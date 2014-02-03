@@ -11,14 +11,13 @@ FWD_VEL0 = FWD_SIGN*80
 FWD_VEL = FWD_SIGN*200
 
 ROT_VEL = FWD_SIGN*100
-
 LEFT_MOTOR = PORT_B
 RIGHT_MOTOR = PORT_A
 
 BrickPiSetup()  # setup the serial port for communication
 
-BrickPi.MotorEnable[PORT_A] = 1 #Enable the Motor A
-BrickPi.MotorEnable[PORT_B] = 1 #Enable the Motor B
+BrickPi.MotorEnable[LEFT_MOTOR] = 1 #Enable the Motor A
+BrickPi.MotorEnable[RIGHT_MOTOR] = 1 #Enable the Motor B
 
 BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 

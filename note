@@ -1,6 +1,0 @@
-//ssh via MAC Address
-~dcw/tmp/git-clone-test/raspberry-pi-wifi/ssh-pi 80:1f:02:af:31:19
-
-//scp local_file user@remote_host:remote_file
-scp ~/robot/Task01.py pi@129.31.196.157:~/rapp/
-
