@@ -21,8 +21,8 @@ class Robot:
 		Makes the robot stop
 		"""
 		print "Stop"
-		self._setMotorSpeed(self.leftMotor)  = 0
-		self._setMotorSpeed(self.rightMotor) = 0
+		self._setMotorSpeed(self.leftMotor, 0)
+		self._setMotorSpeed(self.rightMotor, 0)
 
 	def forward(self, distance):
 		"""
@@ -45,8 +45,10 @@ class Robot:
 
 		#loop for moving
 		while(abs(current_dist) < abs(distance)):
-			self._setMotorSpeed(self.leftMotor) = dir_sign*(main_vel) + dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight))
-			self._setMotorSpeed(self.rightMotor) = dir_sign*(main_vel) - dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight))
+			new_left_speed  = dir_sign*(main_vel) + dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight))
+			new_right_speed = dir_sign*(main_vel) - dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight))
+			self._setMotorSpeed(self.leftMotor, new_left_speed)
+			self._setMotorSpeed(self.rightMotor, new_right_speed)
 			time.sleep(.05)
 			left_move = self.encoder.getMovingDistance(self.leftMotor)
 			right_move = self.encoder.getMovingDistance(self.rightMotor)
@@ -81,8 +83,10 @@ class Robot:
 			dir_sign = -1
 
 		while(abs(current_angle) < abs(angle)):
-			self._setMotorSpeed(self.leftMotor) = -(dir_sign*ROT_VEL + dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight)))
-			self._setMotorSpeed(self.rightMotor) = dir_sign*ROT_VEL - dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight))
+			new_left_speed = -(dir_sign*ROT_VEL + dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight)))
+			new_right_speed = dir_sign*ROT_VEL - dir_sign*FWD_SIGN*int(round(dummy_vel*dummy_weight))
+			self._setMotorSpeed(self.leftMotor, new_left_speed)
+			self._setMotorSpeed(self.rightMotor, new_right_speed)
 			time.sleep(.05)
 			left_move = self.encoder.getMovingDistance(self.leftMotor)
 			right_move = self.encoder.getMovingDistance(self.rightMotor)
@@ -107,5 +111,5 @@ class Robot:
 		"""
 		self.turn(-M_PI/2)
 
-	def _setMotorSpeed(motor_port):
-		BrickPi.MotorSpeed[motor_port]
+	def _setMotorSpeed(motor_port, speed):
+		BrickPi.MotorSpeed[motor_port] = speed
