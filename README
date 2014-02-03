@@ -10,6 +10,8 @@ Pedro, Piyapat, Andrei, Ryan
 ### scp local_file user@remote_host:remote_file
 scp ~/robot/Task01.py pi@129.31.196.157:~/rapp/
 
+scp ~/robot/constants.py ~/robot/robot.py ~/robot/run.py ~/robot/utilities.py ~/robot/encoder.py pi@129.31.196.157:~/rapp/
+
 ### mount the pi's home to ~/robot 
 sshfs pi@129.31.196.157:/home/pi ~/robot
 
