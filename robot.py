@@ -132,9 +132,6 @@ class Robot:
 		"""
 		self.turn(-M_PI/2)
 
-	def _setMotorSpeed(self, motor_port, speed):
-		BrickPi.MotorSpeed[motor_port] = speed
-
 	def isLeftTouch(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.leftTouch]
@@ -146,4 +143,11 @@ class Robot:
 	def _getSonarDistance(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.sonar]
+
+	def setFwdSpeed(self, speed):
+		self._setMotorSpeed(self.leftMotor, speed)
+		self._setMotorSpeed(self.rightMotor, speed)
 		
+	def _setMotorSpeed(self, motor_port, speed):
+		BrickPi.MotorSpeed[motor_port] = speed
+
