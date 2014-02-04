@@ -65,14 +65,39 @@ class Robot:
 			current_right += right_move
 			current_dist = (current_left + current_right)/2
 			dummy_vel = (abs(current_right) - abs(current_left))/2
-			print "L : ", current_left
-			print "R : ", current_right
-			print "Current distance", current_dist
 			
 			#change main speed
 			main_vel += int(round((FWD_VEL - main_vel) * EASING_C))
 		
 		self.stop()
+
+	def follow(self, prefer_wall_distance):
+		"""
+		Follow wall within 'distance' cm
+		"""
+		print "Follow wall within ", prefer_wall_distance, " cm."
+		self.encoder.reset()
+		dummy_vel = 0
+		dummy_weight = 20
+		
+		main_vel = FWD_VEL0
+		
+		#loop for moving
+		while(True):
+			# set moving speed
+			new_left_speed  = FWD_VEL + FWD_SIGN*int(round(dummy_vel*dummy_weight))
+			new_right_speed = FWD_VEL - FWD_SIGN*int(round(dummy_vel*dummy_weight))
+			self._setMotorSpeed(self.leftMotor, new_left_speed)
+			self._setMotorSpeed(self.rightMotor, new_right_speed)
+			time.sleep(.05)
+			
+			# read sonar
+			z = self.getSmoothSonarDistance(0.05)
+			
+			#
+			dummy_vel = (prefer_wall_distance - z)/2
+		
+		self.stop()		
 
 	def turn(self, angle):
 		"""
@@ -173,4 +198,3 @@ class Robot:
 		
 	def _setMotorSpeed(self, motor_port, speed):
 		BrickPi.MotorSpeed[motor_port] = speed
-
