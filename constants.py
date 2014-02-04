@@ -16,3 +16,6 @@ ROT_VEL  = FWD_SIGN*100  # Velocity of robot rotation
 
 LEFT_MOTOR = PORT_B     # Motor port left
 RIGHT_MOTOR = PORT_A    # Motor port right
+
+LEFT_TOUCH = PORT_2
+RIGHT_TOUCH = PORT_1

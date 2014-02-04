@@ -4,14 +4,19 @@ from encoder import Encoder
 from utilities import toPIPI
 
 class Robot:
-	def __init__(self, leftMotor, rightMotor):
+	def __init__(self, leftMotor, rightMotor, leftTouch, rightTouch):
+		BrickPiSetup()  # setup the serial port for communication
+
 		self.leftMotor = leftMotor
 		self.rightMotor = rightMotor
-
-		BrickPiSetup()  # setup the serial port for communication
+		self.leftTouch = leftTouch
+		self.rightTouch = rightTouch
 
 		BrickPi.MotorEnable[leftMotor]  = 1  # Enable the Motor A
 		BrickPi.MotorEnable[rightMotor] = 1 # Enable the Motor B
+
+		BrickPi.SensorType[leftTouch] = TYPE_SENSOR_TOUCH
+		BrickPi.SensorType[rightTouch] = TYPE_SENSOR_TOUCH
 
 		BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
@@ -114,3 +119,12 @@ class Robot:
 
 	def _setMotorSpeed(self, motor_port, speed):
 		BrickPi.MotorSpeed[motor_port] = speed
+
+	def isLeftTouch(self):
+		BrickPiUpdateValues()
+		return BrickPi.Sensor[self.leftTouch]
+
+	def isRightTouch(self):
+		BrickPiUpdateValues()
+		return BrickPi.Sensor[self.rightTouch]
+		
