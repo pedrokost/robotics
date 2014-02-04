@@ -1,7 +1,7 @@
 from constants import *
 from BrickPi import *
 from encoder import Encoder
-from utilities import toPIPI
+from utilities import toPIPI, median
 
 class Robot:
 	# TODO: pass dict with sensor mappings
@@ -115,33 +115,21 @@ class Robot:
 		print "Keep distance : ", distance
 		self.encoder.reset()
 
-		history = [0] * DISTANCE_HISTORY_SIZE
-		counter = 0;
-
 		acc_err = 0
-		while True:
-			# Median filter
-			history[counter] = self._getSonarDistance()
-			print history[counter]
 
-			# get sonar measurement
-			z = sorted(history)[DISTANCE_HISTORY_SIZE / 2]
+		while True:
+			# get sonar measurement for 0.05 seconds
+			z = self.getSmoothSonarDistance(0.05)
 
 			# set the speed of the robot
-			print z, counter
 			err = z - distance
 			acc_err += err
+			print err, acc_err
 			speed = PID_KP_CONSTANT * err + PID_KI_CONSTANT * acc_err
 
-			if(speed < 0):
-				speed = min(speed, -70)
-			if(speed > 0):
-				speed = max(speed, 70)
-			print "speed : ", speed
+			# print "speed : ", speed
 			self._setMotorSpeed(self.leftMotor, speed)
 			self._setMotorSpeed(self.rightMotor, speed)
-			time.sleep(0.05)
-			counter = (counter + 1) % DISTANCE_HISTORY_SIZE
 
 	def left90deg(self):
 		"""
@@ -162,6 +150,17 @@ class Robot:
 	def isRightTouch(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.rightTouch]
+
+	def getSmoothSonarDistance(self, duration):
+		"""
+		Returns a cleaned value for the distance, by sampling continuosly for duration seconds
+		"""
+		values = []
+		start = time.time()
+		while time.time() - start < duration:
+			values.append(self._getSonarDistance())
+			time.sleep(0.001)
+		return median(values)
 
 	# This function is to get sonar distance. (in cm)
 	def _getSonarDistance(self):

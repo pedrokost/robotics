@@ -9,3 +9,10 @@ def toPIPI(angle):
 	while(angle >= math.pi):
 		angle -= 2*math.pi
 	return angle
+
+def median(array):
+	"""
+	Returns the median of an array
+	"""
+	medIndex = int(len(array) / 2)
+	return sorted(array)[medIndex];
