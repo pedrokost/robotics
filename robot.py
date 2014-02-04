@@ -4,13 +4,15 @@ from encoder import Encoder
 from utilities import toPIPI
 
 class Robot:
-	def __init__(self, leftMotor, rightMotor, leftTouch, rightTouch):
+	# TODO: pass dict with sensor mappings
+	def __init__(self, leftMotor, rightMotor, leftTouch, rightTouch, sonar):
 		BrickPiSetup()  # setup the serial port for communication
 
 		self.leftMotor = leftMotor
 		self.rightMotor = rightMotor
 		self.leftTouch = leftTouch
 		self.rightTouch = rightTouch
+		self.sonar = sonar
 
 		BrickPi.MotorEnable[leftMotor]  = 1  # Enable the Motor A
 		BrickPi.MotorEnable[rightMotor] = 1 # Enable the Motor B
@@ -105,6 +107,19 @@ class Robot:
 			print "Current angle : ", current_angle
 		self.stop()
 
+	def keepDistance(self, distance):
+		"""
+		Keeps the robot at some distance from the wall
+		"""
+		self.encoder.reset()
+		while True:
+			z = _getSonarDistance()
+			err = z - distance
+			speed = k * err
+			self._setMotorSpeed(self.leftMotor, speed)
+			self._setMotorSpeed(self.rightMotor, speed)
+			time.sleep(0.05)
+
 	def left90deg(self):
 		"""
 		Function to turn left 90 degrees
@@ -127,4 +142,8 @@ class Robot:
 	def isRightTouch(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.rightTouch]
+
+	def _getSonarDistance(self):
+		BrickPiUpdateValues()
+		return BrickPi.Sensor[self.sonar]
 		
