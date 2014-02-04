@@ -19,7 +19,7 @@ class Robot:
 
 		BrickPi.SensorType[leftTouch] = TYPE_SENSOR_TOUCH
 		BrickPi.SensorType[rightTouch] = TYPE_SENSOR_TOUCH
-		BrickPi.SensorType[rightTouch] = TYPE_SENSOR_ULTRASONIC_CONT
+		BrickPi.SensorType[sonar] = TYPE_SENSOR_ULTRASONIC_CONT
 
 		BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
@@ -112,19 +112,32 @@ class Robot:
 		"""
 		Keeps the robot at some distance from the wall
 		"""
+		print "Keep distance : ", distance
 		self.encoder.reset()
 
 		history = [0] * DISTANCE_HISTORY_SIZE
 		counter = 0;
 
+		acc_err = 0
 		while True:
 			# Median filter
 			history[counter] = self._getSonarDistance()
 			print history[counter]
+
+			# get sonar measurement
 			z = sorted(history)[DISTANCE_HISTORY_SIZE / 2]
+
+			# set the speed of the robot
 			print z, counter
 			err = z - distance
-			speed = SMOOTH_DISTANCE * err
+			acc_err += err
+			speed = PID_KP_CONSTANT * err + PID_KI_CONSTANT * acc_err
+
+			if(speed < 0):
+				speed = min(speed, -70)
+			if(speed > 0):
+				speed = max(speed, 70)
+			print "speed : ", speed
 			self._setMotorSpeed(self.leftMotor, speed)
 			self._setMotorSpeed(self.rightMotor, speed)
 			time.sleep(0.05)
@@ -150,6 +163,7 @@ class Robot:
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.rightTouch]
 
+	# This function is to get sonar distance. (in cm)
 	def _getSonarDistance(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.sonar]
