@@ -9,4 +9,4 @@ robot = Robot(LEFT_MOTOR, RIGHT_MOTOR, LEFT_TOUCH, RIGHT_TOUCH, SONAR_SENSOR)
 prefer_dist = 30
 
 while(True):
-	robot.follow(prefer_dist)
+	robot.follow_wall(prefer_dist)

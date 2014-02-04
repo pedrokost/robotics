@@ -1,15 +1,14 @@
 from BrickPi import *   #import BrickPi.py file to use BrickPi operations
+from constants import *
 from robot import Robot
-from  constants import *
 
-robot = Robot(LEFT_MOTOR, RIGHT_MOTOR, None, None)
+BrickPiSetup()
+robot = Robot(LEFT_MOTOR, RIGHT_MOTOR, None, None, None)
+BrickPiSetupSensors()
 
 # Main Program
-# Left90deg()
 for i in range(0, 4):
-	robot.forward(42)
+	robot.motors.forward(42, FWD_VEL)
 	time.sleep(1)
-	robot.left90deg()
+	robot.motors.left90deg()
 	time.sleep(1)
-
-#robot.forward(40)
