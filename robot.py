@@ -113,13 +113,21 @@ class Robot:
 		Keeps the robot at some distance from the wall
 		"""
 		self.encoder.reset()
+
+		history = [0] * DISTANCE_HISTORY_SIZE
+		counter = 0;
+
 		while True:
-			z = self._getSonarDistance()
+			# Median filter
+			history[counter] = self._getSonarDistance()
+			z = sorted(history)[DISTANCE_HISTORY_SIZE / 2]
+			print z, counter
 			err = z - distance
 			speed = SMOOTH_DISTANCE * err
 			self._setMotorSpeed(self.leftMotor, speed)
 			self._setMotorSpeed(self.rightMotor, speed)
 			time.sleep(0.05)
+			counter = (counter + 1) % DISTANCE_HISTORY_SIZE
 
 	def left90deg(self):
 		"""
