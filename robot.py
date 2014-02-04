@@ -1,5 +1,6 @@
 from constants import *
 from BrickPi import *
+from encoder import Encoder
 from utilities import toPIPI
 
 class Robot:
@@ -29,7 +30,7 @@ class Robot:
 		Makes the robot move forward 'distance' cm
 		"""
 		print "Move forward ", distance, " cm."
-		encoder.reset()  # What does it do?
+		self.encoder.reset()  # What does it do?
 		current_dist = 0
 		current_left = 0
 		current_right = 0
@@ -111,5 +112,5 @@ class Robot:
 		"""
 		self.turn(-M_PI/2)
 
-	def _setMotorSpeed(motor_port, speed):
+	def _setMotorSpeed(self, motor_port, speed):
 		BrickPi.MotorSpeed[motor_port] = speed

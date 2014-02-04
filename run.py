@@ -1,10 +1,10 @@
 from BrickPi import *   #import BrickPi.py file to use BrickPi operations
-import robot
-
+from robot import Robot
+from  constants import *
 
 BrickPiSetup()  # setup the serial port for communication
 
-robot = Robot()
+robot = Robot(LEFT_MOTOR, RIGHT_MOTOR)
 
 # Main Program
 # Left90deg()

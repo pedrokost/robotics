@@ -4,7 +4,10 @@ from constants import *
 from utilities import toPIPI
 
 class Encoder:
-	def __init__(self, wheel_radius):
+	prev_radianL = 0
+	prev_radianR = 0
+
+	def __init__(self):
 		pass
 
 	def getAngle(self, motor_port):
@@ -23,11 +26,11 @@ class Encoder:
 		"""
 		current_radian = self.getAngle(motor_port)
 		if(motor_port == LEFT_MOTOR):	
-			distance = toPIPI(current_radian - self.getMovingDistance.prev_radianL) * W_RADIUS
-			self.getMovingDistance.prev_radianL = current_radian  # ???
+			distance = toPIPI(current_radian - self.prev_radianL) * W_RADIUS
+			self.prev_radianL = current_radian  # ???
 		else:	
-			distance = toPIPI(current_radian - self.getMovingDistance.prev_radianR) * W_RADIUS
-			self.getMovingDistance.prev_radianR = current_radian  # ???
+			distance = toPIPI(current_radian - self.prev_radianR) * W_RADIUS
+			self.prev_radianR = current_radian  # ???
 		return FWD_SIGN*distance
 
 	def reset(self):
@@ -35,5 +38,5 @@ class Encoder:
 		Reset the encoder
 		"""
 		# ???? How does getting the angle reset the encoder?
-		self.getMovingDistance.prev_radianL = self.getAngle(LEFT_MOTOR)
-		self.getMovingDistance.prev_radianR = self.getAngle(RIGHT_MOTOR)
+		self.prev_radianL = self.getAngle(LEFT_MOTOR)
+		self.prev_radianR = self.getAngle(RIGHT_MOTOR)
