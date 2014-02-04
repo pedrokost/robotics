@@ -159,7 +159,7 @@ class Robot:
 		start = time.time()
 		while time.time() - start < duration:
 			values.append(self._getSonarDistance())
-			time.sleep(0.001)
+			time.sleep(0.002)
 		return median(values)
 
 	# This function is to get sonar distance. (in cm)

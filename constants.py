@@ -9,8 +9,8 @@ RW_DIST = 5.65 # distance from center of the robot to center of the wheel
 EASING_C = 0.05  # determines acceleration strenght
 FWD_SIGN = 1     # 1 means forward, -1 means backwards??
 
-PID_KP_CONSTANT = 100  # easing factor for maintaining equal distance from wall
-PID_KI_CONSTANT = 0
+PID_KP_CONSTANT = 45  # easing factor for maintaining equal distance from wall
+PID_KI_CONSTANT = 23
 
 # Velocities:
 FWD_VEL0 = FWD_SIGN*80  # ???

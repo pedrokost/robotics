@@ -6,6 +6,9 @@ Pedro, Piyapat, Andrei, Ryan
 
 ### Via IP Address
 
+#### Password-less login/scp
+ssh-copy-id pi@129.31.192.29
+
 #### ssh
 
 ```
