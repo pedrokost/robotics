@@ -19,6 +19,7 @@ class Robot:
 
 		BrickPi.SensorType[leftTouch] = TYPE_SENSOR_TOUCH
 		BrickPi.SensorType[rightTouch] = TYPE_SENSOR_TOUCH
+		BrickPi.SensorType[rightTouch] = TYPE_SENSOR_ULTRASONIC_CONT
 
 		BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
