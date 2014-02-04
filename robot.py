@@ -117,9 +117,6 @@ class Robot:
 		"""
 		self.turn(-M_PI/2)
 
-	def _setMotorSpeed(self, motor_port, speed):
-		BrickPi.MotorSpeed[motor_port] = speed
-
 	def isLeftTouch(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.leftTouch]
@@ -127,4 +124,11 @@ class Robot:
 	def isRightTouch(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.rightTouch]
+
+	def setFwdSpeed(self, speed):
+		self._setMotorSpeed(self.leftMotor, speed)
+		self._setMotorSpeed(self.rightMotor, speed)
 		
+	def _setMotorSpeed(self, motor_port, speed):
+		BrickPi.MotorSpeed[motor_port] = speed
+
