@@ -120,6 +120,7 @@ class Robot:
 		while True:
 			# Median filter
 			history[counter] = self._getSonarDistance()
+			print history[counter]
 			z = sorted(history)[DISTANCE_HISTORY_SIZE / 2]
 			print z, counter
 			err = z - distance

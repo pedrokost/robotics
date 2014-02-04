@@ -24,4 +24,4 @@ RIGHT_TOUCH = PORT_1
 SONAR_SENSOR = PORT_4   # sonar sensor port
 
 # The array size of previous sonar meausurments
-DISTANCE_HISTORY_SIZE = 101   # make it odd. 
+DISTANCE_HISTORY_SIZE = 51   # make it odd. 
