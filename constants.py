@@ -21,7 +21,7 @@ RIGHT_MOTOR = PORT_A    # Motor port right
 LEFT_TOUCH = PORT_2
 RIGHT_TOUCH = PORT_1
 
-SONAR_SENSOR = PORT_4   # sonar sensor port
+SONAR_SENSOR = PORT_5   # sonar sensor port
 
 # The array size of previous sonar meausurments
 DISTANCE_HISTORY_SIZE = 51   # make it odd. 
