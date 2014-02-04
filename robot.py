@@ -70,7 +70,7 @@ class Robot:
 		"""
 		Makes the robot turn in place by an angle
 		"""
-		encoder.reset()
+		self.encoder.reset()
 		print "Turn ", angle, " radian."
 		current_angle = 0
 		current_left = 0
@@ -98,7 +98,7 @@ class Robot:
 			print "L : ", current_left
 			print "R : ", current_right
 			print "Current angle : ", current_angle
-		motorStop()
+		self.stop()
 
 	def left90deg(self):
 		"""
