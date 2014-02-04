@@ -113,9 +113,9 @@ class Robot:
 		"""
 		self.encoder.reset()
 		while True:
-			z = _getSonarDistance()
+			z = self._getSonarDistance()
 			err = z - distance
-			speed = k * err
+			speed = SMOOTH_DISTANCE * err
 			self._setMotorSpeed(self.leftMotor, speed)
 			self._setMotorSpeed(self.rightMotor, speed)
 			time.sleep(0.05)

@@ -1,5 +1,5 @@
 import math
-from BrickPi import PORT_A, PORT_B
+from BrickPi import *
 
 M_PI = math.pi   # for backwards compatibility
 
