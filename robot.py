@@ -30,11 +30,12 @@ class Robot:
 		print "Follow wall within ", prefer_wall_distance, " cm."
 		
 		acc_err = 0
+		last_err = 0
 		#loop for moving
 		while(True):
-			acc_err = self._follow_wall_step(prefer_wall_distance, acc_err)
+			acc_err, last_err = self._follow_wall_step(prefer_wall_distance, acc_err, last_err)
 		
-	def _follow_wall_step(self, prefer_wall_distance, acc_err=0):
+	def _follow_wall_step(self, prefer_wall_distance, acc_err=0, last_err=0):
 		diff_weight = 20
 		# read sonar
 		z = self.sonar.getSmoothSonarDistance(0.05)
@@ -43,10 +44,10 @@ class Robot:
 		
 		err = (prefer_wall_distance - z)
 		err = limitTo(err, -10, 10)
-		print acc_err
+		derror = err - last_err
 		acc_err += err
 		acc_err = limitTo(acc_err, -10, 10)  # HACK: shouldn't need to do this
-		diff_vel = FOLLOW_WALL_KPROP*err + FOLLOW_WALL_KERR*acc_err
+		diff_vel = FOLLOW_WALL_KP*err + FOLLOW_WALL_KI*acc_err + FOLLOW_WALL_KD * derror
 
 		# set moving speed
 		new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel*diff_weight))
@@ -55,7 +56,7 @@ class Robot:
 		self.motors.setRightSpeed(new_right_speed)
 		time.sleep(0.01)
 
-		return acc_err
+		return (acc_err, err) 
 		
 
 	def keepDistanceFront(self, distance):

@@ -15,6 +15,7 @@ KEEP_DISTANCE_FRONT_KD = 30
 
 FOLLOW_WALL_KP = 0.8  # affects how much the robot oscillates while following the wall (Proportonal)
 FOLLOW_WALL_KI = 0  # affects how much the robot oscillates while following the wall (Integral)
+FOLLOW_WALL_KD = 1  # affects how much the robot oscillates while following the wall (Integral)
 
 # Velocities:
 FWD_VEL  = FWD_SIGN*200  # Wanted max velocity
