@@ -27,16 +27,15 @@ class Encoder:
 		current_radian = self.getAngle(motor_port)
 		if(motor_port == LEFT_MOTOR):	
 			distance = toPIPI(current_radian - self.prev_radianL) * W_RADIUS
-			self.prev_radianL = current_radian  # ???
+			self.prev_radianL = current_radian
 		else:	
 			distance = toPIPI(current_radian - self.prev_radianR) * W_RADIUS
-			self.prev_radianR = current_radian  # ???
+			self.prev_radianR = current_radian
 		return FWD_SIGN*distance
 
 	def reset(self):
 		"""
-		Reset the encoder
+		Reset the encoder. By storing the current values, we can get following measurments relative to this one.
 		"""
-		# ???? How does getting the angle reset the encoder?
 		self.prev_radianL = self.getAngle(LEFT_MOTOR)
 		self.prev_radianR = self.getAngle(RIGHT_MOTOR)

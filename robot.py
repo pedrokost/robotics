@@ -42,7 +42,6 @@ class Robot:
 			new_right_speed = 150 - FWD_SIGN*int(round(diff_vel*diff_weight))
 			self.motors.setLeftSpeed(new_left_speed)
 			self.motors.setRightSpeed(new_right_speed)
-			time.sleep(.05)
 			
 			# read sonar
 			z = self.sonar.getSmoothSonarDistance(0.05)

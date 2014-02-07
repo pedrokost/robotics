@@ -104,12 +104,10 @@ class Motors:
 		self.turn(-M_PI/2)
 
 	def setLeftSpeed(self, speed):
-		BrickPi.MotorSpeed[self.leftMotorPort] = speed
-		BrickPiUpdateValues()
+		self._setMotorSpeed(self.leftMotorPort, speed)
 
 	def setRightSpeed(self, speed):
-		BrickPi.MotorSpeed[self.rightMotorPort] = speed
-		BrickPiUpdateValues()
+		self._setMotorSpeed(self.rightMotorPort, speed)
 
 	def _setMotorSpeed(self, motor_port, speed):
 		BrickPi.MotorSpeed[motor_port] = speed

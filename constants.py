@@ -13,8 +13,8 @@ PID_KP_CONSTANT = 45  # easing factor for maintaining equal distance from wall
 PID_KI_CONSTANT = 23
 
 # Velocities:
-FWD_VEL0 = FWD_SIGN*80  # ???
-FWD_VEL  = FWD_SIGN*200  # ???
+FWD_VEL0 = FWD_SIGN*80  # Velocity before acceleration
+FWD_VEL  = FWD_SIGN*200  # Wanted max velocity
 ROT_VEL  = FWD_SIGN*100  # Velocity of robot rotation
 
 LEFT_MOTOR = PORT_B     # Motor port left

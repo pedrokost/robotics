@@ -13,7 +13,7 @@ while(True):
 		if(uniform(0, 1) < 0.5):
 			robot.motors.right90deg()
 		else:
-			robot.left90deg()
+			robot.motors.left90deg()
 	elif(isLeftTouch):
 		robot.motors.right90deg()
 	elif(isRightTouch):
