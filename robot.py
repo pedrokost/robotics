@@ -38,8 +38,8 @@ class Robot:
 		#loop for moving
 		while(True):
 			# set moving speed
-			new_left_speed  = 150 + FWD_SIGN*int(round(diff_vel*diff_weight))
-			new_right_speed = 150 - FWD_SIGN*int(round(diff_vel*diff_weight))
+			new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel*diff_weight))
+			new_right_speed = FWD_VEL - FWD_SIGN*int(round(diff_vel*diff_weight))
 			self.motors.setLeftSpeed(new_left_speed)
 			self.motors.setRightSpeed(new_right_speed)
 			
@@ -50,7 +50,7 @@ class Robot:
 			
 			err = (prefer_wall_distance - z)
 			acc_err += err
-			diff_vel = 1*err + 0.0*acc_err
+			diff_vel = 0.3*err + 0.0*acc_err
 		
 		self.stop()		
 
