@@ -17,8 +17,7 @@ class Motors:
 		"""
 		Stop Motors
 		"""
-		self._setMotorSpeed(self.leftMotorPort, 0)
-		self._setMotorSpeed(self.rightMotorPort, 0)
+		self.setSpeed(0, 0)
 
 	def forward(self, distance, speed=FWD_VEL):
 		"""
@@ -91,6 +90,12 @@ class Motors:
 			print "Current angle : ", current_angle
 		self.stop()
 
+	def setLeftSpeed(self, speed):
+		self._setMotorSpeed(self.leftMotorPort, speed)
+
+	def setRightSpeed(self, speed):
+		self._setMotorSpeed(self.rightMotorPort, speed)
+
 	def left90deg(self):
 		"""
 		Function to turn left 90 degrees
@@ -102,12 +107,6 @@ class Motors:
 		Function to turn right 90 degrees
 		"""
 		self.turn(-M_PI/2)
-
-	def setLeftSpeed(self, speed):
-		self._setMotorSpeed(self.leftMotorPort, speed)
-
-	def setRightSpeed(self, speed):
-		self._setMotorSpeed(self.rightMotorPort, speed)
 
 	def _setMotorSpeed(self, motor_port, speed):
 		BrickPi.MotorSpeed[motor_port] = int(round(speed))

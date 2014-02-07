@@ -74,4 +74,31 @@ class Robot:
 			last_err = err
 			time.sleep(0.01)
 
+	# def stop(self):
+	# 	self.motors.stop()
 
+	# def forward(self, *args, **kwargs):
+	# 	self.motors.forward(*args, **kwargs)
+
+	# def turn(self, *args, **kwargs):
+	# 	self.motors.turn(*args, **kwargs)
+
+	# def left90deg(self):
+	# 	self.motors.left90deg()
+		
+	# def right90deg(self):
+	# 	self.motors.right90deg()
+
+	# def setSpeed(self, *args, **kwargs):
+	# 	self.motors.setSpeed(*args, **kwargs)
+
+	def __getattr__(self, name):
+		"""
+		If a method like stop does not exist, try it on the motors
+		"""
+		def _missing(*args, **kwargs):
+			if self.motors is not None:
+				func = getattr(self.motors, name)
+				func(*args, **kwargs)
+
+		return _missing

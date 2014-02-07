@@ -22,10 +22,10 @@ while key != ord('q'):
     # stdscr.refresh()
     if key == curses.KEY_UP: 
         # stdscr.addstr(2, 20, "Up")
-        robot.motors.forward(30)
+        robot.forward(30)
     elif key == curses.KEY_DOWN: 
         # stdscr.addstr(3, 20, "Down")
-        robot.motors.forward(-30)
+        robot.forward(-30)
     if key == curses.KEY_LEFT:
     	# stdscr.addstr(4, 20, "Left")
     	robot.motors.turn(1)
