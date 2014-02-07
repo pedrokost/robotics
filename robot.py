@@ -43,26 +43,29 @@ class Robot:
 		
 		err = (prefer_wall_distance - z)
 		err = limitTo(err, -10, 10)
-		print err
+		print acc_err
 		acc_err += err
-		diff_vel = FOLLOW_WALL_KERR*err + 2*acc_err
+		acc_err = limitTo(acc_err, -10, 10)  # HACK: shouldn't need to do this
+		diff_vel = FOLLOW_WALL_KPROP*err + FOLLOW_WALL_KERR*acc_err
 
 		# set moving speed
 		new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel*diff_weight))
 		new_right_speed = FWD_VEL - FWD_SIGN*int(round(diff_vel*diff_weight))
 		self.motors.setLeftSpeed(new_left_speed)
 		self.motors.setRightSpeed(new_right_speed)
+		time.sleep(0.01)
 
 		return acc_err
 		
 
-	def keepDistance(self, distance):
+	def keepDistanceFront(self, distance):
 		"""
 		Keeps the robot at some distance from the wall
 		"""
 		print "Keep distance : ", distance
 
 		acc_err = 0
+		last_err = 0
 
 		while True:
 			# get sonar measurement for 0.05 seconds
@@ -71,9 +74,13 @@ class Robot:
 			# set the speed of the robot
 			err = z - distance
 			acc_err += err
+			derror = err - last_err
 			print err, acc_err
-			speed = PID_KP_CONSTANT * err + PID_KI_CONSTANT * acc_err
+			speed = KEEP_DISTANCE_FRONT_KP * err + KEEP_DISTANCE_FRONT_KI * acc_err + KEEP_DISTANCE_FRONT_KD * derror
 
 			# print "speed : ", speed
-			self.motors.setLeftSpeed(speed)
-			self.motors.setRightSpeed(speed)
+			self.motors.setSpeed(speed)
+			last_err = err
+			time.sleep(0.01)
+
+

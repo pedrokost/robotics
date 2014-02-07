@@ -9,14 +9,16 @@ RW_DIST = 5.65 # distance from center of the robot to center of the wheel
 EASING_C = 0.05  # determines acceleration strenght
 FWD_SIGN = 1     # 1 means forward, -1 means backwards??
 
-PID_KP_CONSTANT = 45  # easing factor for maintaining equal distance from wall
-PID_KI_CONSTANT = 23
+KEEP_DISTANCE_FRONT_KP = 20  # easing factor for maintaining equal distance from wall
+KEEP_DISTANCE_FRONT_KI = 0.5
+KEEP_DISTANCE_FRONT_KD = 30
 
-FOLLOW_WALL_KERR = 0.7  # affects how much the robot oscillates while following the wall
+FOLLOW_WALL_KP = 0.8  # affects how much the robot oscillates while following the wall (Proportonal)
+FOLLOW_WALL_KI = 0  # affects how much the robot oscillates while following the wall (Integral)
 
 # Velocities:
-FWD_VEL0 = FWD_SIGN*80  # Velocity before acceleration
 FWD_VEL  = FWD_SIGN*200  # Wanted max velocity
+FWD_VEL0 = FWD_VEL * 0.3  # Velocity before acceleration
 ROT_VEL  = FWD_SIGN*100  # Velocity of robot rotation
 
 LEFT_MOTOR = PORT_B     # Motor port left

@@ -16,4 +16,3 @@ while(True):
 		robot.motors.right90deg()
 	else:
 		acc_err =robot._follow_wall_step(30, acc_err)
-	time.sleep(0.1)

@@ -8,4 +8,4 @@ robot = Robot(LEFT_MOTOR, RIGHT_MOTOR, LEFT_TOUCH, RIGHT_TOUCH, SONAR_SENSOR)
 # Main Program
 
 while(True):
-	robot.keepDistance(30)
+	robot.keepDistanceFront(30)

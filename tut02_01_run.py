@@ -9,6 +9,8 @@ robot = Robot(LEFT_MOTOR, RIGHT_MOTOR, LEFT_TOUCH, RIGHT_TOUCH, None)
 while(True):
 	isLeftTouch = robot.leftTouch.isTouch()
 	isRightTouch = robot.rightTouch.isTouch()
+	if(isLeftTouch or isRightTouch):
+		robot.motors.forward(-30)
 	if(isLeftTouch and isRightTouch):
 		if(uniform(0, 1) < 0.5):
 			robot.motors.right90deg()
