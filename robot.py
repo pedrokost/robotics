@@ -6,20 +6,15 @@ from sonar import Sonar
 from touch import Touch
 
 class Robot:
-	# TODO: pass dict with sensor mappings
-	def __init__(self, leftMotorPort, rightMotorPort, leftTouchPort, rightTouchPort, sonarPort):
+
+	def __init__(self, leftMotorPort=None, rightMotorPort=None, leftTouchPort=None, rightTouchPort=None, sonarPort=None):
 		BrickPiSetup()  # setup the serial port for communication
 
-		self.motors = Motors(leftMotorPort, rightMotorPort)
-		
-		if(sonarPort != None):
-			self.sonar = Sonar(sonarPort)
-
-		if(leftTouchPort != None):
-			self.leftTouch = Touch(leftTouchPort)
-		
-		if(rightTouchPort != None):
-			self.rightTouch = Touch(rightTouchPort)
+		if(sonarPort is not None): self.sonar = Sonar(sonarPort)
+		if(leftTouchPort is not None): self.leftTouch = Touch(leftTouchPort)
+		if(rightTouchPort is not None): self.rightTouch = Touch(rightTouchPort)
+		if(leftMotorPort is not None and rightMotorPort is not None): 
+			self.motors = Motors(leftMotorPort, rightMotorPort)
 
 		BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 

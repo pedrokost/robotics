@@ -3,7 +3,11 @@ from robot import Robot
 from constants import *
 from random import uniform
 
-robot = Robot(LEFT_MOTOR, RIGHT_MOTOR, LEFT_TOUCH, RIGHT_TOUCH, SONAR_SENSOR)
+robot = Robot(leftMotorPort=LEFT_MOTOR,
+			  rightMotorPort=RIGHT_MOTOR,
+			  leftTouchPort=LEFT_TOUCH,
+			  rightTouchPort=RIGHT_TOUCH,
+			  sonarPort=SONAR_SENSOR)
 
 # Main Program
 acc_err = 0
@@ -14,6 +18,7 @@ while(True):
 	isRightTouch = robot.rightTouch.isTouch()
 	if(isLeftTouch or isRightTouch):
 		robot.motors.forward(-30)
+			create_port(type, port)
 		robot.motors.right90deg()
 	else:
 		acc_err, last_err =robot._follow_wall_step(30, acc_err, last_err)
