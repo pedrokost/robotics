@@ -11,4 +11,4 @@ robot = Robot(leftMotorPort=LEFT_MOTOR,
 # Main Program
 acc_err = 0
 
-robot.follow_wall(30)
+robot.followWall(30)

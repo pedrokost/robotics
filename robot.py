@@ -18,19 +18,17 @@ class Robot:
 
 		BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
-	def follow_wall(self, prefer_wall_distance):
+	def followWall(self, prefer_wall_distance):
 		"""
 		Follow wall within 'distance' cm
 		"""
 		print "Follow wall within ", prefer_wall_distance, " cm."
-		
 		acc_err = 0
 		last_err = 0
-		#loop for moving
 		while(True):
-			acc_err, last_err = self._follow_wall_step(prefer_wall_distance, acc_err, last_err)
+			acc_err, last_err = self.followWallStep(prefer_wall_distance, acc_err, last_err)
 		
-	def _follow_wall_step(self, prefer_wall_distance, acc_err=0, last_err=0):
+	def followWallStep(self, prefer_wall_distance, acc_err=0, last_err=0):
 		diff_weight = 20
 		# read sonar
 		z = self.sonar.getSmoothSonarDistance(0.05)
@@ -47,12 +45,10 @@ class Robot:
 		# set moving speed
 		new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel*diff_weight))
 		new_right_speed = FWD_VEL - FWD_SIGN*int(round(diff_vel*diff_weight))
-		self.motors.setLeftSpeed(new_left_speed)
-		self.motors.setRightSpeed(new_right_speed)
+		self.motors.setSpeed(new_left_speed, new_right_speed)
 		time.sleep(0.01)
 
-		return (acc_err, err) 
-		
+		return (acc_err, err)
 
 	def keepDistanceFront(self, distance):
 		"""
@@ -74,7 +70,6 @@ class Robot:
 			print err, acc_err
 			speed = KEEP_DISTANCE_FRONT_KP * err + KEEP_DISTANCE_FRONT_KI * acc_err + KEEP_DISTANCE_FRONT_KD * derror
 
-			# print "speed : ", speed
 			self.motors.setSpeed(speed)
 			last_err = err
 			time.sleep(0.01)

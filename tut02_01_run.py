@@ -25,6 +25,5 @@ while(True):
 	elif(isRightTouch):
 		robot.motors.left90deg()
 	else:
-		robot.motors.setLeftSpeed(150)
-		robot.motors.setRightSpeed(150)
+		robot.motors.setSpeed(150)
 	time.sleep(0.01)

@@ -113,8 +113,8 @@ class Motors:
 		BrickPi.MotorSpeed[motor_port] = int(round(speed))
 		BrickPiUpdateValues()
 
-	def setSpeed(self, speed):
-		print speed
-		BrickPi.MotorSpeed[self.leftMotorPort] = int(round(speed))
-		BrickPi.MotorSpeed[self.rightMotorPort] = int(round(speed))
+	def setSpeed(self, speed_left, speed_right=None):
+		if speed_right is None: speed_right = speed_left
+		BrickPi.MotorSpeed[self.leftMotorPort] = int(round(speed_left))
+		BrickPi.MotorSpeed[self.rightMotorPort] = int(round(speed_right))
 		BrickPiUpdateValues()

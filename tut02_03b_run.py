@@ -21,4 +21,4 @@ while(True):
 			create_port(type, port)
 		robot.motors.right90deg()
 	else:
-		acc_err, last_err =robot._follow_wall_step(30, acc_err, last_err)
+		acc_err, last_err =robot.followWallStep(30, acc_err, last_err)
