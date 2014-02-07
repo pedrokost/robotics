@@ -12,6 +12,8 @@ FWD_SIGN = 1     # 1 means forward, -1 means backwards??
 PID_KP_CONSTANT = 45  # easing factor for maintaining equal distance from wall
 PID_KI_CONSTANT = 23
 
+FOLLOW_WALL_KERR = 0.7  # affects how much the robot oscillates while following the wall
+
 # Velocities:
 FWD_VEL0 = FWD_SIGN*80  # Velocity before acceleration
 FWD_VEL  = FWD_SIGN*200  # Wanted max velocity

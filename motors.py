@@ -20,7 +20,7 @@ class Motors:
 		self._setMotorSpeed(self.leftMotorPort, 0)
 		self._setMotorSpeed(self.rightMotorPort, 0)
 
-	def forward(self, distance, speed):
+	def forward(self, distance, speed=FWD_VEL):
 		"""
 		Makes the robot move forward 'distance' cm
 		"""

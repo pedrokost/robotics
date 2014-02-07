@@ -28,31 +28,33 @@ class Robot:
 		Follow wall within 'distance' cm
 		"""
 		print "Follow wall within ", prefer_wall_distance, " cm."
-
-		diff_vel = 0
-		diff_weight = 20
-		
-		main_vel = FWD_VEL0
 		
 		acc_err = 0
 		#loop for moving
 		while(True):
-			# set moving speed
-			new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel*diff_weight))
-			new_right_speed = FWD_VEL - FWD_SIGN*int(round(diff_vel*diff_weight))
-			self.motors.setLeftSpeed(new_left_speed)
-			self.motors.setRightSpeed(new_right_speed)
-			
-			# read sonar
-			z = self.sonar.getSmoothSonarDistance(0.05)
-
-			print "Distance from the wall ", z
-			
-			err = (prefer_wall_distance - z)
-			acc_err += err
-			diff_vel = 0.3*err + 0.0*acc_err
+			acc_err = self._follow_wall_step(prefer_wall_distance, acc_err)
 		
-		self.stop()		
+	def _follow_wall_step(self, prefer_wall_distance, acc_err=0):
+		diff_weight = 20
+		# read sonar
+		z = self.sonar.getSmoothSonarDistance(0.05)
+
+		print "Distance from the wall ", z
+		
+		err = (prefer_wall_distance - z)
+		err = limitTo(err, -10, 10)
+		print err
+		acc_err += err
+		diff_vel = FOLLOW_WALL_KERR*err + 2*acc_err
+
+		# set moving speed
+		new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel*diff_weight))
+		new_right_speed = FWD_VEL - FWD_SIGN*int(round(diff_vel*diff_weight))
+		self.motors.setLeftSpeed(new_left_speed)
+		self.motors.setRightSpeed(new_right_speed)
+
+		return acc_err
+		
 
 	def keepDistance(self, distance):
 		"""
