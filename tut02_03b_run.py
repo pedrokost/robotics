@@ -12,13 +12,13 @@ robot = Robot(leftMotorPort=LEFT_MOTOR,
 # Main Program
 acc_err = 0
 last_err = 0
+last_dist = 0
 
 while(True):
 	isLeftTouch = robot.leftTouch.isTouch()
 	isRightTouch = robot.rightTouch.isTouch()
 	if(isLeftTouch or isRightTouch):
 		robot.motors.forward(-30)
-			create_port(type, port)
 		robot.motors.right90deg()
 	else:
-		acc_err, last_err =robot.followWallStep(30, acc_err, last_err)
+		acc_err, last_err, last_diff_vel =robot.followWallStep(30, acc_err, last_err, last_dist)

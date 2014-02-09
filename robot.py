@@ -23,32 +23,54 @@ class Robot:
 		Follow wall within 'distance' cm
 		"""
 		print "Follow wall within ", prefer_wall_distance, " cm."
+
 		acc_err = 0
 		last_err = 0
+		last_dist = 0
 		while(True):
-			acc_err, last_err = self.followWallStep(prefer_wall_distance, acc_err, last_err)
+			acc_err, last_err, last_diff_vel = self.followWallStep(prefer_wall_distance, acc_err, last_err, last_dist)
 		
-	def followWallStep(self, prefer_wall_distance, acc_err=0, last_err=0):
-		diff_weight = 20
+	def followWallStep(self, prefer_wall_distance, acc_err=0, last_err=0, last_z = 0):
 		# read sonar
 		z = self.sonar.getSmoothSonarDistance(0.05)
 
 		print "Distance from the wall ", z
-		
+				
 		err = (prefer_wall_distance - z)
 		err = limitTo(err, -10, 10)
 		derror = err - last_err
 		acc_err += err
-		acc_err = limitTo(acc_err, -10, 10)  # HACK: shouldn't need to do this
-		diff_vel = FOLLOW_WALL_KP*err + FOLLOW_WALL_KI*acc_err + FOLLOW_WALL_KD * derror
+		#acc_err = limitTo(acc_err, -10, 10)  # HACK: shouldn't need to do this
+
+		if(err < 0):
+			kp = FOLLOW_WALL_KP_FAR
+		else:
+			kp = FOLLOW_WALL_KP_NEAR
+		
+		I_adjust = limitTo(FOLLOW_WALL_KI*acc_err, -5, 5)
+
+		diff_vel = kp*err + I_adjust + FOLLOW_WALL_KD * derror
+		
+		print "err : ", err, acc_err
+
+		if(err*last_err <= 0):
+			acc_err = 0
+		print kp*err, I_adjust, FOLLOW_WALL_KD * derror
+		
+		print "RERR : ", abs(err) - abs(last_err)
+
+		ERR_T = 3
+		#if(abs(last_err) - abs(err) > ERR_T):
+		#	diff_vel = 0
 
 		# set moving speed
-		new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel*diff_weight))
-		new_right_speed = FWD_VEL - FWD_SIGN*int(round(diff_vel*diff_weight))
+		new_left_speed  = FWD_VEL + FWD_SIGN*int(round(diff_vel))
+		new_right_speed = FWD_VEL - FWD_SIGN*int(round(diff_vel))
 		self.motors.setSpeed(new_left_speed, new_right_speed)
 		time.sleep(0.01)
 
-		return (acc_err, err)
+		last_z = z
+		return (acc_err, err, last_z)
 
 	def keepDistanceFront(self, distance):
 		"""
@@ -67,9 +89,15 @@ class Robot:
 			err = z - distance
 			acc_err += err
 			derror = err - last_err
-			print err, acc_err
+			print "Current distance : ", z
 			speed = KEEP_DISTANCE_FRONT_KP * err + KEEP_DISTANCE_FRONT_KI * acc_err + KEEP_DISTANCE_FRONT_KD * derror
-
+			print speed, err, acc_err, derror
+			#if(abs(err) > 3 and speed != 0 and abs(speed) < LOWEST_VEL):
+			#	direction = speed/abs(speed)
+			#	speed = direction*LOWEST_VEL
+			if(err*last_err < 0):
+				acc_err = 0
+			print "mul", err*last_err
 			self.motors.setSpeed(speed)
 			last_err = err
 			time.sleep(0.01)

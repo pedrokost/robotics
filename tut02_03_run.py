@@ -10,5 +10,4 @@ robot = Robot(leftMotorPort=LEFT_MOTOR,
 
 # Main Program
 acc_err = 0
-
 robot.followWall(30)

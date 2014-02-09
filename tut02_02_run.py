@@ -13,4 +13,5 @@ robot = Robot(leftMotorPort=LEFT_MOTOR,
 # Main Program
 
 while(True):
+	#robot.motors.setSpeed(LOWEST_VEL)
 	robot.keepDistanceFront(30)
