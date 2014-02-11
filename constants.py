@@ -1,6 +1,7 @@
 import math
 from BrickPi import *
 
+NEAR_ZERO = 0.0000001
 M_PI = math.pi   # for backwards compatibility
 
 W_RADIUS = 3 # wheel radius in cm
