@@ -29,24 +29,15 @@ sshfs pi@129.31.196.157:/home/pi ~/robot
 
 ### Via MAC Address
 
-#### ssh
-
-```
-~dcw/tmp/git-clone-test/raspberry-pi-wifi/ssh-pi 80:1f:02:af:31:19
-```
-
-#### scp via MAC Address
-
-```
-bash -c 'export PERL5LIB=/homes/dcw/tmp/git-clone-test/raspberry-pi-wifi/PERSISTENT_TUPLES; ~/robot/scp-pi 80:1f:02:af:31:19'
-```
-
 #### Adding aliases
 
 To simplify connecting via MAC address you should add the following lines to ~/.cshrc
 
 ```
-alias pi "~dcw/tmp/git-clone-test/raspberry-pi-wifi/ssh-pi 80:1f:02:af:31:19"
-alias pithon "bash -c 'export PERL5LIB=/homes/dcw/tmp/git-clone-test/raspberry-pi-wifi/PERSISTENT_TUPLES; ./scp-pi 80:1f:02:af:31:19'"
+setenv ICL_USER_PASS user:password
+
+alias pi-ip 'curl -s --data "macaddress=80:1f:02:af:31:19" --user $ICL_USER_PASS https://www.doc.ic.ac.uk/~jrj07/robotics/index.cgi | grep -E -o "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" | head -n 1'
+alias pi-ssh "ssh pi@`pi-ip`"
+alias pi-scp "scp ./*.py pi@`pi-ip`:~/rapp/"
 ```
 
