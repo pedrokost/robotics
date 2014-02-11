@@ -30,7 +30,7 @@ leftVel = 0
 rightVel = 0
 
 while True:
-	time.sleep(0.1)
+	time.sleep(0.05)
 
 	# get encoder data (for actual run)
 	#enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
