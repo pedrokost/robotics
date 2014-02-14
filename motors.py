@@ -25,6 +25,8 @@ class Motors:
 
 # New Version of motors.py
 	def setVel(self, prefer_left_vel, prefer_right_vel, current_left_vel, current_right_vel):
+		print "Prefer : "
+		print prefer_left_vel, prefer_right_vel
 		self.setLeftVel(prefer_left_vel, current_left_vel)
 		self.setRightVel(prefer_right_vel, current_right_vel)
 

@@ -5,7 +5,7 @@ ACCEPTABLE_ANGLE = math.pi/36
 ACCEPTABLE_DISTANCE = 2
 
 NAV_FWD_VEL = 25
-NAV_ROT_VEL = 5
+NAV_ROT_VEL = 15
 
 class Navigator:
 	def navigateToWaypoint(self, robotState, goalPoint):
@@ -13,9 +13,6 @@ class Navigator:
 			This function is to obtain the proper control command (leftVel, rightVel) for 		                navigating the robot from robotState(x, y, th) to goalPoint(x, y)
 		"""
 
-		leftVel = NAV_FWD_VEL
-		rightVel = NAV_FWD_VEL
-		return (leftVel, rightVel)
 		# calculate different from goal point
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
@@ -23,8 +20,11 @@ class Navigator:
 		prefer_th = atan2(dy, dx)
 		d_th = toPIPI(prefer_th - robotState[2])
 
+		#print "Prefer TH: ", prefer_th*180/pi
+		#print "DT : ", d_th*180/pi
 		# check if angle error is within acceptable region
 		if(abs(d_th) >= ACCEPTABLE_ANGLE):
+			print "Rotate"
 			if(d_th > 0):
 				leftVel = -NAV_ROT_VEL
 				rightVel = NAV_ROT_VEL

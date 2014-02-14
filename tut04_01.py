@@ -32,8 +32,8 @@ particleFilter = ParticleFilter()
 particleFilter.initialize()
 
 # initialize way points
-#wayPoints = [(40, 0), (40, 40), (0, 40), (0, 0)]
-wayPoints = [(40, 0)]
+wayPoints = [(40, 0), (40, 40), (0, 40), (0, 0)]
+#wayPoints = [(40, 0)]
 drawTrajectory(wayPoints)
 currentPointIndex = 0
 
@@ -47,16 +47,16 @@ while True:
 	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
 	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
 
-	print enc_distL, enc_dtL
 	enc_velL = enc_distL/enc_dtL;
 	enc_velR = enc_distR/enc_dtL;
 
+	#print enc_distL
 	# temp encoder data (for simulation only)
-	#temp_dt = 0.05;
-	#enc_velL = leftVel;
-	#enc_velR = rightVel;
-	#enc_distL = leftVel*temp_dt;
-	#enc_distR = rightVel*temp_dt;
+	temp_dt = 0.05;
+	enc_velL = leftVel;
+	enc_velR = rightVel;
+	enc_distL = leftVel*temp_dt;
+	enc_distR = rightVel*temp_dt;
 
 
 	# motion update
@@ -68,8 +68,8 @@ while True:
 	# get predict state
 	robotState = particleFilter.getPredictState()
 
-	#print "Current State : ", robotState[0], robotState[1], robotState[2]
-	#print "Goal : ", currentPointIndex, wayPoints[currentPointIndex][0], wayPoints[currentPointIndex][1]
+	#print "From : ", int(robotState[0]), int(robotState[1]), int(robotState[2]*180/pi)
+	#print "To : ", currentPointIndex, int(wayPoints[currentPointIndex][0]), int(wayPoints[currentPointIndex][1])
 
 	# set control signal
 	leftVel, rightVel = navigator.navigateToWaypoint(robotState, wayPoints[currentPointIndex])

@@ -1,8 +1,8 @@
-import math
+from math import pi
 from BrickPi import *
 
 NEAR_ZERO = 0.0000001
-M_PI = math.pi   # for backwards compatibility
+M_PI = pi   # for backwards compatibility
 
 W_RADIUS = 2 # wheel radius in cm
 RW_DIST = 5.4 # distance from center of the robot to center of the wheel

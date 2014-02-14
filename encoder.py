@@ -17,8 +17,8 @@ class Encoder:
 		"""
 		BrickPiUpdateValues()
 		degree = ( BrickPi.Encoder[motor_port] % 720 ) * 0.5
-		radian = ( degree * math.pi / 180 )
-		return radian*ENCODER_RATIO
+		radian = toPIPI( degree * math.pi / 180 )
+		return radian
 
 	def getMovingDistance(self, motor_port):
 		"""
@@ -28,12 +28,21 @@ class Encoder:
 		current_time = time.time()
 		if(motor_port == LEFT_MOTOR):
 			dt = current_time - self.prev_timeL
-			distance = toPIPI(current_radian - self.prev_radianL) * W_RADIUS
+			dth = toPIPI(current_radian - self.prev_radianL)
+			distance = dth * W_RADIUS
+			#print "*********************************************"
+			#print current_radian*180/math.pi
+			#print self.prev_radianL*180/math.pi
+			#print (current_radian - self.prev_radianL)*180/math.pi
+			#print dth*180/math.pi
+			if(dth > 3): print "Shoot!"
 			self.prev_radianL = current_radian
 			self.prev_timeL = current_time
 		else:	
 			dt = current_time - self.prev_timeR
-			distance = toPIPI(current_radian - self.prev_radianR) * W_RADIUS
+			dth = toPIPI(current_radian - self.prev_radianR)
+			distance = dth * W_RADIUS
+			#print "R : ", current_radian - self.prev_radianR
 			self.prev_radianR = current_radian
 			self.prev_timeR = current_time
 		return (FWD_SIGN*distance, dt)
