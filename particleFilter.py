@@ -3,17 +3,11 @@ from math import *
 from utilities import *
 import random
 
-# for display
-DISPLAY_SCALE_X = 5
-DISPLAY_SCALE_Y = 5
-DISPLAY_OFFSET_X = 40
-DISPLAY_OFFSET_Y = 40
-
 # for particle filter
 NUMBER_OF_PARTICLES = 100
-sigmaE = 0#0.5
-sigmaF = 0#pi/720
-sigmaG = 0#pi/180
+sigmaE = 0#0.08
+sigmaF = pi/1000
+sigmaG = pi/5000
 
 
 
@@ -40,28 +34,34 @@ class ParticleFilter:
 			if(distR*distL > 0):
 				e = random.gauss(0, sigmaE)
 				f = random.gauss(0, sigmaF)
+				if(i == 0): # use first particle as mean
+					e = 0
+					f = 0
 				self.particleSet[i] = self._updateParticleTranslate(self.particleSet[i], motionD, e, f)
 			else:
 				g = random.gauss(0, sigmaG)
+				if(i == 0): # use first particle as mean
+					g = 0
 				self.particleSet[i] = self._updateParticleRotate(self.particleSet[i], motionTH, g)
 
 	def measurementUpdate(self):
 		pass
 
 	def getPredictState(self):
-		best_x = 0
-		best_y = 0
-		best_th = 0
-		for i in range(0, NUMBER_OF_PARTICLES):
-			best_x += self.particleSet[i][0]
-			best_y += self.particleSet[i][1]
-			best_th += self.particleSet[i][2]
-		
-		best_x /= NUMBER_OF_PARTICLES
-		best_y /= NUMBER_OF_PARTICLES
-		best_th /= NUMBER_OF_PARTICLES
+		return self.particleSet[0] # use first particle as mean
+		#best_x = 0
+		#best_y = 0
+		#best_th = 0
+		#for i in range(0, NUMBER_OF_PARTICLES):
+		#	best_x += self.particleSet[i][0]
+		#	best_y += self.particleSet[i][1]
+		#	best_th += self.particleSet[i][2]
+		#
+		#best_x /= NUMBER_OF_PARTICLES
+		#best_y /= NUMBER_OF_PARTICLES
+		#best_th /= NUMBER_OF_PARTICLES
 
-		return (best_x, best_y, best_th)
+		#return (best_x, best_y, best_th)
 
 
 	def drawParticles(self):

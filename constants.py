@@ -35,3 +35,9 @@ SONAR_SENSOR = PORT_4   # sonar sensor port
 
 # The array size of previous sonar meausurments
 DISTANCE_HISTORY_SIZE = 5   # make it odd. 
+
+# for display
+DISPLAY_SCALE_X = 10
+DISPLAY_SCALE_Y = 10
+DISPLAY_OFFSET_X = 200
+DISPLAY_OFFSET_Y = 200

@@ -2,8 +2,8 @@ from constants import *
 from BrickPi import *
 
 MOTOR_VEL_KP = 3
-MOTOR_VEL_KI = 0.01
-MOTOR_VEL_KD = 1.8
+MOTOR_VEL_KI = 0
+MOTOR_VEL_KD = 0
 
 class Motors:
 	def __init__(self, leftMotor, rightMotor):

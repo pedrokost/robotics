@@ -30,6 +30,6 @@ while True:
 	print "Right vel : ", enc_velR
 
 	# set control signal
-	leftVel = 15
-	rightVel = 15
+	leftVel = -20
+	rightVel = 20
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)

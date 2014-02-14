@@ -6,6 +6,15 @@ from encoder import *
 from random import uniform
 from navigator import Navigator
 
+def drawTrajectory(points):
+	n = len(points)
+	for i in range(0, n):
+		x0 = DISPLAY_OFFSET_X + DISPLAY_SCALE_X*points[i][0]
+		y0 = DISPLAY_OFFSET_Y + DISPLAY_SCALE_Y*points[i][1]
+		x1 = DISPLAY_OFFSET_X + DISPLAY_SCALE_X*points[(i + 1)%n][0]
+		y1 = DISPLAY_OFFSET_Y + DISPLAY_SCALE_Y*points[(i + 1)%n][1]
+		print "drawLine:" + str((x0, y0, x1, y1))
+
 leftMotorPort=LEFT_MOTOR
 rightMotorPort=RIGHT_MOTOR
 
@@ -24,6 +33,7 @@ particleFilter.initialize()
 
 # initialize way points
 wayPoints = [(40, 0), (40, 40), (0, 40), (0, 0)]
+drawTrajectory(wayPoints)
 currentPointIndex = 0
 
 leftVel = 0
@@ -55,8 +65,8 @@ while True:
 	# get predict state
 	robotState = particleFilter.getPredictState()
 
-	print "Current State : ", robotState[0], robotState[1], robotState[2]
-	print "Goal : ", currentPointIndex, wayPoints[currentPointIndex][0], wayPoints[currentPointIndex][1]
+	#print "Current State : ", robotState[0], robotState[1], robotState[2]
+	#print "Goal : ", currentPointIndex, wayPoints[currentPointIndex][0], wayPoints[currentPointIndex][1]
 
 	# set control signal
 	leftVel, rightVel = navigator.navigateToWaypoint(robotState, wayPoints[currentPointIndex])
