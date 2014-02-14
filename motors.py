@@ -14,15 +14,12 @@ class Motors:
 	prevError = [0, 0]
 	power = [0, 0]
 
-	# TODO do similar for porew
-
 	def __init__(self, leftMotor, rightMotor):
 		self.leftMotorPort = leftMotor
 		self.rightMotorPort = rightMotor
 		BrickPi.MotorEnable[leftMotor]  = 1 # Enable the Motor A
 		BrickPi.MotorEnable[rightMotor] = 1 # Enable the Motor B
 
-# New Version of motors.py
 	def setVel(self, prefer_left_vel, prefer_right_vel, current_left_vel, current_right_vel):
 		print "Prefer : "
 		print prefer_left_vel, prefer_right_vel
@@ -34,6 +31,12 @@ class Motors:
 
 	def setRightVel(self, prefer_vel, current_vel):
 		self._setVel(self.rightMotorPort, prefer_vel, current_vel)
+
+	def reset(self):
+		"""
+		Resets the power, but does immediately apply it to the motors
+		"""
+		self.power = [0, 0]
 
 	def _setVel(self, motor_port, prefer_vel, current_vel):
 		"""

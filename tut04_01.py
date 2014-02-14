@@ -40,6 +40,8 @@ currentPointIndex = 0
 leftVel = 0
 rightVel = 0
 
+lastAction = 'forward'
+
 while True:
 	time.sleep(0.05)
 
@@ -72,7 +74,11 @@ while True:
 	#print "To : ", currentPointIndex, int(wayPoints[currentPointIndex][0]), int(wayPoints[currentPointIndex][1])
 
 	# set control signal
-	leftVel, rightVel = navigator.navigateToWaypoint(robotState, wayPoints[currentPointIndex])
+	leftVel, rightVel, action = navigator.navigateToWaypoint(robotState, wayPoints[currentPointIndex])
+	if action is not lastAction:
+		robot.motors.reset()
+	lastAction = action
+
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# set waypoint index
