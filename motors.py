@@ -42,7 +42,7 @@ class Motors:
 		"""
 			Set Velocity in cm/s
 		"""
-		motor_index = LEFT_MOTOR_INDEX if motor_port == self.leftMotorPort else RIGHT_MOTOR_INDEX
+		motor_index = self.LEFT_MOTOR_INDEX if motor_port == self.leftMotorPort else self.RIGHT_MOTOR_INDEX
 
 		error = prefer_vel - current_vel
 		d_error = error - self.prevError[motor_index]
