@@ -37,22 +37,16 @@ class Motors:
 		"""
 			Set Velocity in cm/s
 		"""
-		# no longer need this. current_vel now passed as an input!
-		# get moving distance + current velocity
-		# distance, dt = encoder.getMovingDistance(motor_port)
-		# current_vel = distance/dt
-
-		MAP = {
-			self.leftMotorPort = {
-				prevError: self.leftMotorPrevErr
-				accError: self.leftMotorAccErr,
-				power: self.leftPower
-			},
-			self.rightMotorPort = {
-				prevError: self.rightMotorPrevErr
-				accError: self.rightMotorAccErr,
-				power: self.rightPower
-			}
+		MAP = {}
+		MAP[self.leftMotorPort] = {
+			'prevError': self.leftMotorPrevErr,
+			'accError': self.leftMotorAccErr,
+			'power': self.leftPower
+		}
+		MAP[self.rightMotorPort] = {
+			'prevError': self.rightMotorPrevErr,
+			'accError': self.rightMotorAccErr,
+			'power': self.rightPower
 		}
 
 		error = prefer_vel - current_vel
