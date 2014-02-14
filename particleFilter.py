@@ -3,42 +3,32 @@ from math import *
 from utilities import *
 import random
 
-# for particle filter
-NUMBER_OF_PARTICLES = 100
-sigmaE = 0.03
-sigmaF = pi/1000
-sigmaG = pi/5000
-
-
-
 class ParticleFilter:
-	def __init__(self):
-		self.particleSet = []
-		self.particleDraw = []
-		pass
+	particleSet = []
+	particleDraw = []
 
 	def initialize(self):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			self.particleSet.append((0, 0, 0)) # (x, y, th(radian))
+			self.particleSet.append((0, 0, 0))  # (x, y, th(radian))
 			self.particleDraw.append((0, 0, 0)) # (x, y, th(degree))
-		pass
 
 	def motionUpdate(self, distL, distR):
 		# calculate estimated motion
-		motionD = (distR + distL)/2
-		motionTH = (distR - distL)/(2*RW_DIST)
+		motionD  = (distR + distL)/2            # average moved direction of both wheels
+		motionTH = (distR - distL)/(2*RW_DIST)  # rotation (voluntary or not) 
 
 		# update particle
 		for i in range(0, NUMBER_OF_PARTICLES):
-			if(distR*distL > 0):
-				e = random.gauss(0, sigmaE)
-				f = random.gauss(0, sigmaF)
+			going_straight = distR*distL > 0 # if both motors moved to same direction, it goes forward
+			if going_straight:
+				e = random.gauss(0, SIGMA_E)
+				f = random.gauss(0, SIGMA_F)
 				if(i == 0): # use first particle as mean
 					e = 0
 					f = 0
 				self.particleSet[i] = self._updateParticleTranslate(self.particleSet[i], motionD, e, f)
-			else:
-				g = random.gauss(0, sigmaG)
+			else:  # rotating
+				g = random.gauss(0, SIGMA_G)
 				if(i == 0): # use first particle as mean
 					g = 0
 				self.particleSet[i] = self._updateParticleRotate(self.particleSet[i], motionTH, g)
@@ -48,19 +38,12 @@ class ParticleFilter:
 
 	def getPredictState(self):
 		return self.particleSet[0] # use first particle as mean
-		#best_x = 0
-		#best_y = 0
-		#best_th = 0
-		#for i in range(0, NUMBER_OF_PARTICLES):
-		#	best_x += self.particleSet[i][0]
-		#	best_y += self.particleSet[i][1]
-		#	best_th += self.particleSet[i][2]
-		#
-		#best_x /= NUMBER_OF_PARTICLES
-		#best_y /= NUMBER_OF_PARTICLES
-		#best_th /= NUMBER_OF_PARTICLES
 
-		#return (best_x, best_y, best_th)
+		# best_x = mean(self.particleSet[:][0])
+		# best_y = mean(self.particleSet[:][1])
+		# best_th = mean(self.particleSet[:][2])
+
+		# return (best_x, best_y, best_th)
 
 
 	def drawParticles(self):

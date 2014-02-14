@@ -42,3 +42,10 @@ DISPLAY_SCALE_X = 10
 DISPLAY_SCALE_Y = 10
 DISPLAY_OFFSET_X = 200
 DISPLAY_OFFSET_Y = 200
+
+
+# Porticle filter constants
+NUMBER_OF_PARTICLES = 100
+SIGMA_E = 0.03          # error noise when driving straight
+SIGMA_F = pi/1000       # angular error noise when driving straight
+SIGMA_G = pi/5000       # angular error noise when rotating
