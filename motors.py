@@ -10,7 +10,7 @@ class Motors:
 	LEFT_MOTOR_INDEX  = 0
 	RIGHT_MOTOR_INDEX = 1
 	# set up parameter for velocity control with PID
-	accErr = [0, 0]
+	accError = [0, 0]
 	prevError = [0, 0]
 	power = [0, 0]
 
