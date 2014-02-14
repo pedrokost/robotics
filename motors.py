@@ -1,9 +1,9 @@
 from constants import *
 from BrickPi import *
 
-MOTOR_VEL_KP = 5
+MOTOR_VEL_KP = 6
 MOTOR_VEL_KI = 0
-MOTOR_VEL_KD = 2
+MOTOR_VEL_KD = 0
 
 class Motors:
 	# The index indicates the element of the vector that belongs to each motor
@@ -19,10 +19,9 @@ class Motors:
 		self.rightMotorPort = rightMotor
 		BrickPi.MotorEnable[leftMotor]  = 1 # Enable the Motor A
 		BrickPi.MotorEnable[rightMotor] = 1 # Enable the Motor B
+		self.reset()
 
 	def setVel(self, prefer_left_vel, prefer_right_vel, current_left_vel, current_right_vel):
-		print "Prefer : "
-		print prefer_left_vel, prefer_right_vel
 		self.setLeftVel(prefer_left_vel, current_left_vel)
 		self.setRightVel(prefer_right_vel, current_right_vel)
 
@@ -37,6 +36,8 @@ class Motors:
 		Resets the power, but does immediately apply it to the motors
 		"""
 		self.power = [0, 0]
+		self.accError = [0, 0]
+		self.prevError = [0, 0]
 
 	def _setVel(self, motor_port, prefer_vel, current_vel):
 		"""

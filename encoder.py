@@ -28,21 +28,14 @@ class Encoder:
 		current_time = time.time()
 		if(motor_port == LEFT_MOTOR):
 			dt = current_time - self.prev_timeL
-			dth = toPIPI(current_radian - self.prev_radianL)
+			dth = toPIPI(current_radian - self.prev_radianL)*ENCODER_RATIO
 			distance = dth * W_RADIUS
-			#print "*********************************************"
-			#print current_radian*180/math.pi
-			#print self.prev_radianL*180/math.pi
-			#print (current_radian - self.prev_radianL)*180/math.pi
-			#print dth*180/math.pi
-			if(dth > 3): print "Shoot!"
 			self.prev_radianL = current_radian
 			self.prev_timeL = current_time
 		else:	
 			dt = current_time - self.prev_timeR
-			dth = toPIPI(current_radian - self.prev_radianR)
+			dth = toPIPI(current_radian - self.prev_radianR)*ENCODER_RATIO
 			distance = dth * W_RADIUS
-			#print "R : ", current_radian - self.prev_radianR
 			self.prev_radianR = current_radian
 			self.prev_timeR = current_time
 		return (FWD_SIGN*distance, dt)

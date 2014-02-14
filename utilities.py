@@ -33,3 +33,7 @@ def limitTo(value, min_v, max_v):
 	"""
 	return min(max(value, min_v), max_v)
 
+def diffDist(point0, point1):
+	dx = point0[0] - point1[0]
+	dy = point0[1] - point1[1]
+	return math.sqrt(dx*dx + dy*dy)
