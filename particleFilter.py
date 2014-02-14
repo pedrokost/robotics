@@ -39,11 +39,19 @@ class ParticleFilter:
 	def getPredictState(self):
 		return self.particleSet[0] # use first particle as mean
 
-		# best_x = mean(self.particleSet[:][0])
-		# best_y = mean(self.particleSet[:][1])
-		# best_th = mean(self.particleSet[:][2])
+		best_x = 0
+		best_y = 0
+		best_th = 0
+		for i in range(0, NUMBER_OF_PARTICLES):
+			best_x += self.particleSet[i][0]
+			best_y += self.particleSet[i][1]
+			best_th += self.particleSet[i][2]
+		
+		best_x /= NUMBER_OF_PARTICLES
+		best_y /= NUMBER_OF_PARTICLES
+		best_th /= NUMBER_OF_PARTICLES
 
-		# return (best_x, best_y, best_th)
+		return (best_x, best_y, best_th)
 
 
 	def drawParticles(self):
