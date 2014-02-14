@@ -57,6 +57,8 @@ class Motors:
 		MAP[motor_port]['accError'] = acc_error
 		MAP[motor_port]['prevError'] = error
 
+		print self.rightMotorAccErr
+
 		# update power
 		MAP[motor_port]['power'] += MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error
 		self._setMotorPower(motor_port, MAP[motor_port]['power'])
