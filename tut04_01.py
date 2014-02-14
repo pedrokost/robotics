@@ -33,17 +33,17 @@ while True:
 	time.sleep(0.05)
 
 	# get encoder data (for actual run)
-	#enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
-	#enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
-	#enc_velL = enc_distL/enc_dtL;
-	#enc_velR = enc_distR/enc_dtL;
+	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
+	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
+	enc_velL = enc_distL/enc_dtL;
+	enc_velR = enc_distR/enc_dtL;
 
 	# temp encoder data (for simulation only)
-	temp_dt = 0.5;
-	enc_velL = leftVel;
-	enc_velR = rightVel;
-	enc_distL = leftVel*temp_dt;
-	enc_distR = rightVel*temp_dt;
+	#temp_dt = 0.05;
+	#enc_velL = leftVel;
+	#enc_velR = rightVel;
+	#enc_distL = leftVel*temp_dt;
+	#enc_distR = rightVel*temp_dt;
 
 
 	# motion update

@@ -1,9 +1,9 @@
 from constants import *
 from BrickPi import *
 
-MOTOR_VEL_KP = 1
-MOTOR_VEL_KI = 0
-MOTOR_VEL_KD = 0
+MOTOR_VEL_KP = 3
+MOTOR_VEL_KI = 0.01
+MOTOR_VEL_KD = 1.8
 
 class Motors:
 	def __init__(self, leftMotor, rightMotor):
@@ -71,9 +71,6 @@ class Motors:
 			# update power
 			self.rightPower += MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error
 			self._setMotorPower(motor_port, self.rightPower)
-
-
-		pass
 
 	def _setMotorPower(self, motor_port, power):
 		BrickPi.MotorSpeed[motor_port] = int(round(power))

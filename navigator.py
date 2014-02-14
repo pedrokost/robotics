@@ -4,8 +4,8 @@ from math import *
 ACCEPTABLE_ANGLE = math.pi/36
 ACCEPTABLE_DISTANCE = 2
 
-NAV_FWD_VEL = 2
-NAV_ROT_VEL = 1
+NAV_FWD_VEL = 15
+NAV_ROT_VEL = 5
 
 class Navigator:
 	def navigateToWaypoint(self, robotState, goalPoint):
@@ -19,6 +19,10 @@ class Navigator:
 	
 		prefer_th = atan2(dy, dx)
 		d_th = toPIPI(prefer_th - robotState[2])
+
+		print "state = ", (robotState[2]*180/pi)
+		print "dth = ", d_th
+		print "accept = ", ACCEPTABLE_ANGLE
 
 		# check if angle error is within acceptable region
 		if(abs(d_th) >= ACCEPTABLE_ANGLE):

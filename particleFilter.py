@@ -1,6 +1,8 @@
 from constants import *
 from math import *
+from utilities import *
 import random
+
 # for display
 DISPLAY_SCALE_X = 5
 DISPLAY_SCALE_Y = 5
@@ -9,20 +11,22 @@ DISPLAY_OFFSET_Y = 40
 
 # for particle filter
 NUMBER_OF_PARTICLES = 100
-sigmaE = 0.5
-sigmaF = pi/720
-sigmaG = pi/180
+sigmaE = 0#0.5
+sigmaF = 0#pi/720
+sigmaG = 0#pi/180
 
 
 
 class ParticleFilter:
 	def __init__(self):
 		self.particleSet = []
+		self.particleDraw = []
 		pass
 
 	def initialize(self):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			self.particleSet.append((0, 0, 0)) # (x, y, th)
+			self.particleSet.append((0, 0, 0)) # (x, y, th(radian))
+			self.particleDraw.append((0, 0, 0)) # (x, y, th(degree))
 		pass
 
 	def motionUpdate(self, distL, distR):
@@ -61,22 +65,21 @@ class ParticleFilter:
 
 
 	def drawParticles(self):
-		displayParticleSet = []
 		for i in range(0, NUMBER_OF_PARTICLES):
-			disp_x = self.particleSet[i][0]*DISPLAY_SCALE_X + DISPLAY_OFFSET_X
-			disp_y = self.particleSet[i][1]*DISPLAY_SCALE_Y + DISPLAY_OFFSET_Y
-			disp_th = self.particleSet[i][2]
-			displayParticleSet.append((disp_x, disp_y, disp_th))
-  		print "drawParticles:" + str(displayParticleSet)
+			draw_x = int(self.particleSet[i][0]*DISPLAY_SCALE_X + DISPLAY_OFFSET_X)
+			draw_y = int(self.particleSet[i][1]*DISPLAY_SCALE_Y + DISPLAY_OFFSET_Y)
+			draw_th = int((self.particleSet[i][2] + pi)/pi*180) # change radian to degree
+			self.particleDraw[i] = (draw_x, draw_y, draw_th)
+  		print "drawParticles:" + str(self.particleDraw)
 
 	def _updateParticleTranslate(self, particleState, motionD, e, f):
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])
 		newY = particleState[1] + (motionD + e)*sin(particleState[2])
-		newTH = particleState[2] + f
+		newTH = toPIPI(particleState[2] + f)
 		return (newX, newY, newTH)
 
 	def _updateParticleRotate(self, particleState, motionTH, g):
 		newX = particleState[0]
 		newY = particleState[1]
-		newTH = particleState[2] + motionTH + g
+		newTH = toPIPI(particleState[2] + motionTH + g)
 		return (newX, newY, newTH)

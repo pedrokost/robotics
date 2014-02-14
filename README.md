@@ -40,3 +40,6 @@ alias pi-ip 'curl -s --data "macaddress=80:1f:02:af:31:19" --user $ICL_USER_PASS
 alias pi-ssh "ssh pi@`pi-ip`"
 alias pi-scp "scp ./*.py pi@`pi-ip`:~/rapp/"
 ```
+
+#### start server
+sudo /etc/init.d/nodejs.sh start
