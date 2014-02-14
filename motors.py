@@ -6,22 +6,21 @@ MOTOR_VEL_KI = 0
 MOTOR_VEL_KD = 2
 
 class Motors:
+	leftPower = 0
+	rightPower = 0
+
+	# set up parameter for velocity control with PID
+	leftMotorAccErr = 0
+	leftMotorPrevErr = 0
+
+	rightMotorAccErr = 0
+	rightMotorPrevErr = 0
+
 	def __init__(self, leftMotor, rightMotor):
 		self.leftMotorPort = leftMotor
 		self.rightMotorPort = rightMotor
 		BrickPi.MotorEnable[leftMotor]  = 1 # Enable the Motor A
 		BrickPi.MotorEnable[rightMotor] = 1 # Enable the Motor B
-
-		self.leftPower = 0
-		self.rightPower = 0
-
-		# set up parameter for velocity control with PID
-		self.leftMotorAccErr = 0
-		self.leftMotorPrevErr = 0
-
-		self.rightMotorAccErr = 0
-		self.rightMotorPrevErr = 0
-
 
 # New Version of motors.py
 	def setVel(self, prefer_left_vel, prefer_right_vel, current_left_vel, current_right_vel):
@@ -43,34 +42,57 @@ class Motors:
 		# distance, dt = encoder.getMovingDistance(motor_port)
 		# current_vel = distance/dt
 
-		# get pid variables
+		MAP = {
+			self.leftMotorPort = {
+				prevError: self.leftMotorPrevErr
+				accError: self.leftMotorAccErr,
+				power: self.leftPower
+			},
+			self.rightMotorPort = {
+				prevError: self.rightMotorPrevErr
+				accError: self.rightMotorAccErr,
+				power: self.rightPower
+			}
+		}
+
 		error = prefer_vel - current_vel
-		if(motor_port == self.leftMotorPort):
-			# set variables
-			d_error = error - self.leftMotorPrevErr
-			acc_error = self.leftMotorAccErr + error
+		d_error = error - MAP[motor_port]['prevError']
+		acc_error = MAP[motor_port]['accError'] + error
 
-			# update static params
-			self.leftMotorAccErr = acc_error
-			self.leftMotorPrevErr = error
+		# update static params
+		MAP[motor_port]['accError'] = acc_error
+		MAP[motor_port]['prevError'] = error
 
-			# update power
-			self.leftPower += MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error
-			self._setMotorPower(motor_port, self.leftPower)
+		# update power
+		MAP[motor_port]['power'] += MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error
+		self._setMotorPower(motor_port, MAP[motor_port]['power'])
+
+		# if(motor_port == self.leftMotorPort):
+		# 	# set variables
+		# 	d_error = error - self.leftMotorPrevErr
+		# 	acc_error = self.leftMotorAccErr + error
+
+		# 	# update static params
+		# 	self.leftMotorAccErr = acc_error
+		# 	self.leftMotorPrevErr = error
+
+		# 	# update power
+		# 	self.leftPower += MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error
+		# 	self._setMotorPower(motor_port, self.leftPower)
 
 		
-		elif(motor_port == self.rightMotorPort):
-			# set variables
-			d_error = error - self.rightMotorPrevErr
-			acc_error = self.rightMotorAccErr + error
+		# elif(motor_port == self.rightMotorPort):
+		# 	# set variables
+		# 	d_error = error - self.rightMotorPrevErr
+		# 	acc_error = self.rightMotorAccErr + error
 
-			# update static params
-			self.rightMotorAccErr = acc_error
-			self.rightMotorPrevErr = error
+		# 	# update static params
+		# 	self.rightMotorAccErr = acc_error
+		# 	self.rightMotorPrevErr = error
 
-			# update power
-			self.rightPower += MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error
-			self._setMotorPower(motor_port, self.rightPower)
+		# 	# update power
+		# 	self.rightPower += MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error
+		# 	self._setMotorPower(motor_port, self.rightPower)
 
 	def _setMotorPower(self, motor_port, power):
 		BrickPi.MotorSpeed[motor_port] = FWD_SIGN*int(round(power))
