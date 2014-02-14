@@ -40,7 +40,7 @@ currentPointIndex = 0
 leftVel = 0
 rightVel = 0
 
-lastAction = 'forward'
+lastAction = 'None'
 
 while True:
 	time.sleep(0.05)
@@ -49,16 +49,17 @@ while True:
 	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
 	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
 
+	print enc_distL
 	enc_velL = enc_distL/enc_dtL;
 	enc_velR = enc_distR/enc_dtL;
 
 	#print enc_distL
 	# temp encoder data (for simulation only)
-	temp_dt = 0.05;
-	enc_velL = leftVel;
-	enc_velR = rightVel;
-	enc_distL = leftVel*temp_dt;
-	enc_distR = rightVel*temp_dt;
+	#temp_dt = 0.05;
+	#enc_velL = leftVel;
+	#enc_velR = rightVel;
+	#enc_distL = leftVel*temp_dt;
+	#enc_distR = rightVel*temp_dt;
 
 
 	# motion update
@@ -74,7 +75,8 @@ while True:
 	#print "To : ", currentPointIndex, int(wayPoints[currentPointIndex][0]), int(wayPoints[currentPointIndex][1])
 
 	# set control signal
-	leftVel, rightVel, action = navigator.navigateToWaypoint(robotState, wayPoints[currentPointIndex])
+	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
 	if action is not lastAction:
 		robot.motors.reset()
 	lastAction = action

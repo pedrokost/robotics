@@ -5,8 +5,8 @@ NEAR_ZERO = 0.0000001
 M_PI = pi   # for backwards compatibility
 
 W_RADIUS = 2 # wheel radius in cm
-RW_DIST = 5.4 # distance from center of the robot to center of the wheel
-ENCODER_RATIO = 24.0/40.0
+RW_DIST = 6 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
+ENCODER_RATIO = 24.0/40.0 # Gear Parameter
 
 EASING_C = 0.05  # determines acceleration strenght
 FWD_SIGN = -1     # 1 means forward, -1 means backwards??
