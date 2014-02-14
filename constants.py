@@ -4,11 +4,12 @@ from BrickPi import *
 NEAR_ZERO = 0.0000001
 M_PI = math.pi   # for backwards compatibility
 
-W_RADIUS = 3 # wheel radius in cm
-RW_DIST = 5.65 # distance from center of the robot to center of the wheel
+W_RADIUS = 2 # wheel radius in cm
+RW_DIST = 5.4 # distance from center of the robot to center of the wheel
+ENCODER_RATIO = 24.0/40.0
 
 EASING_C = 0.05  # determines acceleration strenght
-FWD_SIGN = 1     # 1 means forward, -1 means backwards??
+FWD_SIGN = -1     # 1 means forward, -1 means backwards??
 
 KEEP_DISTANCE_FRONT_KP = 20  # easing factor for maintaining equal distance from wall
 KEEP_DISTANCE_FRONT_KI = 0.5
@@ -25,8 +26,8 @@ FWD_VEL0 = FWD_VEL * 0.3  # Velocity before acceleration
 ROT_VEL  = FWD_SIGN*100  # Velocity of robot rotation
 LOWEST_VEL = 55
 
-LEFT_MOTOR = PORT_B     # Motor port left
-RIGHT_MOTOR = PORT_A    # Motor port right
+LEFT_MOTOR = PORT_A     # Motor port left
+RIGHT_MOTOR = PORT_B    # Motor port right
 
 LEFT_TOUCH = PORT_2
 RIGHT_TOUCH = PORT_1

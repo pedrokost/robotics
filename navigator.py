@@ -13,16 +13,15 @@ class Navigator:
 			This function is to obtain the proper control command (leftVel, rightVel) for 		                navigating the robot from robotState(x, y, th) to goalPoint(x, y)
 		"""
 
+		leftVel = NAV_FWD_VEL
+		rightVel = NAV_FWD_VEL
+		return (leftVel, rightVel)
 		# calculate different from goal point
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
 	
 		prefer_th = atan2(dy, dx)
 		d_th = toPIPI(prefer_th - robotState[2])
-
-		print ""
-		print "state = ", (robotState[2]*180/pi) , " prefer = ", (prefer_th*180/pi)
-		print "dth = ", d_th*180/pi, " accept = ", ACCEPTABLE_ANGLE*180/pi
 
 		# check if angle error is within acceptable region
 		if(abs(d_th) >= ACCEPTABLE_ANGLE):

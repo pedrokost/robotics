@@ -32,7 +32,8 @@ particleFilter = ParticleFilter()
 particleFilter.initialize()
 
 # initialize way points
-wayPoints = [(40, 0), (40, 40), (0, 40), (0, 0)]
+#wayPoints = [(40, 0), (40, 40), (0, 40), (0, 0)]
+wayPoints = [(40, 0)]
 drawTrajectory(wayPoints)
 currentPointIndex = 0
 
@@ -45,6 +46,8 @@ while True:
 	# get encoder data (for actual run)
 	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
 	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
+
+	print enc_distL, enc_dtL
 	enc_velL = enc_distL/enc_dtL;
 	enc_velR = enc_distR/enc_dtL;
 

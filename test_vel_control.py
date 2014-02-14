@@ -31,5 +31,7 @@ while True:
 
 	# set control signal
 	leftVel = -20
-	rightVel = 20
+	rightVel = -20
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
+	#robot.motors._setMotorPower(leftMotorPort, 250)
+	#robot.motors._setMotorPower(rightMotorPort, -250)

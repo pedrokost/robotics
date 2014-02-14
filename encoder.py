@@ -18,7 +18,7 @@ class Encoder:
 		BrickPiUpdateValues()
 		degree = ( BrickPi.Encoder[motor_port] % 720 ) * 0.5
 		radian = ( degree * math.pi / 180 )
-		return radian
+		return radian*ENCODER_RATIO
 
 	def getMovingDistance(self, motor_port):
 		"""

@@ -5,7 +5,7 @@ import random
 
 # for particle filter
 NUMBER_OF_PARTICLES = 100
-sigmaE = 0#0.08
+sigmaE = 0.03
 sigmaF = pi/1000
 sigmaG = pi/5000
 
@@ -24,7 +24,6 @@ class ParticleFilter:
 		pass
 
 	def motionUpdate(self, distL, distR):
-		print len(self.particleSet)
 		# calculate estimated motion
 		motionD = (distR + distL)/2
 		motionTH = (distR - distL)/(2*RW_DIST)
