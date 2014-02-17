@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+#
+#	ssh-pi:	retrieve (from the persistent tuple store)
+#		the IP address corresponding to a given
+#		RPiWifi MAC address, then ssh to pi@it
+#
+#	(C) Duncan C. White, Imperial College London, January 2014
+#
+
+use strict;
+use warnings;
+use Data::Dumper;
+
+use FindBin qw($Bin);
+use lib "$Bin/PERSISTENT_TUPLES";
+use PTuples;
+
+die "Usage: ssh-pi MAC_address\n" unless @ARGV == 1;
+my $mac = shift @ARGV;
+
+chdir $Bin;
+
+my $pth = PTuples->new("RPiWifi", DBUSER => "sys_ptuple_readonly",
+                       DBPASSWD => "xdjfkjsdf8743bhjkDHF*(Df7240F6>4yhdr" ) ||
+	die "ssh-pi: can't new PTuples(RPiWifi)\n";
+
+my @tuple = $pth->get( $mac );
+my $count = @tuple;
+
+if( $count == 1 )
+{
+	my $ip = shift @tuple;
+	print "Transferring files to pi\@$ip\n";
+	system( "scp ./*.py pi\@$ip:~/prac-files/" );
+} else
+{
+	print "debug: retrieved $count elements from ptuple($mac): @tuple\n";
+}
+
+$pth->disconnect;

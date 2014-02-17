@@ -41,3 +41,5 @@ alias pi-ssh "ssh pi@`pi-ip`"
 alias pi-scp "scp ./*.py pi@`pi-ip`:~/rapp/"
 ```
 
+#### start server
+sudo /etc/init.d/nodejs.sh start

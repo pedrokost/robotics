@@ -1,13 +1,15 @@
-import math
+from math import pi
 from BrickPi import *
 
-M_PI = math.pi   # for backwards compatibility
+NEAR_ZERO = 0.0000001
+M_PI = pi   # for backwards compatibility
 
-W_RADIUS = 3 # wheel radius in cm
-RW_DIST = 5.65 # distance from center of the robot to center of the wheel
+W_RADIUS = 2 # wheel radius in cm
+RW_DIST = 6 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
+ENCODER_RATIO = 24.0/40.0 # Gear Parameter
 
 EASING_C = 0.05  # determines acceleration strenght
-FWD_SIGN = 1     # 1 means forward, -1 means backwards??
+FWD_SIGN = -1     # 1 means forward, -1 means backwards??
 
 KEEP_DISTANCE_FRONT_KP = 20  # easing factor for maintaining equal distance from wall
 KEEP_DISTANCE_FRONT_KI = 0.5
@@ -24,8 +26,8 @@ FWD_VEL0 = FWD_VEL * 0.3  # Velocity before acceleration
 ROT_VEL  = FWD_SIGN*100  # Velocity of robot rotation
 LOWEST_VEL = 55
 
-LEFT_MOTOR = PORT_B     # Motor port left
-RIGHT_MOTOR = PORT_A    # Motor port right
+LEFT_MOTOR = PORT_A     # Motor port left
+RIGHT_MOTOR = PORT_B    # Motor port right
 
 LEFT_TOUCH = PORT_2
 RIGHT_TOUCH = PORT_1
@@ -34,3 +36,16 @@ SONAR_SENSOR = PORT_4   # sonar sensor port
 
 # The array size of previous sonar meausurments
 DISTANCE_HISTORY_SIZE = 5   # make it odd. 
+
+# for display
+DISPLAY_SCALE_X = 10
+DISPLAY_SCALE_Y = 10
+DISPLAY_OFFSET_X = 200
+DISPLAY_OFFSET_Y = 200
+
+
+# Porticle filter constants
+NUMBER_OF_PARTICLES = 100
+SIGMA_E = 0.03          # error noise when driving straight
+SIGMA_F = pi/1000       # angular error noise when driving straight
+SIGMA_G = pi/5000       # angular error noise when rotating
