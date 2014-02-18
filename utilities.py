@@ -37,3 +37,9 @@ def diffDist(point0, point1):
 	dx = point0[0] - point1[0]
 	dy = point0[1] - point1[1]
 	return math.sqrt(dx*dx + dy*dy)
+
+def cumsum(list):
+    total = 0
+    for x in list:
+        total += x
+        yield total
