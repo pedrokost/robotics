@@ -9,14 +9,17 @@ from Canvas import *
 SIGMA_S = 3
 LIK_K = 0.01
 
+INIT_X = 10
+INIT_Y = 10
+INIT_TH = 0
 class ParticleFilter:
 	particleSet = []
 	particleDraw = []
 
 	def __init__(self, Map, canvas):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			self.particleSet.append((0, 0, 0, 1/NUMBER_OF_PARTICLES))  # (x, y, th(radian), w)
-			self.particleDraw.append((0, 0, 0)) # (x, y, th(degree))
+			self.particleSet.append((INIT_X, INIT_Y, INIT_TH, 1.0/NUMBER_OF_PARTICLES))  # (x, y, th(radian), w)
+			self.particleDraw.append((0, 0, 0, 0)) # (x, y, th(degree), w)
 		self.Map = Map
 		self.canvas = canvas
 
@@ -43,51 +46,61 @@ class ParticleFilter:
 
 	def measurementUpdate(self, z):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			self.particleSet[i] *= _calculate_likelihood(self.particleSet[i][0], self.particleSet[i][1], self.particleSet[i][2], z)
-		pass
+			p = self.particleSet[i]
+			new_w = self._calculate_likelihood(p[0], p[1], p[2], z)*p[3]
+			self.particleSet[i] = (p[0], p[1], p[2], new_w) 
 
 	def compute_m(self, Ax, Ay, Bx, By, x, y, theta):
-		return ((By - Ay)*(Ax - x) - (Bx - Ax)*(Ay - y)) / ((By - Ay)*cos(theta) - (Bx - Ax)*sin(theta))
+		bottom = ((By - Ay)*cos(theta) - (Bx - Ax)*sin(theta))
+		if(bottom == 0):
+			return 0
+		return ((By - Ay)*(Ax - x) - (Bx - Ax)*(Ay - y)) / bottom
 
-	def wall_intersection(self, x, m, theta):
+	def wall_intersection(self, x, y, theta, m):
 		Cx = x + m*cos(theta)			
 		Cy = y + m*sin(theta)
 		return Cx, Cy
 
 	def is_wall_boundary(self, Ax, Ay, Bx, By, Cx, Cy):
 		AB = (Bx - Ax, By - Ay)
-		lenAB = sqrt(AB[0]*AB[0], AB[1]*AB[1])
+		lenAB = sqrt(AB[0]*AB[0] + AB[1]*AB[1])
 		AC = (Cx - Ax, Cy - Ay)
-		lenAC = sqrt(AC[0]*AC[0], AC[1]*AC[1])
+		lenAC = sqrt(AC[0]*AC[0] + AC[1]*AC[1])
 		return ((AB[0]*AC[0] + AB[1]*AC[1] > 0) and (lenAC < lenAB))
 
-	# likelihood function for particle at state(x, y, theta) and current sonar measurement is z
-	def _calculate_likelihood(self, x, y, theta, z):
-		nWalls = len(self.Map)
+	def getIdealM(self):
+		return self._get_predict_m(self.particleSet[0][0], self.particleSet[0][1], self.particleSet[0][2])
+
+	# return -1 if not intersect with any wall
+	def _get_predict_m(self, x, y, theta):
+		nWalls = len(self.Map.walls)
 
 		best_m = -1
 		# estimate sonar measurement from the predict one of each wall
 		for i in range(0, nWalls):
 			# predict m of this wall
-			Ax = self.Map[i][0]
-			Ay = self.Map[i][1]
-			Bx = self.Map[i][2]
-			By = self.Map[i][3]
+			Ax = self.Map.walls[i][0]
+			Ay = self.Map.walls[i][1]
+			Bx = self.Map.walls[i][2]
+			By = self.Map.walls[i][3]
 			predictM = self.compute_m(Ax, Ay, Bx, By, x, y, theta)
 
 			# calculate crashing point
-			Cx, Cy = self.wall_intersection(x, m, theta)
+			Cx, Cy = self.wall_intersection(x, y, theta, predictM)
 
 			# check if the point is in the wall boundary
 			if not self.is_wall_boundary(Ax, Ay, Bx, By, Cx, Cy):
 				continue
-
+			
 			# check if predict distance is minimum
-			if(best_m < 0):
+			if(best_m < 0 or best_m > predictM):  # the first possible or better
 				best_m = predictM
-			elif(best_m > predictM):
-				best_m = predictM
+		return best_m
 
+
+	# likelihood function for particle at state(x, y, theta) and current sonar measurement is z
+	def _calculate_likelihood(self, x, y, theta, z):
+		best_m = self._get_predict_m(x, y, theta)
 		if(best_m < 0):
 			print "Something wrong!"
 
@@ -130,18 +143,16 @@ class ParticleFilter:
 		cumWeights = list(cumsum(weights))
 		newParticleSet = []
 		for i in xrange(0, NUMBER_OF_PARTICLES):
-			index = bisect(cumWeights, uniform(0, 1))  # O(logn)
+			index = bisect(cumWeights, uniform(0, 1)) -1 #Hack  # O(logn)
 			(x, y, t, _) = self.particleSet[index]
 			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
 		self.particleSet = newParticleSet
 
 	def drawParticles(self):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			draw_x = int(self.particleSet[i][0]*DISPLAY_SCALE_X + DISPLAY_OFFSET_X)
-			draw_y = int(self.particleSet[i][1]*DISPLAY_SCALE_Y + DISPLAY_OFFSET_Y)
 			draw_th = int((self.particleSet[i][2] + pi)/pi*180) # change radian to degree
-			self.particleDraw[i] = (draw_x, draw_y, draw_th)
-		print "drawParticles:" + str(self.particleDraw)
+			self.particleDraw[i] = (self.particleSet[i][0], self.particleSet[i][1], draw_th, self.particleSet[i][3])
+		self.canvas.drawParticles(self.particleDraw)
 
 	def _updateParticleTranslate(self, particleState, motionD, e, f):
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])

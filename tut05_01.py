@@ -64,6 +64,7 @@ while True:
 	# get encoder data (for actual run)
 	#enc_distL, enc_velL = encoder.getMovingDistanceAndVelocity(leftMotorPort);
 	#enc_distR, enc_velR = encoder.getMovingDistanceAndVelocity(rightMotorPort);
+
 	#print enc_distL
 	# temp encoder data (for simulation only)
 	temp_dt = 0.05;
@@ -74,7 +75,7 @@ while True:
 
 	# measure from sonar
 	#z = robot.sonar.getSmoothSonarDistance(0.05)
-	z = 50
+	z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
