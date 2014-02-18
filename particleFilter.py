@@ -45,6 +45,20 @@ class ParticleFilter:
 			self.particleSet[i] *= _calculate_likelihood(self.particleSet[i][0], self.particleSet[i][1], self.particleSet[i][2], z)
 		pass
 
+	def compute_m(self, Ax, Ay, Bx, By, x, y, theta):
+		return ((By - Ay)*(Ax - x) - (Bx - Ax)*(Ay - y)) / ((By - Ay)*cos(theta) - (Bx - Ax)*sin(theta))
+
+	def wall_intersection(self, x, m, theta):
+		Cx = x + m*cos(theta)			
+		Cy = y + m*sin(theta)
+		return Cx, Cy
+
+	def is_wall_boundary(self, Ax, Ay, Bx, By, Cx, Cy):
+		AB = (Bx - Ax, By - Ay)
+		lenAB = sqrt(AB[0]*AB[0], AB[1]*AB[1])
+		AC = (Cx - Ax, Cy - Ay)
+		lenAC = sqrt(AC[0]*AC[0], AC[1]*AC[1])
+		return ((AB[0]*AC[0] + AB[1]*AC[1] > 0) and (lenAC < lenAB))
 
 	# likelihood function for particle at state(x, y, theta) and current sonar measurement is z
 	def _calculate_likelihood(self, x, y, theta, z):
@@ -58,24 +72,19 @@ class ParticleFilter:
 			Ay = self.Map[i][1]
 			Bx = self.Map[i][2]
 			By = self.Map[i][3]
-			predictM = ((By - Ay)*(Ax - x) - (Bx - Ax)*(Ay - y)) / ((By - Ay)*cos(theta) - (Bx - Ax)*sin(theta))
+			predictM = self.compute_m(Ax, Ay, Bx, By, x, y, theta)
 
 			# calculate crashing point
-			Cx = x + predictM*cos(theta)			
-			Cy = y + predictM*sin(theta)
+			Cx, Cy = self.wall_intersection(x, m, theta)
 
 			# check if the point is in the wall boundary
-			AB = (Bx - Ax, By - Ay)
-			lenAB = sqrt(AB[0]*AB[0], AB[1]*AB[1])
-			AC = (Cx - Ax, Cy - Ay)
-			lenAC = sqrt(AC[0]*AC[0], AC[1]*AC[1])
-			if(((AB[0]*AC[0] + AB[1]*AC[1] > 0) and (lenAC < lenAB)) == False):
+			if not self.is_wall_boundary(Ax, Ay, Bx, By, Cx, Cy):
 				continue
 
 			# check if predict distance is minimum
 			if(best_m < 0):
 				best_m = predictM
-			else if(best_m > predictM)
+			elif(best_m > predictM):
 				best_m = predictM
 
 		if(best_m < 0):
