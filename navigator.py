@@ -5,8 +5,8 @@ from constants import *
 ACCEPTABLE_ANGLE = pi/180  # about 1 degress
 ACCEPTABLE_DISTANCE = 1  # cm
 
-NAV_FWD_VEL = 5
-NAV_ROT_VEL = 3
+NAV_FWD_VEL = 30 #5
+NAV_ROT_VEL = 5 #3
 
 class Navigator:
 	def __init__(self):
@@ -68,7 +68,7 @@ class Navigator:
 
 	def navigateToWayPoint(self, robotState, goalPoint):
 		"""
-			This function is to obtain the proper control command (leftVel, rightVel) for 		                navigating the robot from robotState(x, y, th) to goalPoint(x, y)
+			This function is to obtain the proper control command (leftVel, rightVel) for navigating the robot from robotState(x, y, th) to goalPoint(x, y)
 		"""
 
 		# calculate different from goal point

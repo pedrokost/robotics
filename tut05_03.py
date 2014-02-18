@@ -8,12 +8,8 @@ from navigator import Navigator
 
 def drawTrajectory(points):
 	n = len(points)
-	for i in range(0, n):
-		x0 = DISPLAY_OFFSET_X + DISPLAY_SCALE_X*points[i][0]
-		y0 = DISPLAY_OFFSET_Y + DISPLAY_SCALE_Y*points[i][1]
-		x1 = DISPLAY_OFFSET_X + DISPLAY_SCALE_X*points[(i + 1)%n][0]
-		y1 = DISPLAY_OFFSET_Y + DISPLAY_SCALE_Y*points[(i + 1)%n][1]
-		print "drawLine:" + str((x0, y0, x1, y1))
+	for i in range(0, n - 1):
+		canvas.drawLine((points[i][0], points[i][1], points[(i + 1)%n][0], points[(i + 1)%n][1]));
 
 #
 # initialize device
@@ -54,13 +50,14 @@ mymap.add_wall((210,84,210,0));     # g
 mymap.add_wall((210,0,0,0));        # h
 mymap.draw();
 
-# initialize particle filter
-particleFilter = ParticleFilter(mymap, canvas)
-
 # initialize way points
-wayPoints = [(40, 0), (40, 40), (0, 40), (0, 0)]
+wayPoints = [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
 drawTrajectory(wayPoints)
-currentPointIndex = 0
+currentPointIndex = 1
+
+# initialize particle filter
+particleFilter = ParticleFilter(mymap, canvas, (84, 30, 0))
+
 
 # initialize control command
 leftVel = 0

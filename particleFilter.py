@@ -9,19 +9,19 @@ from Canvas import *
 SIGMA_S = 3
 LIK_K = 0.01
 
-INIT_X = 10
-INIT_Y = 10
-INIT_TH = 0
 class ParticleFilter:
 	particleSet = []
 	particleDraw = []
 
-	def __init__(self, Map, canvas):
+	def __init__(self, Map, canvas, start_pose):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			self.particleSet.append((INIT_X, INIT_Y, INIT_TH, 1.0/NUMBER_OF_PARTICLES))  # (x, y, th(radian), w)
+			self.particleSet.append((start_pose[0], start_pose[1], start_pose[2], 1.0/NUMBER_OF_PARTICLES))  # (x, y, th(radian), w)
 			self.particleDraw.append((0, 0, 0, 0)) # (x, y, th(degree), w)
 		self.Map = Map
 		self.canvas = canvas
+
+		print "Best : ", self._get_predict_m(181.155146345, 31.6499539921, 0.177086156456)
+		time.sleep(100)
 
 	def motionUpdate(self, distL, distR):
 		# calculate estimated motion
@@ -84,6 +84,9 @@ class ParticleFilter:
 			Bx = self.Map.walls[i][2]
 			By = self.Map.walls[i][3]
 			predictM = self.compute_m(Ax, Ay, Bx, By, x, y, theta)
+			
+			if(predictM < 0):
+				continue
 
 			# calculate crashing point
 			Cx, Cy = self.wall_intersection(x, y, theta, predictM)
@@ -94,7 +97,8 @@ class ParticleFilter:
 			
 			# check if predict distance is minimum
 			if(best_m < 0 or best_m > predictM):  # the first possible or better
-				best_m = predictM
+				best_m = predictM			
+
 		return best_m
 
 
