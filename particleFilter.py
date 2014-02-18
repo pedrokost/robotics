@@ -13,11 +13,12 @@ class ParticleFilter:
 	particleSet = []
 	particleDraw = []
 
-	def initialize(self, Map):
+	def __init__(self, Map, canvas):
 		for i in range(0, NUMBER_OF_PARTICLES):
 			self.particleSet.append((0, 0, 0, 1/NUMBER_OF_PARTICLES))  # (x, y, th(radian), w)
 			self.particleDraw.append((0, 0, 0)) # (x, y, th(degree))
 		self.Map = Map
+		self.canvas = canvas
 
 	def motionUpdate(self, distL, distR):
 		# calculate estimated motion
