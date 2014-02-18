@@ -60,7 +60,7 @@ class ParticleFilter:
 			draw_y = int(self.particleSet[i][1]*DISPLAY_SCALE_Y + DISPLAY_OFFSET_Y)
 			draw_th = int((self.particleSet[i][2] + pi)/pi*180) # change radian to degree
 			self.particleDraw[i] = (draw_x, draw_y, draw_th)
-  		# print "drawParticles:" + str(self.particleDraw)
+		print "drawParticles:" + str(self.particleDraw)
 
 	def _updateParticleTranslate(self, particleState, motionD, e, f):
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])
