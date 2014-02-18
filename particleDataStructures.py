@@ -95,7 +95,8 @@ mymap.add_wall((210,84,210,0));     # g
 mymap.add_wall((210,0,0,0));        # h
 mymap.draw();
 
-particles = Particles();
+
+particles = Particles(;
 
 t = 0;
 while True:

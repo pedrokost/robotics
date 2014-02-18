@@ -1,7 +1,8 @@
 # A Map class containing walls
 class Map:
-    def __init__(self):
+    def __init__(self, canvas):
         self.walls = [];
+	self.canvas = canvas
 
     def add_wall(self,wall):
         self.walls.append(wall);
@@ -11,4 +12,4 @@ class Map:
 
     def draw(self):
         for wall in self.walls:
-            canvas.drawLine(wall);
+            self.canvas.drawLine(wall);
