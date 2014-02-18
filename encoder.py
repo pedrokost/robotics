@@ -20,9 +20,21 @@ class Encoder:
 		radian = toPIPI( degree * math.pi / 180 )
 		return radian
 
+	def getMovingDistanceAndVelocity(self, motor_port):
+		"""
+		Returns the last traveled distance segment (in cm),
+		together with the velocity of the segment
+		"""
+		dist, dtime = encoder.getMovingDistance(leftMotorPort);
+
+		vel = dist/dtime;
+
+		return dist, vel
+
+
 	def getMovingDistance(self, motor_port):
 		"""
-		Function to change encoder steps into distance(in cm)Current distance 36.0759556387
+		Function to change encoder steps into distance(in cm)
 		"""
 		current_radian = self.getAngle(motor_port)
 		current_time = time.time()

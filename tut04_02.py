@@ -51,7 +51,7 @@ while True:
 
 	print enc_distL
 	enc_velL = enc_distL/enc_dtL;
-	enc_velR = enc_distR/enc_dtL;
+	enc_velR = enc_distR/enc_dtR;
 
 	#print enc_distL
 	# temp encoder data (for simulation only)
