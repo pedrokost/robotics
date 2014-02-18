@@ -6,6 +6,15 @@ from encoder import *
 from random import uniform
 from navigator import Navigator
 
+def drawTrajectory(points):
+	n = len(points)
+	for i in range(0, n):
+		x0 = DISPLAY_OFFSET_X + DISPLAY_SCALE_X*points[i][0]
+		y0 = DISPLAY_OFFSET_Y + DISPLAY_SCALE_Y*points[i][1]
+		x1 = DISPLAY_OFFSET_X + DISPLAY_SCALE_X*points[(i + 1)%n][0]
+		y1 = DISPLAY_OFFSET_Y + DISPLAY_SCALE_Y*points[(i + 1)%n][1]
+		print "drawLine:" + str((x0, y0, x1, y1))
+
 #
 # initialize device
 #
@@ -65,7 +74,7 @@ while True:
 	#enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
 	#enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
 	#enc_velL = enc_distL/enc_dtL;
-	#enc_velR = enc_distR/enc_dtL;
+	#enc_velR = enc_distR/enc_dtR;
 
 	#print enc_distL
 	# temp encoder data (for simulation only)
@@ -77,7 +86,7 @@ while True:
 
 	# measure from sonar
 	#z = robot.sonar.getSmoothSonarDistance(0.05)
-	z = 50
+	z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
