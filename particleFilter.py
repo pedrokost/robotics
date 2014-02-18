@@ -1,7 +1,8 @@
 from constants import *
 from math import *
 from utilities import *
-import random
+from random import uniform, gauss
+from bisect import bisect
 
 class ParticleFilter:
 	particleSet = []
@@ -21,14 +22,14 @@ class ParticleFilter:
 		for i in range(0, NUMBER_OF_PARTICLES):
 			going_straight = distR*distL > 0 # if both motors moved to same direction, it goes forward
 			if going_straight:
-				e = random.gauss(0, SIGMA_E)
-				f = random.gauss(0, SIGMA_F)
+				e = gauss(0, SIGMA_E)
+				f = gauss(0, SIGMA_F)
 				if(i == 0): # use first particle as mean
 					e = 0
 					f = 0
 				self.particleSet[i] = self._updateParticleTranslate(self.particleSet[i], motionD, e, f)
 			else:  # rotating
-				g = random.gauss(0, SIGMA_G)
+				g = gauss(0, SIGMA_G)
 				if(i == 0): # use first particle as mean
 					g = 0
 				self.particleSet[i] = self._updateParticleRotate(self.particleSet[i], motionTH, g)
@@ -53,6 +54,26 @@ class ParticleFilter:
 
 		return (best_x, best_y, best_th)
 
+	def normalizeWeights(self):
+		"""
+		Normalizes the weight of the particles so that they all sum to 1
+		"""
+		s = sum([p[3] for p in self.particleSet])
+		self.particleSet = [(x, y, t, w/s) for (x, y, t, w) in self.particleSet]
+
+	def resample(self):
+		"""
+		Weight-proportionally resamples particles so that those with higher weight are more
+		likely to reproduce. The new particles have all uniform weights
+		"""
+		weights = [p[3] for p in self.particleSet]
+		cumWeights = list(cumsum(weights))
+		newParticleSet = []
+		for i in xrange(0, NUMBER_OF_PARTICLES):
+			index = bisect(cumWeights, uniform(0, 1))  # O(logn)
+			(x, y, t, _) = self.particleSet[index]
+			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
+		self.particleSet = newParticleSet
 
 	def drawParticles(self):
 		for i in range(0, NUMBER_OF_PARTICLES):
