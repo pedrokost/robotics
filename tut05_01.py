@@ -62,11 +62,8 @@ while True:
 	time.sleep(0.05)
 
 	# get encoder data (for actual run)
-	#enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
-	#enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
-	#enc_velL = enc_distL/enc_dtL;
-	#enc_velR = enc_distR/enc_dtL;
-
+	#enc_distL, enc_velL = encoder.getMovingDistanceAndVelocity(leftMotorPort);
+	#enc_distR, enc_velR = encoder.getMovingDistanceAndVelocity(rightMotorPort);
 	#print enc_distL
 	# temp encoder data (for simulation only)
 	temp_dt = 0.05;
@@ -91,21 +88,18 @@ while True:
 
 	# get predict state
 	robotState = particleFilter.getPredictState()
+	robotVelocity = [enc_velL, enc_velR]
 
 	# set control signal
-	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	if action is not lastAction:
-		robot.motors.reset()
-	lastAction = action
+	leftVel, rightVel = navigator.navigateToWayPoint(robotState, robotVelocity, wayPoints[currentPointIndex])
 
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# set waypoint index
 	if(abs(leftVel) < NEAR_ZERO and abs(rightVel) < NEAR_ZERO):
+		robot.motors.reset()
 		currentPointIndex += 1
-		if(currentPointIndex >= len(wayPoints)):
-			break
+		if(currentPointIndex >= len(wayPoints)): break
 
 	# draw particle
 	particleFilter.drawParticles()
