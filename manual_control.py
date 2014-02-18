@@ -29,15 +29,19 @@ while key != 'q':
         print "pressed: q"
     if key == 'u':
         print "pressed: top"
-        robot.setSpeed(FWD_VEL)
+        robot.motors._setMotorPower(LEFT_MOTOR, FWD_VEL)
+        robot.motors._setMotorPower(RIGHT_MOTOR, FWD_VEL)
     if key == 'e':
         print "pressed: bottom"
-        robot.setSpeed(-FWD_VEL)
+        robot.motors._setMotorPower(LEFT_MOTOR, -FWD_VEL)
+        robot.motors._setMotorPower(RIGHT_MOTOR, -FWD_VEL)
     if key == 'i':
         print "pressed: right"
-        robot.setSpeed(ROT_VEL, 0)
+        robot.motors._setMotorPower(LEFT_MOTOR, 0)
+        robot.motors._setMotorPower(RIGHT_MOTOR, ROT_VEL)
     if key == 'n':
         print "pressed: left"
-        robot.setSpeed(0, ROT_VEL)
+        robot.motors._setMotorPower(LEFT_MOTOR, ROT_VEL)
+        robot.motors._setMotorPower(RIGHT_MOTOR, 0)
 
 termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
