@@ -65,28 +65,28 @@ rightVel = 0
 lastAction = 'None'
 
 while True:
-	time.sleep(0.05)
+	time.sleep(0.01)
 
 	# get encoder data (for actual run)
-	#enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
-	#enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
-	#enc_velL = enc_distL/enc_dtL;
-	#enc_velR = enc_distR/enc_dtR;
+	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
+	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
+	enc_velL = enc_distL/enc_dtL;
+	enc_velR = enc_distR/enc_dtR;
 
 	#print enc_distL
 	# temp encoder data (for simulation only)
-	temp_dt = 0.05;
-	enc_velL = leftVel;
-	enc_velR = rightVel;
-	enc_distL = leftVel*temp_dt;
-	enc_distR = rightVel*temp_dt;
+	#temp_dt = 0.05;
+	#enc_velL = leftVel;
+	#enc_velR = rightVel;
+	#enc_distL = leftVel*temp_dt;
+	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
 	#z = robot.sonar.getSmoothSonarDistance(0.05)
 	z = particleFilter.getIdealM()
 
 	# motion update
-	particleFilter.motionUpdate(enc_distL, enc_distR)
+	particleFilter.motionUpdate(enc_distL, enc_distR) # Hack
 
 	# measurement update
 	particleFilter.measurementUpdate(z)
@@ -100,6 +100,7 @@ while True:
 
 	# print state
 	print "State : ", robotState
+	print "Goal : ", currentPointIndex, wayPoints[currentPointIndex]
 
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])

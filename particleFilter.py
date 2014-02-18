@@ -20,9 +20,6 @@ class ParticleFilter:
 		self.Map = Map
 		self.canvas = canvas
 
-		print "Best : ", self._get_predict_m(181.155146345, 31.6499539921, 0.177086156456)
-		time.sleep(100)
-
 	def motionUpdate(self, distL, distR):
 		# calculate estimated motion
 		motionD  = (distR + distL)/2            # average moved direction of both wheels
@@ -98,6 +95,11 @@ class ParticleFilter:
 			# check if predict distance is minimum
 			if(best_m < 0 or best_m > predictM):  # the first possible or better
 				best_m = predictM			
+
+		if(best_m < 0):
+			print "Something wrong!"
+			print (x, y, theta)
+			time.sleep(100)
 
 		return best_m
 

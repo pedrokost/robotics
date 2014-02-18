@@ -53,4 +53,4 @@ SIGMA_G = pi/5000       # angular error noise when rotating
 
 # How aggresively should it turn towards the goal
 # (determines the smoothness of the movement)
-GOAL_GREADYNESS = 0.1  # if close to goal can be more aggressive ... higher
+GOAL_GREADYNESS = 1  # if close to goal can be more aggressive ... higher

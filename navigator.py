@@ -5,8 +5,8 @@ from constants import *
 ACCEPTABLE_ANGLE = pi/180  # about 1 degress
 ACCEPTABLE_DISTANCE = 1  # cm
 
-NAV_FWD_VEL = 30 #5
-NAV_ROT_VEL = 5 #3
+NAV_FWD_VEL = 10
+NAV_ROT_VEL = 3
 
 class Navigator:
 	def __init__(self):
@@ -92,6 +92,7 @@ class Navigator:
 		else:
 			prefer_velL, prefer_velR = 0, 0
 
+		print "prefer : ", prefer_velL, prefer_velR
 		d_velL = (prefer_velL - velL) * GOAL_GREADYNESS
 		d_velR = (prefer_velR - velR) * GOAL_GREADYNESS
 
