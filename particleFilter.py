@@ -3,15 +3,21 @@ from math import *
 from utilities import *
 from random import uniform, gauss
 from bisect import bisect
+from Map import *
+from Canvas import *
+
+SIGMA_S = 3
+LIK_K = 0.01
 
 class ParticleFilter:
 	particleSet = []
 	particleDraw = []
 
-	def initialize(self):
+	def initialize(self, Map):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			self.particleSet.append((0, 0, 0))  # (x, y, th(radian))
+			self.particleSet.append((0, 0, 0, 1/NUMBER_OF_PARTICLES))  # (x, y, th(radian), w)
 			self.particleDraw.append((0, 0, 0)) # (x, y, th(degree))
+		self.Map = Map
 
 	def motionUpdate(self, distL, distR):
 		# calculate estimated motion
@@ -34,8 +40,52 @@ class ParticleFilter:
 					g = 0
 				self.particleSet[i] = self._updateParticleRotate(self.particleSet[i], motionTH, g)
 
-	def measurementUpdate(self):
+	def measurementUpdate(self, z):
+		for i in range(0, NUMBER_OF_PARTICLES):
+			self.particleSet[i] *= _calculate_likelihood(self.particleSet[i][0], self.particleSet[i][1], self.particleSet[i][2], z)
 		pass
+
+
+	# likelihood function for particle at state(x, y, theta) and current sonar measurement is z
+	def _calculate_likelihood(self, x, y, theta, z):
+		nWalls = len(self.Map)
+
+		best_m = -1
+		# estimate sonar measurement from the predict one of each wall
+		for i in range(0, nWalls):
+			# predict m of this wall
+			Ax = self.Map[i][0]
+			Ay = self.Map[i][1]
+			Bx = self.Map[i][2]
+			By = self.Map[i][3]
+			predictM = ((By - Ay)*(Ax - x) - (Bx - Ax)*(Ay - y)) / ((By - Ay)*cos(theta) - (Bx - Ax)*sin(theta))
+
+			# calculate crashing point
+			Cx = x + predictM*cos(theta)			
+			Cy = y + predictM*sin(theta)
+
+			# check if the point is in the wall boundary
+			AB = (Bx - Ax, By - Ay)
+			lenAB = sqrt(AB[0]*AB[0], AB[1]*AB[1])
+			AC = (Cx - Ax, Cy - Ay)
+			lenAC = sqrt(AC[0]*AC[0], AC[1]*AC[1])
+			if(((AB[0]*AC[0] + AB[1]*AC[1] > 0) and (lenAC < lenAB)) == False):
+				continue
+
+			# check if predict distance is minimum
+			if(best_m < 0):
+				best_m = predictM
+			else if(best_m > predictM)
+				best_m = predictM
+
+		if(best_m < 0):
+			print "Something wrong!"
+
+		# calculate likelihood
+		dz = z - best_m;
+		lik = exp(-(dz*dz)/(2*SIGMA_S*SIGMA_S)) + LIK_K
+
+		return lik
 
 	def getPredictState(self):
 		return self.particleSet[0] # use first particle as mean
@@ -87,10 +137,10 @@ class ParticleFilter:
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])
 		newY = particleState[1] + (motionD + e)*sin(particleState[2])
 		newTH = toPIPI(particleState[2] + f)
-		return (newX, newY, newTH)
+		return (newX, newY, newTH, particleState[3])
 
 	def _updateParticleRotate(self, particleState, motionTH, g):
 		newX = particleState[0]
 		newY = particleState[1]
 		newTH = toPIPI(particleState[2] + motionTH + g)
-		return (newX, newY, newTH)
+		return (newX, newY, newTH, particleState[3])
