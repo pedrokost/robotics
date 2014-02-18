@@ -70,8 +70,7 @@ class Navigator:
 		"""
 			This function is to obtain the proper control command (leftVel, rightVel) for 		                navigating the robot from robotState(x, y, th) to goalPoint(x, y)
 		"""
-
-		# calculate different from goal point
+		# calculate distance to goal point
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
 	
@@ -81,20 +80,16 @@ class Navigator:
 		# check if angle error is within acceptable region
 		if(abs(d_th) >= ACCEPTABLE_ANGLE):
 			if(d_th > 0):
-				action = 'RotateCCW'
-				leftVel = -NAV_ROT_VEL
-				rightVel = NAV_ROT_VEL
+				action = ACTION_ROTATE_CCW
+				leftVel, rightVel = -NAV_ROT_VEL, NAV_ROT_VEL
 			else:
-				action = 'RotateCW'
-				leftVel = NAV_ROT_VEL
-				rightVel = -NAV_ROT_VEL
+				action = ACTION_ROTATE_CW
+				leftVel, rightVel = NAV_ROT_VEL, -NAV_ROT_VEL
 		elif(sqrt(dx*dx + dy*dy) >= ACCEPTABLE_DISTANCE):
-			action = 'Forward'
-			leftVel = NAV_FWD_VEL
-			rightVel = NAV_FWD_VEL
+			action = ACTION_FORWARD
+			leftVel, rightVel = NAV_FWD_VEL, NAV_FWD_VEL
 		else:
-			action = 'Stop'
-			leftVel = 0
-			rightVel = 0
+			action = ACTION_STOP
+			leftVel, rightVel = 0, 0
 
 		return (leftVel, rightVel, action)

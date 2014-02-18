@@ -49,3 +49,9 @@ NUMBER_OF_PARTICLES = 100
 SIGMA_E = 0.03          # error noise when driving straight
 SIGMA_F = pi/1000       # angular error noise when driving straight
 SIGMA_G = pi/5000       # angular error noise when rotating
+
+# Robot actions
+ACTION_ROTATE_CW = 0
+ACTION_ROTATE_CCW = 1
+ACTION_FORWARD = 2
+ACTION_STOP = 3
