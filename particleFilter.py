@@ -39,11 +39,19 @@ class ParticleFilter:
 	def getPredictState(self):
 		return self.particleSet[0] # use first particle as mean
 
-		# best_x = mean(self.particleSet[:][0])
-		# best_y = mean(self.particleSet[:][1])
-		# best_th = mean(self.particleSet[:][2])
+		best_x = 0
+		best_y = 0
+		best_th = 0
+		for i in range(0, NUMBER_OF_PARTICLES):
+			best_x += self.particleSet[i][0]
+			best_y += self.particleSet[i][1]
+			best_th += self.particleSet[i][2]
+		
+		best_x /= NUMBER_OF_PARTICLES
+		best_y /= NUMBER_OF_PARTICLES
+		best_th /= NUMBER_OF_PARTICLES
 
-		# return (best_x, best_y, best_th)
+		return (best_x, best_y, best_th)
 
 
 	def drawParticles(self):
@@ -52,7 +60,7 @@ class ParticleFilter:
 			draw_y = int(self.particleSet[i][1]*DISPLAY_SCALE_Y + DISPLAY_OFFSET_Y)
 			draw_th = int((self.particleSet[i][2] + pi)/pi*180) # change radian to degree
 			self.particleDraw[i] = (draw_x, draw_y, draw_th)
-  		# print "drawParticles:" + str(self.particleDraw)
+		print "drawParticles:" + str(self.particleDraw)
 
 	def _updateParticleTranslate(self, particleState, motionD, e, f):
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])
