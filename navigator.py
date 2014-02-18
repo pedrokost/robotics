@@ -66,35 +66,36 @@ class Navigator:
 		return (leftVel, rightVel, action)
 		
 
-	def navigateToWayPoint(self, robotState, goalPoint):
+	def navigateToWayPoint(self, robotState, robotVelocity, goalPoint):
 		"""
 			This function is to obtain the proper control command (leftVel, rightVel) for navigating the robot from robotState(x, y, th) to goalPoint(x, y)
-		"""
+			robotStates = [x, y, theta]
+			robotVelocity = [velL, velR]
+			goalPoint = (x, y)
 
-		# calculate different from goal point
+		"""
+		velL, velR = robotVelocity  # current
+		# calculate distance to goal point
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
-	
-		prefer_th = atan2(dy, dx)
-		d_th = toPIPI(prefer_th - robotState[2])
-	
-		# check if angle error is within acceptable region
+		
+		absolute_th = atan2(dy, dx)
+		d_th = toPIPI(absolute_th - robotState[2])
+		
 		if(abs(d_th) >= ACCEPTABLE_ANGLE):
 			if(d_th > 0):
-				action = 'RotateCCW'
-				leftVel = -NAV_ROT_VEL
-				rightVel = NAV_ROT_VEL
+				prefer_velL, prefer_velR = -NAV_ROT_VEL, NAV_ROT_VEL
 			else:
-				action = 'RotateCW'
-				leftVel = NAV_ROT_VEL
-				rightVel = -NAV_ROT_VEL
+				prefer_velL, prefer_velR = NAV_ROT_VEL, -NAV_ROT_VEL
 		elif(sqrt(dx*dx + dy*dy) >= ACCEPTABLE_DISTANCE):
-			action = 'Forward'
-			leftVel = NAV_FWD_VEL
-			rightVel = NAV_FWD_VEL
+			prefer_velL, prefer_velR = NAV_FWD_VEL, NAV_FWD_VEL
 		else:
-			action = 'Stop'
-			leftVel = 0
-			rightVel = 0
+			prefer_velL, prefer_velR = 0, 0
 
-		return (leftVel, rightVel, action)
+		d_velL = (prefer_velL - velL) * GOAL_GREADYNESS
+		d_velR = (prefer_velR - velR) * GOAL_GREADYNESS
+
+		velL += d_velL
+		velR += d_velR
+
+		return velL, velR
