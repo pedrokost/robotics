@@ -2,8 +2,8 @@ from utilities import *
 from math import *
 from constants import *
 
-ACCEPTABLE_ANGLE_LARGE = pi/36  # about 5 degress
-ACCEPTABLE_ANGLE_SMALL = pi/90  # about 2 degress
+ACCEPTABLE_ANGLE_LARGE = pi/12  # about 15 degress
+ACCEPTABLE_ANGLE_SMALL = pi/36  # about 5 degress
 ACCEPTABLE_DISTANCE = 1  # cm
 
 NAV_FWD_VEL = 10
@@ -18,6 +18,10 @@ class Navigator:
 
 
 	def navigateToWayPointStateFul(self, robotState, goalPoint):
+		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
+			self.lastGoalPoint = goalPoint
+			self.navState = 'Rotate' # rotate first
+
 		#calculate angle different
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
@@ -25,13 +29,15 @@ class Navigator:
 		diffTh = toPIPI(prefer_th - robotState[2])
 		diffD = diffDist(robotState, goalPoint)
 
-		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
-			self.lastGoalPoint = goalPoint
-			self.navState = 'Rotate' # rotate first
 
 		leftVel = 0
 		rightVel = 0
 		action = 'Stop'
+
+		if(abs(diffD) <= ACCEPTABLE_DISTANCE):
+			self.navState = 'Complete'
+			action = 'Complete'
+			return (leftVel, rightVel, action)
 
 		# set control command rotate
 		if(self.navState == 'Rotate'):
@@ -59,7 +65,7 @@ class Navigator:
 				leftVel = NAV_FWD_VEL
 				rightVel = NAV_FWD_VEL
 
-		print self.navState, diffTh*180/pi, diffTh
+		print "Diff (R, T) : ", diffTh*180/pi, diffTh
 		return (leftVel, rightVel, action)
 
 

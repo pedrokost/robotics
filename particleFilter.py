@@ -117,21 +117,28 @@ class ParticleFilter:
 		return lik
 
 	def getPredictState(self):
+		#maximum weight
+		bestIndex = 0
+		for i in range(1, NUMBER_OF_PARTICLES):
+			if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
+				bestIndex = i
+			
+		return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
 		#return self.particleSet[0] # use first particle as mean
 
-		best_x = 0
-		best_y = 0
-		best_th = 0
-		for i in range(0, NUMBER_OF_PARTICLES):
-			best_x += self.particleSet[i][0]
-			best_y += self.particleSet[i][1]
-			best_th += self.particleSet[i][2]
+		# mean
+		#best_x = 0
+		#best_y = 0
+		#best_th = 0
+		#for i in range(0, NUMBER_OF_PARTICLES):
+		#	best_x += self.particleSet[i][0]
+		#	best_y += self.particleSet[i][1]
+		#	best_th += self.particleSet[i][2]
 		
-		best_x /= NUMBER_OF_PARTICLES
-		best_y /= NUMBER_OF_PARTICLES
-		best_th /= NUMBER_OF_PARTICLES
-
-		return (best_x, best_y, best_th)
+		#best_x /= NUMBER_OF_PARTICLES
+		#best_y /= NUMBER_OF_PARTICLES
+		#best_th /= NUMBER_OF_PARTICLES
+		#return (best_x, best_y, best_th)
 
 	def normalizeWeights(self):
 		"""
@@ -152,7 +159,11 @@ class ParticleFilter:
 			index = bisect(cumWeights, uniform(0, 1)) -1 #Hack  # O(logn)
 			(x, y, t, _) = self.particleSet[index]
 			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
+
+		
+		particle0 = self.particleSet[0] #Hack preserved 0th index state
 		self.particleSet = newParticleSet
+		self.particleSet[0] = (particle0[0], particle0[1], particle0[2], 1./NUMBER_OF_PARTICLES) #Hack preserved 0th index state
 
 	def drawParticles(self):
 		for i in range(0, NUMBER_OF_PARTICLES):

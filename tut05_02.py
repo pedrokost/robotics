@@ -6,70 +6,122 @@ from encoder import *
 from random import uniform
 from navigator import Navigator
 
-robot = Robot(leftMotorPort=LEFT_MOTOR,
-			rightMotorPort=RIGHT_MOTOR,
-			leftTouchPort=LEFT_TOUCH,
-			rightTouchPort=RIGHT_TOUCH,
-			sonarPort=SONAR_SENSOR)
+def drawTrajectory(points):
+	n = len(points)
+	for i in range(0, n - 1):
+		canvas.drawLine((points[i][0], points[i][1], points[(i + 1)%n][0], points[(i + 1)%n][1]));
+
+#
+# initialize device
+#
+leftMotorPort=LEFT_MOTOR
+rightMotorPort=RIGHT_MOTOR
+
+robot = Robot(leftMotorPort,
+		rightMotorPort,
+		leftTouchPort=LEFT_TOUCH,
+		rightTouchPort=RIGHT_TOUCH,
+		sonarPort=SONAR_SENSOR)
 
 encoder = Encoder()
 navigator = Navigator()
 
-# initialize particle filter
-particleFilter = ParticleFilter()
-particleFilter.initialize()
+#
+# intialize environment
+#
+canvas = Canvas();
+mymap = Map(canvas);
+# Definitions of walls
+# a: O to A
+# b: A to B
+# c: C to D
+# d: D to E
+# e: E to F
+# f: F to G
+# g: G to H
+# h: H to O
+mymap.add_wall((0,0,0,168));        # a
+mymap.add_wall((0,168,84,168));     # b
+mymap.add_wall((84,126,84,210));    # c
+mymap.add_wall((84,210,168,210));   # d
+mymap.add_wall((168,210,168,84));   # e
+mymap.add_wall((168,84,210,84));    # f
+mymap.add_wall((210,84,210,0));     # g
+mymap.add_wall((210,0,0,0));        # h
+mymap.draw();
 
 # initialize way points
 wayPoints = [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
-
 drawTrajectory(wayPoints)
-currentPointIndex = 0
+currentPointIndex = 1
 
+# initialize particle filter
+particleFilter = ParticleFilter(mymap, canvas, (84, 30, 0))
+
+
+# initialize control command
 leftVel = 0
 rightVel = 0
-
 lastAction = 'None'
 
-
-currentWaypoint = wayPoints.pop(0)
-for wayPoint in wayPoints:
-	# measure
-	# do motion update
-	# resample
-
-
-
-
+timeStep = 0
 while True:
-	time.sleep(0.05)
+	timeStep += 1
+	time.sleep(0.001)
 
 	# get encoder data (for actual run)
-	distL, velL = encoder.getMovingDistanceAndVelocity(leftMotorPort);
-	distR, velR = encoder.getMovingDistanceAndVelocity(rightMotorPort);
+	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
+	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
+	enc_velL = enc_distL/enc_dtL;
+	enc_velR = enc_distR/enc_dtR;
 
-	particleFilter.motionUpdate(distL, distR)
-	particleFilter.measurementUpdate()
+	#print enc_distL
+	# temp encoder data (for simulation only)
+	#temp_dt = 0.05;
+	#enc_velL = leftVel;
+	#enc_velR = rightVel;
+	#enc_distL = leftVel*temp_dt;
+	#enc_distR = rightVel*temp_dt;
+
+	# measure from sonar
+	#z = robot.sonar.getSmoothSonarDistance(0.02)
+	z = particleFilter.getIdealM()
+
+	# motion update
+	particleFilter.motionUpdate(enc_distL, enc_distR) # Hack
+
+	# measurement update
+	particleFilter.measurementUpdate(z)
 	particleFilter.normalizeWeights()
-	particleFilter.resample()
 
 	# get predict state
 	robotState = particleFilter.getPredictState()
 
+	# print state
+	print "State : ", robotState
+	print "Goal : ", currentPointIndex, wayPoints[currentPointIndex]
+
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, distL, distR, wayPoints[currentPointIndex])
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
 	if action is not lastAction:
 		robot.motors.reset()
 	lastAction = action
 
-	robot.motors.setVel(leftVel, rightVel, velL, velR)
+	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# set waypoint index
-	if(abs(leftVel) < NEAR_ZERO and abs(rightVel) < NEAR_ZERO):
+	if(action == 'Complete'):
 		currentPointIndex += 1
 		if(currentPointIndex >= len(wayPoints)):
 			break
+	
+	print action
+	# resampling
+	if(timeStep%RESAMPLING_PERIOD == 0):
+		particleFilter.resample()
 
 	# draw particle
-	particleFilter.drawParticles()
+	if(timeStep%DRAWING_PERIOD == 0):
+		particleFilter.drawParticles()
 
