@@ -4,8 +4,8 @@ from BrickPi import *
 NEAR_ZERO = 0.0000001
 M_PI = pi   # for backwards compatibility
 
-W_RADIUS = 2 # wheel radius in cm
-RW_DIST = 6 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
+W_RADIUS = 2.45 # wheel radius in cm # if move too much -> increase
+RW_DIST = 5.8 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
 ENCODER_RATIO = 24.0/40.0 # Gear Parameter
 
 EASING_C = 0.05  # determines acceleration strenght
@@ -46,9 +46,9 @@ DISPLAY_OFFSET_Y = 200
 
 # Porticle filter constants
 NUMBER_OF_PARTICLES = 100 #100
-SIGMA_E = 0.2          # error noise when driving straight
-SIGMA_F = pi/1000       # angular error noise when driving straight
-SIGMA_G = pi/5000       # angular error noise when rotating
+SIGMA_E = 0.1          # error noise when driving straight
+SIGMA_F = pi/3600      # angular error noise when driving straight
+SIGMA_G = pi/1200      # angular error noise when rotating
 
 
 # How aggresively should it turn towards the goal
@@ -56,5 +56,5 @@ SIGMA_G = pi/5000       # angular error noise when rotating
 GOAL_GREADYNESS = 1  # if close to goal can be more aggressive ... higher
 
 
-RESAMPLING_PERIOD = 10
+RESAMPLING_PERIOD = 5
 DRAWING_PERIOD = 1

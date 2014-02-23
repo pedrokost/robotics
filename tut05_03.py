@@ -63,6 +63,7 @@ particleFilter = ParticleFilter(mymap, canvas, (84, 30, 0))
 leftVel = 0
 rightVel = 0
 lastAction = 'None'
+action = 'None'
 
 timeStep = 0
 while True:
@@ -84,15 +85,17 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	#z = robot.sonar.getSmoothSonarDistance(0.02)
-	z = particleFilter.getIdealM()
+	z = robot.sonar.getSmoothSonarDistance(0.02)
+	print "Measurement : ", z
+	#z = particleFilter.getIdealM()
 
 	# motion update
-	particleFilter.motionUpdate(enc_distL, enc_distR) # Hack
+	particleFilter.motionUpdate(enc_distL, enc_distR)
 
 	# measurement update
-	particleFilter.measurementUpdate(z)
-	particleFilter.normalizeWeights()
+	if(action != 'Rotate'): #update only when translate
+		particleFilter.measurementUpdate(z)
+		particleFilter.normalizeWeights()
 
 	# get predict state
 	robotState = particleFilter.getPredictState()

@@ -28,7 +28,7 @@ navigator = Navigator()
 canvas = Canvas();
 mymap = Map(canvas);
 mymap.add_wall((80,0,80,150));      
-mymap.draw();
+mymap.draw()
 
 canvas.drawLine((60,0,60,100))
 canvas.drawLine((50,0,50,100))

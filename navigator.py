@@ -6,8 +6,8 @@ ACCEPTABLE_ANGLE_LARGE = pi/12  # about 15 degress
 ACCEPTABLE_ANGLE_SMALL = pi/36  # about 5 degress
 ACCEPTABLE_DISTANCE = 1  # cm
 
-NAV_FWD_VEL = 10
-NAV_ROT_VEL = 3
+NAV_FWD_VEL = 7
+NAV_ROT_VEL = 5
 
 class Navigator:
 	def __init__(self):
@@ -47,11 +47,11 @@ class Navigator:
 			else:
 				# set control command
 				if(diffTh > 0):
-					action = 'RotateCCW'
+					action = 'Rotate'
 					leftVel = -NAV_ROT_VEL
 					rightVel = NAV_ROT_VEL
 				else:
-					action = 'RotateCW'
+					action = 'Rotate'
 					leftVel = NAV_ROT_VEL
 					rightVel = -NAV_ROT_VEL
 		elif(self.navState == 'Translate'):
