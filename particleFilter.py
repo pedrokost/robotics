@@ -6,8 +6,8 @@ from bisect import bisect
 from Map import *
 from Canvas import *
 
-SIGMA_S = 3
-LIK_K = 0.01
+SIGMA_Z = 3
+LIK_K = 0.05
 
 class ParticleFilter:
 	particleSet = []
@@ -20,6 +20,9 @@ class ParticleFilter:
 		self.Map = Map
 		self.canvas = canvas
 
+		#for x in range(40, 70):
+		#	print x, " : ", self._calculate_likelihood(x, start_pose[1], start_pose[2], 25)
+
 	def motionUpdate(self, distL, distR):
 		# calculate estimated motion
 		motionD  = (distR + distL)/2            # average moved direction of both wheels
@@ -27,25 +30,25 @@ class ParticleFilter:
 
 		# update particle
 		for i in range(0, NUMBER_OF_PARTICLES):
-			going_straight = distR*distL > 0 # if both motors moved to same direction, it goes forward
+			going_straight = distR*distL >=0 # if both motors moved to same direction, it goes forward or backward
 			if going_straight:
 				e = gauss(0, SIGMA_E)
 				f = gauss(0, SIGMA_F)
-				if(i == 0): # use first particle as mean
-					e = 0
-					f = 0
+				#if(i == 0): # preserved 0th index
+				#	e = 0
+				#	f = 0
 				self.particleSet[i] = self._updateParticleTranslate(self.particleSet[i], motionD, e, f)
 			else:  # rotating
 				g = gauss(0, SIGMA_G)
-				if(i == 0): # use first particle as mean
-					g = 0
+				#if(i == 0): # preserved 0th index
+				#	g = 0
 				self.particleSet[i] = self._updateParticleRotate(self.particleSet[i], motionTH, g)
 
 	def measurementUpdate(self, z):
 		for i in range(0, NUMBER_OF_PARTICLES):
 			p = self.particleSet[i]
 			new_w = self._calculate_likelihood(p[0], p[1], p[2], z)*p[3]
-			self.particleSet[i] = (p[0], p[1], p[2], new_w) 
+			self.particleSet[i] = (p[0], p[1], p[2], new_w)
 
 	def compute_m(self, Ax, Ay, Bx, By, x, y, theta):
 		bottom = ((By - Ay)*cos(theta) - (Bx - Ax)*sin(theta))
@@ -66,7 +69,7 @@ class ParticleFilter:
 		return ((AB[0]*AC[0] + AB[1]*AC[1] > 0) and (lenAC < lenAB))
 
 	def getIdealM(self):
-		return self._get_predict_m(self.particleSet[0][0], self.particleSet[0][1], self.particleSet[0][2])
+		return self._get_predict_m(self.particleSet[0][0], self.particleSet[0][1], self.particleSet[0][2])  # preserved 0th index
 
 	# return -1 if not intersect with any wall
 	def _get_predict_m(self, x, y, theta):
@@ -112,7 +115,7 @@ class ParticleFilter:
 
 		# calculate likelihood
 		dz = z - best_m;
-		lik = exp(-(dz*dz)/(2*SIGMA_S*SIGMA_S)) + LIK_K
+		lik = exp(-(dz*dz)/(2*SIGMA_Z*SIGMA_Z)) + LIK_K
 
 		return lik
 
@@ -124,7 +127,7 @@ class ParticleFilter:
 				bestIndex = i
 			
 		return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
-		#return self.particleSet[0] # use first particle as mean
+		#return self.particleSet[0]  # preserved 0th index
 
 		# mean
 		#best_x = 0
@@ -155,15 +158,29 @@ class ParticleFilter:
 		weights = [p[3] for p in self.particleSet]
 		cumWeights = list(cumsum(weights))
 		newParticleSet = []
+
+		#print "Weight : "
+		#for i in range(0, 10):
+		#	print i, " : ", self.particleSet[i][3], "(", int(self.particleSet[i][0]), int(self.particleSet[i][1]), ")"
+
+		#print "Cum Weight : "
+		#for i in range(0, 10):
+		#	print i, " : ", cumWeights[i]
+
 		for i in xrange(0, NUMBER_OF_PARTICLES):
-			index = bisect(cumWeights, uniform(0, 1)) -1 #Hack  # O(logn)
+			r = uniform(0, 1)
+			index = bisect(cumWeights, r) #Hack  # O(logn)
+			#print "Chosen Index : ", index, "<", r, ">"
 			(x, y, t, _) = self.particleSet[index]
 			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
-
 		
-		particle0 = self.particleSet[0] #Hack preserved 0th index state
+			
+
+		# particle0 = self.particleSet[0]  # preserved 0th index
 		self.particleSet = newParticleSet
-		self.particleSet[0] = (particle0[0], particle0[1], particle0[2], 1./NUMBER_OF_PARTICLES) #Hack preserved 0th index state
+		# self.particleSet[0] = (particle0[0], particle0[1], particle0[2], 1./NUMBER_OF_PARTICLES)  # preserved 0th index
+
+		# time.sleep(100)
 
 	def drawParticles(self):
 		for i in range(0, NUMBER_OF_PARTICLES):

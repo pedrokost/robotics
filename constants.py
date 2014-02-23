@@ -32,7 +32,7 @@ RIGHT_MOTOR = PORT_B    # Motor port right
 LEFT_TOUCH = PORT_2
 RIGHT_TOUCH = PORT_1
 
-SONAR_SENSOR = PORT_4   # sonar sensor port
+SONAR_SENSOR = PORT_3   # sonar sensor port
 
 # The array size of previous sonar meausurments
 DISTANCE_HISTORY_SIZE = 5   # make it odd. 
@@ -45,7 +45,7 @@ DISPLAY_OFFSET_Y = 200
 
 
 # Porticle filter constants
-NUMBER_OF_PARTICLES = 100
+NUMBER_OF_PARTICLES = 100 #100
 SIGMA_E = 0.2          # error noise when driving straight
 SIGMA_F = pi/1000       # angular error noise when driving straight
 SIGMA_G = pi/5000       # angular error noise when rotating

@@ -3,13 +3,9 @@ from robot import Robot
 from constants import *
 from particleFilter import *
 from encoder import *
+from math import *
 from random import uniform
 from navigator import Navigator
-
-def drawTrajectory(points):
-	n = len(points)
-	for i in range(0, n - 1):
-		canvas.drawLine((points[i][0], points[i][1], points[(i + 1)%n][0], points[(i + 1)%n][1]));
 
 #
 # initialize device
@@ -31,39 +27,17 @@ navigator = Navigator()
 #
 canvas = Canvas();
 mymap = Map(canvas);
-# Definitions of walls
-# a: O to A
-# b: A to B
-# c: C to D
-# d: D to E
-# e: E to F
-# f: F to G
-# g: G to H
-# h: H to O
-mymap.add_wall((0,0,0,168));        # a
-mymap.add_wall((0,168,84,168));     # b
-mymap.add_wall((84,126,84,210));    # c
-mymap.add_wall((84,210,168,210));   # d
-mymap.add_wall((168,210,168,84));   # e
-mymap.add_wall((168,84,210,84));    # f
-mymap.add_wall((210,84,210,0));     # g
-mymap.add_wall((210,0,0,0));        # h
+mymap.add_wall((80,0,80,150));      
 mymap.draw();
 
-# initialize way points
-wayPoints = [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
-drawTrajectory(wayPoints)
-currentPointIndex = 1
+canvas.drawLine((60,0,60,100))
+canvas.drawLine((50,0,50,100))
 
 # initialize particle filter
-particleFilter = ParticleFilter(mymap, canvas, (84, 30, 0))
+particleFilter = ParticleFilter(mymap, canvas, (50, 50, 0))
 
 
 # initialize control command
-leftVel = 0
-rightVel = 0
-lastAction = 'None'
-
 timeStep = 0
 while True:
 	timeStep += 1
@@ -84,39 +58,27 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	#z = robot.sonar.getSmoothSonarDistance(0.02)
-	z = particleFilter.getIdealM()
+	z = robot.sonar.getSmoothSonarDistance(0.05)
+	print "Measurement : ", z
+	#z = particleFilter.getIdealM()
 
 	# motion update
-	particleFilter.motionUpdate(enc_distL, enc_distR) # Hack
+	particleFilter.motionUpdate(enc_distL, enc_distR)
 
 	# measurement update
-	particleFilter.measurementUpdate(z)
-	particleFilter.normalizeWeights()
+	if(z > 0):
+		particleFilter.measurementUpdate(z)
+		particleFilter.normalizeWeights()
+	
 
 	# get predict state
 	robotState = particleFilter.getPredictState()
 
-	# print state
-	print "State : ", robotState
-	print "Goal : ", currentPointIndex, wayPoints[currentPointIndex]
+	print "State : ", int(robotState[0]), int(robotState[1]), int(robotState[2]*180/pi)
 
 	# set control signal
-	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
-	if action is not lastAction:
-		robot.motors.reset()
-	lastAction = action
+	robot.motors.setVel(0, 0, enc_velL, enc_velR)
 
-	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
-
-	# set waypoint index
-	if(action == 'Complete'):
-		currentPointIndex += 1
-		if(currentPointIndex >= len(wayPoints)):
-			break
-	
-	print action
 	# resampling
 	if(timeStep%RESAMPLING_PERIOD == 0):
 		particleFilter.resample()
