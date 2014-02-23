@@ -27,8 +27,14 @@ class ParticleFilter:
 		# calculate estimated motion
 		motionD  = (distR + distL)/2            # average moved direction of both wheels
 		motionTH = (distR - distL)/(2*RW_DIST)  # rotation (voluntary or not) 
-
-		# update particle
+		
+		# update particle merge rotate and translate
+		#for i in range(0, NUMBER_OF_PARTICLES):
+		#	e = gauss(0, SIGMA_E)
+		#	f = gauss(0, SIGMA_F)
+		#	self.particleSet[i] = self._updateParticle(self.particleSet[i], motionD, motionTH, e, f)
+			
+		# update particle separate rotate and translate
 		for i in range(0, NUMBER_OF_PARTICLES):
 			going_straight = distR*distL >=0 # if both motors moved to same direction, it goes forward or backward
 			if going_straight:
@@ -187,6 +193,12 @@ class ParticleFilter:
 			draw_th = int((self.particleSet[i][2] + pi)/pi*180) # change radian to degree
 			self.particleDraw[i] = (self.particleSet[i][0], self.particleSet[i][1], draw_th, self.particleSet[i][3])
 		self.canvas.drawParticles(self.particleDraw)
+
+	def _updateParticle(self, particleState, motionD, motionTH, e, f):
+		newX = particleState[0] + (motionD + e)*cos(particleState[2])
+		newY = particleState[1] + (motionD + e)*sin(particleState[2])
+		newTH = toPIPI(particleState[2] + motionTH + f)
+		return (newX, newY, newTH, particleState[3])
 
 	def _updateParticleTranslate(self, particleState, motionD, e, f):
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])

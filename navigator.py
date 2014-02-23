@@ -2,12 +2,12 @@ from utilities import *
 from math import *
 from constants import *
 
-ACCEPTABLE_ANGLE_LARGE = pi/12  # about 15 degress
-ACCEPTABLE_ANGLE_SMALL = pi/36  # about 5 degress
-ACCEPTABLE_DISTANCE = 3  # cm
-NAV_FWD_VEL = 10
-NAV_ROT_VEL_LARGE = 10
-NAV_ROT_VEL_SMALL = 6
+ACCEPTABLE_ANGLE_LARGE = pi/12  # about 5 degress
+ACCEPTABLE_ANGLE_SMALL = pi/36  # about 1 degress
+ACCEPTABLE_DISTANCE = 1  # cm
+NAV_FWD_VEL = 8
+NAV_ROT_VEL_LARGE = 6
+NAV_ROT_VEL_SMALL = 3
 
 class Navigator:
 	def __init__(self):
@@ -16,14 +16,30 @@ class Navigator:
 		self.dToGo = 0
 		self.thToGo = 0
 
-#	def navigateToWayPoint(self, robotState, goalPoint):
-#		#calculate angle different
-#		dx = goalPoint[0] - robotState[0]
-#		dy = goalPoint[1] - robotState[1]
-#		prefer_th = atan2(dy, dx)
-#		diffTh = toPIPI(prefer_th - robotState[2])
-#		diffD = diffDist(robotState, goalPoint)
-#		pass
+	def navigateToWayPoint(self, robotState, goalPoint):
+		#calculate angle different
+		dx = goalPoint[0] - robotState[0]
+		dy = goalPoint[1] - robotState[1]
+		prefer_th = atan2(dy, dx)
+		diffTh = toPIPI(prefer_th - robotState[2])
+		diffD = diffDist(robotState, goalPoint)
+		
+		if(abs(diffD) <= ACCEPTABLE_DISTANCE):
+			return (0, 0, 'Complete')
+
+		KmeanV = (1.0/50)
+		KrotV = 180/pi	
+
+		meanV = limitTo(diffD*KmeanV, 6, 8)
+		rotV = limitTo(diffTh*KrotV, -20, 20)
+
+		print "V : ", meanV, rotV
+
+		leftVel = meanV - rotV
+		rightVel = meanV + rotV
+
+		return (leftVel, rightVel, 'Not Complete')
+		
 
 
 	def navigateToWayPointStateFul(self, robotState, goalPoint):
@@ -90,90 +106,90 @@ class Navigator:
 
 		
 
-#	def navigateToWayPointStateFul(self, robotState, enc_distL, enc_distR, goalPoint):
-#		#calculate angle different
-#		dx = goalPoint[0] - robotState[0]
-#		dy = goalPoint[1] - robotState[1]
-#		prefer_th = atan2(dy, dx)
-#		dth = toPIPI(prefer_th - robotState[2])	
-#
-#		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
-#			self.lastGoalPoint = goalPoint
-#			self.navState = 'Rotate' # rotate first
-#			self.thToGo = dth
-#
-#		# set control command		 
-#		if(self.navState == 'Rotate'):
-#			# set new state
-#			motionTH = (enc_distR - enc_distL)/(2*RW_DIST) #estamate moved angle
-#			self.thToGo -= motionTH			
-#
-#			# check if the robot is at the goal angle
-#			if(abs(self.thToGo) <= ACCEPTABLE_ANGLE_SMALL):
-#				self.navState = 'Translate'
-#				self.dToGo = diffDist(robotState, goalPoint)
-#			else:
-#				# set control command
-#				if(self.thToGo > 0):
-#					action = 'RotateCCW'
-#					leftVel = -NAV_ROT_VEL
-#					rightVel = NAV_ROT_VEL
-#				else:
-#					action = 'RotateCW'
-#					leftVel = NAV_ROT_VEL
-#					rightVel = -NAV_ROT_VEL
-#
-#		
-#		if(self.navState == 'Translate'):
-#			motionD  = (enc_distR + enc_distL)/2
-#			self.dToGo -= motionD
-#
-#			if(abs(self.dToGo) <= ACCEPTABLE_DISTANCE):
-#				self.navState = 'None'
-#			else:
-#				action = 'Forward'
-#				leftVel = NAV_FWD_VEL
-#				rightVel = NAV_FWD_VEL
-#
-#		if(self.navState == 'None'):
-#			action = 'Stop'
-#			leftVel = 0
-#			rightVel = 0
-#
-#		return (leftVel, rightVel, action)
-#		
-
-	def navigateToWayPoint(self, robotState, robotVelocity, goalPoint):
-		"""
-			This function is to obtain the proper control command (leftVel, rightVel) for navigating the robot from robotState(x, y, th) to goalPoint(x, y)
-			robotStates = [x, y, theta]
-			robotVelocity = [velL, velR]
-			goalPoint = (x, y)
-
-		"""
-		velL, velR = robotVelocity  # current
-		# calculate distance to goal point
+	def navigateToWayPointStateFul2(self, robotState, enc_distL, enc_distR, goalPoint):
+		#calculate angle different
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
-		
-		absolute_th = atan2(dy, dx)
-		d_th = toPIPI(absolute_th - robotState[2])
-		
-		if(abs(d_th) >= ACCEPTABLE_ANGLE):
-			if(d_th > 0):
-				prefer_velL, prefer_velR = -NAV_ROT_VEL, NAV_ROT_VEL
+		prefer_th = atan2(dy, dx)
+		dth = toPIPI(prefer_th - robotState[2])	
+
+		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
+			self.lastGoalPoint = goalPoint
+			self.navState = 'Rotate' # rotate first
+			self.thToGo = dth
+
+		# set control command		 
+		if(self.navState == 'Rotate'):
+			# set new state
+			motionTH = (enc_distR - enc_distL)/(2*RW_DIST) #estamate moved angle
+			self.thToGo -= motionTH			
+
+			# check if the robot is at the goal angle
+			if(abs(self.thToGo) <= ACCEPTABLE_ANGLE_SMALL):
+				self.navState = 'Translate'
+				self.dToGo = diffDist(robotState, goalPoint)
 			else:
-				prefer_velL, prefer_velR = NAV_ROT_VEL, -NAV_ROT_VEL
-		elif(sqrt(dx*dx + dy*dy) >= ACCEPTABLE_DISTANCE):
-			prefer_velL, prefer_velR = NAV_FWD_VEL, NAV_FWD_VEL
-		else:
-			prefer_velL, prefer_velR = 0, 0
+				# set control command
+				if(self.thToGo > 0):
+					action = 'RotateCCW'
+					leftVel = -NAV_ROT_VEL
+					rightVel = NAV_ROT_VEL
+				else:
+					action = 'RotateCW'
+					leftVel = NAV_ROT_VEL
+					rightVel = -NAV_ROT_VEL
 
-		print "prefer : ", prefer_velL, prefer_velR
-		d_velL = (prefer_velL - velL) * GOAL_GREADYNESS
-		d_velR = (prefer_velR - velR) * GOAL_GREADYNESS
+		
+		if(self.navState == 'Translate'):
+			motionD  = (enc_distR + enc_distL)/2
+			self.dToGo -= motionD
 
-		velL += d_velL
-		velR += d_velR
+			if(abs(self.dToGo) <= ACCEPTABLE_DISTANCE):
+				self.navState = 'None'
+			else:
+				action = 'Forward'
+				leftVel = NAV_FWD_VEL
+				rightVel = NAV_FWD_VEL
 
-		return velL, velR
+		if(self.navState == 'None'):
+			action = 'Stop'
+			leftVel = 0
+			rightVel = 0
+
+		return (leftVel, rightVel, action)
+#		
+#
+#	def navigateToWayPoint(self, robotState, robotVelocity, goalPoint):
+#		"""
+#			This function is to obtain the proper control command (leftVel, rightVel) for navigating the robot from robotState(x, y, th) to goalPoint(x, y)
+#			robotStates = [x, y, theta]
+#			robotVelocity = [velL, velR]
+#			goalPoint = (x, y)
+#
+#		"""
+#		velL, velR = robotVelocity  # current
+#		# calculate distance to goal point
+#		dx = goalPoint[0] - robotState[0]
+#		dy = goalPoint[1] - robotState[1]
+#		
+#		absolute_th = atan2(dy, dx)
+#		d_th = toPIPI(absolute_th - robotState[2])
+#		
+#		if(abs(d_th) >= ACCEPTABLE_ANGLE):
+#			if(d_th > 0):
+#				prefer_velL, prefer_velR = -NAV_ROT_VEL, NAV_ROT_VEL
+#			else:
+#				prefer_velL, prefer_velR = NAV_ROT_VEL, -NAV_ROT_VEL
+#		elif(sqrt(dx*dx + dy*dy) >= ACCEPTABLE_DISTANCE):
+#			prefer_velL, prefer_velR = NAV_FWD_VEL, NAV_FWD_VEL
+#		else:
+#			prefer_velL, prefer_velR = 0, 0
+#
+#		print "prefer : ", prefer_velL, prefer_velR
+#		d_velL = (prefer_velL - velL) * GOAL_GREADYNESS
+#		d_velR = (prefer_velR - velR) * GOAL_GREADYNESS
+#
+#		velL += d_velL
+#		velR += d_velR
+#
+#		return velL, velR

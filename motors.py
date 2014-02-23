@@ -2,12 +2,12 @@ from constants import *
 from BrickPi import *
 from utilities import *
 
-MOTOR_VEL_KP = 0.05
-MOTOR_VEL_KI = 0.01
-MOTOR_VEL_KD = 0.01
+MOTOR_VEL_KP = 0.1
+MOTOR_VEL_KI = 0.03
+MOTOR_VEL_KD = 0.05
 
 VEL_TO_POWER_W1 = 12.6407
-VEL_TO_POWER_W0 = -1.8951
+VEL_TO_POWER_W0 = 0 #-1.8951
 
 class Motors:
 	# The index indicates the element of the vector that belongs to each motor

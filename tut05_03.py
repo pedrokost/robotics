@@ -86,7 +86,7 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	z = robot.sonar.getSmoothSonarDistance(0.02)
+	z = robot.sonar.getSmoothSonarDistance(0.05)
 	# print "Measurement : FAKE"
 	# z = particleFilter.getIdealM()
 
@@ -108,9 +108,10 @@ while True:
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
 	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
-	if action is not lastAction:
-		robot.motors.reset()
-	lastAction = action
+	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	#if action is not lastAction:
+	#	robot.motors.reset()
+	#lastAction = action
 
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 

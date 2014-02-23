@@ -50,3 +50,10 @@ def sign(x):
 	elif(x < 0):
 		return -1
 	return 0
+
+def limitTo(x, min_val, max_val):
+	if(x < min_val):
+		x = min_val
+	if(x > max_val):
+		x = max_val
+	return x
