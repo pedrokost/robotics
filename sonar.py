@@ -1,3 +1,4 @@
+from constants import *
 from BrickPi import *
 from utilities import *
 
@@ -16,7 +17,7 @@ class Sonar:
 		while time.time() - start < duration:
 			values.append(self._getSonarDistance())
 			time.sleep(0.002)
-		return median(values)
+		return median(values) - SONAR_BIAS
 
 	# This function is to get sonar distance. (in cm)
 	def _getSonarDistance(self):

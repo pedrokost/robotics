@@ -52,6 +52,7 @@ mymap.draw();
 
 # initialize way points
 wayPoints = [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
+#wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
 drawTrajectory(wayPoints)
 currentPointIndex = 1
 
@@ -86,8 +87,8 @@ while True:
 
 	# measure from sonar
 	z = robot.sonar.getSmoothSonarDistance(0.02)
-	print "Measurement : ", z
-	#z = particleFilter.getIdealM()
+	# print "Measurement : FAKE"
+	# z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
@@ -101,8 +102,8 @@ while True:
 	robotState = particleFilter.getPredictState()
 
 	# print state
-	print "State : ", robotState
-	print "Goal : ", currentPointIndex, wayPoints[currentPointIndex]
+	#print "State : ", robotState
+	#print "Goal : ", currentPointIndex, wayPoints[currentPointIndex]
 
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
@@ -119,7 +120,6 @@ while True:
 		if(currentPointIndex >= len(wayPoints)):
 			break
 	
-	print action
 	# resampling
 	if(timeStep%RESAMPLING_PERIOD == 0):
 		particleFilter.resample()

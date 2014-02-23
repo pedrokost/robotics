@@ -43,3 +43,10 @@ def cumsum(list):
     for x in list:
         total += x
         yield total
+
+def sign(x):
+	if(x > 0):
+		return 1
+	elif(x < 0):
+		return -1
+	return 0

@@ -22,31 +22,6 @@ encoder = Encoder()
 nowD = 0
 nowTH = 0
 
-while True:
-	time.sleep(0.05)
-
-	# get encoder data (for actual run)
-	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
-	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
-	enc_velL = enc_distL/enc_dtL;
-	enc_velR = enc_distR/enc_dtL;
-	robot.motors.setVel(-5, 5, enc_velL, enc_velR)
-
-	motionD  = (enc_distR + enc_distL)/2
-	motionTH = (enc_distR - enc_distL)/(2*RW_DIST)
-	nowD += motionD
-	nowTH += motionTH
-
-	print nowD
-
-	if(abs(nowTH) > pi/2):
-		break
-
-
-	#motionTH = (distR - distL)/(2*RW_DIST)
-	#nowTH 
-
-
 #while True:
 #	time.sleep(0.05)
 #
@@ -55,13 +30,38 @@ while True:
 #	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
 #	enc_velL = enc_distL/enc_dtL;
 #	enc_velR = enc_distR/enc_dtL;
+#	robot.motors.setVel(-5, 5, enc_velL, enc_velR)
 #
-#	print "Left vel : ", enc_velL
-#	print "Right vel : ", enc_velR
+#	motionD  = (enc_distR + enc_distL)/2
+#	motionTH = (enc_distR - enc_distL)/(2*RW_DIST)
+#	nowD += motionD
+#	nowTH += motionTH
 #
-#	# set control signal
-#	leftVel = -20
-#	rightVel = -20
-#	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
-#	#robot.motors._setMotorPower(leftMotorPort, 250)
-#	#robot.motors._setMotorPower(rightMotorPort, -250)
+#	print "current : ", nowTH
+#
+#	if(abs(nowTH) > pi/2):
+#		break
+#
+#
+#	#motionTH = (distR - distL)/(2*RW_DIST)
+#	#nowTH 
+
+
+while True:
+	time.sleep(0.05)
+
+	# get encoder data (for actual run)
+	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
+	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
+	enc_velL = enc_distL/enc_dtL;
+	enc_velR = enc_distR/enc_dtL;
+
+	print "Left vel : ", enc_velL
+	print "Right vel : ", enc_velR
+
+	# set control signal
+	leftVel = 8
+	rightVel = 8
+	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
+	#robot.motors._setMotorPower(leftMotorPort, 250)
+	#robot.motors._setMotorPower(rightMotorPort, -250)

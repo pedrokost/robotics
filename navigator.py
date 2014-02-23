@@ -4,10 +4,10 @@ from constants import *
 
 ACCEPTABLE_ANGLE_LARGE = pi/12  # about 15 degress
 ACCEPTABLE_ANGLE_SMALL = pi/36  # about 5 degress
-ACCEPTABLE_DISTANCE = 1  # cm
-
-NAV_FWD_VEL = 7
-NAV_ROT_VEL = 5
+ACCEPTABLE_DISTANCE = 3  # cm
+NAV_FWD_VEL = 10
+NAV_ROT_VEL_LARGE = 10
+NAV_ROT_VEL_SMALL = 6
 
 class Navigator:
 	def __init__(self):
@@ -15,6 +15,15 @@ class Navigator:
 		self.navState = 'None'
 		self.dToGo = 0
 		self.thToGo = 0
+
+#	def navigateToWayPoint(self, robotState, goalPoint):
+#		#calculate angle different
+#		dx = goalPoint[0] - robotState[0]
+#		dy = goalPoint[1] - robotState[1]
+#		prefer_th = atan2(dy, dx)
+#		diffTh = toPIPI(prefer_th - robotState[2])
+#		diffD = diffDist(robotState, goalPoint)
+#		pass
 
 
 	def navigateToWayPointStateFul(self, robotState, goalPoint):
@@ -44,16 +53,26 @@ class Navigator:
 			# check if the robot is at the goal angle
 			if(abs(diffTh) <= ACCEPTABLE_ANGLE_SMALL):
 				self.navState = 'Translate'
+			elif(abs(diffTh) <= ACCEPTABLE_ANGLE_LARGE):
+				# set control command
+				if(diffTh > 0):
+					action = 'Rotate'
+					leftVel = -NAV_ROT_VEL_SMALL
+					rightVel = NAV_ROT_VEL_SMALL
+				else:
+					action = 'Rotate'
+					leftVel = NAV_ROT_VEL_SMALL
+					rightVel = -NAV_ROT_VEL_SMALL
 			else:
 				# set control command
 				if(diffTh > 0):
 					action = 'Rotate'
-					leftVel = -NAV_ROT_VEL
-					rightVel = NAV_ROT_VEL
+					leftVel = -NAV_ROT_VEL_LARGE
+					rightVel = NAV_ROT_VEL_LARGE
 				else:
 					action = 'Rotate'
-					leftVel = NAV_ROT_VEL
-					rightVel = -NAV_ROT_VEL
+					leftVel = NAV_ROT_VEL_LARGE
+					rightVel = -NAV_ROT_VEL_LARGE
 		elif(self.navState == 'Translate'):
 			if(abs(diffTh) > ACCEPTABLE_ANGLE_LARGE):
 				self.navState = 'Rotate'
@@ -65,7 +84,7 @@ class Navigator:
 				leftVel = NAV_FWD_VEL
 				rightVel = NAV_FWD_VEL
 
-		print "Diff (R, T) : ", diffTh*180/pi, diffTh
+		#print "Diff (R, T) : ", diffTh*180/pi, diffTh
 		return (leftVel, rightVel, action)
 
 
