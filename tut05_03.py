@@ -64,7 +64,9 @@ leftVel = 0
 rightVel = 0
 lastAction = 'None'
 
+timeStep = 0
 while True:
+	timeStep += 1
 	time.sleep(0.01)
 
 	# get encoder data (for actual run)
@@ -90,10 +92,7 @@ while True:
 
 	# measurement update
 	particleFilter.measurementUpdate(z)
-
 	particleFilter.normalizeWeights()
-
-	particleFilter.resample()
 
 	# get predict state
 	robotState = particleFilter.getPredictState()
@@ -104,7 +103,7 @@ while True:
 
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
 	if action is not lastAction:
 		robot.motors.reset()
 	lastAction = action
@@ -112,11 +111,17 @@ while True:
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# set waypoint index
-	if(abs(leftVel) < NEAR_ZERO and abs(rightVel) < NEAR_ZERO):
+	if(action == 'Complete'):
 		currentPointIndex += 1
 		if(currentPointIndex >= len(wayPoints)):
 			break
+	
+	print action
+	# resampling
+	if(timeStep%RESAMPLING_PERIOD == 0):
+		particleFilter.resample()
 
 	# draw particle
-	particleFilter.drawParticles()
+	if(timeStep%DRAWING_PERIOD == 0):
+		particleFilter.drawParticles()
 

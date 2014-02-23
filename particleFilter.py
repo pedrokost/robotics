@@ -117,7 +117,7 @@ class ParticleFilter:
 		return lik
 
 	def getPredictState(self):
-		return self.particleSet[0] # use first particle as mean
+		#return self.particleSet[0] # use first particle as mean
 
 		best_x = 0
 		best_y = 0
