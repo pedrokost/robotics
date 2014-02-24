@@ -127,27 +127,27 @@ class ParticleFilter:
 
 	def getPredictState(self):
 		#maximum weight
-		bestIndex = 0
-		for i in range(1, NUMBER_OF_PARTICLES):
-			if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
-				bestIndex = i
-			
-		return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
+		#bestIndex = 0
+		#for i in range(1, NUMBER_OF_PARTICLES):
+		#	if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
+		#		bestIndex = i
+		#	
+		#return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
 		#return self.particleSet[0]  # preserved 0th index
 
 		# mean
-		#best_x = 0
-		#best_y = 0
-		#best_th = 0
-		#for i in range(0, NUMBER_OF_PARTICLES):
-		#	best_x += self.particleSet[i][0]
-		#	best_y += self.particleSet[i][1]
-		#	best_th += self.particleSet[i][2]
+		best_x = 0
+		best_y = 0
+		best_th = 0
+		for i in range(0, NUMBER_OF_PARTICLES):
+			best_x += self.particleSet[i][3]*self.particleSet[i][0]
+			best_y += self.particleSet[i][3]*self.particleSet[i][1]
+			best_th += self.particleSet[i][3]*self.particleSet[i][2]
 		
 		#best_x /= NUMBER_OF_PARTICLES
 		#best_y /= NUMBER_OF_PARTICLES
 		#best_th /= NUMBER_OF_PARTICLES
-		#return (best_x, best_y, best_th)
+		return (best_x, best_y, best_th)
 
 	def normalizeWeights(self):
 		"""
