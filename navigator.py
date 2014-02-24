@@ -86,9 +86,6 @@ class Navigator:
 		elif(self.navState == 'Translate'):
 			if(abs(diffTh) > ACCEPTABLE_ANGLE_LARGE):
 				self.navState = 'Rotate'
-			elif(abs(diffD) <= ACCEPTABLE_DISTANCE):
-				self.navState = 'Complete'
-				action = 'Complete'
 			else:
 				action = 'Forward'
 				leftVel = NAV_FWD_VEL
