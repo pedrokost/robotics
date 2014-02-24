@@ -86,15 +86,16 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	z = robot.sonar.getSmoothSonarDistance(0.05)
+	# z = robot.sonar.getSmoothSonarDistance(0.05)
 	# print "Measurement : FAKE"
-	# z = particleFilter.getIdealM()
+	z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
 
 	# measurement update
 	if(action != 'Rotate'): #update only when translate
+	# if(z < 120 and action != 'Rotate'): #update only when translate
 		particleFilter.measurementUpdate(z)
 		particleFilter.normalizeWeights()
 
@@ -108,6 +109,7 @@ while True:
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
 	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
+	print leftVel, rightVel
 	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
 	#if action is not lastAction:
 	#	robot.motors.reset()
@@ -123,9 +125,9 @@ while True:
 	
 	# resampling
 	if(timeStep%RESAMPLING_PERIOD == 0):
+		print "Updated measurements"
 		particleFilter.resample()
 
 	# draw particle
 	if(timeStep%DRAWING_PERIOD == 0):
 		particleFilter.drawParticles()
-

@@ -2,9 +2,9 @@ from utilities import *
 from math import *
 from constants import *
 
-ACCEPTABLE_ANGLE_LARGE = pi/12  # about 5 degress
-ACCEPTABLE_ANGLE_SMALL = pi/36  # about 1 degress
-ACCEPTABLE_DISTANCE = 1  # cm
+ACCEPTABLE_ANGLE_LARGE = degToRad(20)  # about 5 degress
+ACCEPTABLE_ANGLE_SMALL = degToRad(10)  # about 1 degress
+ACCEPTABLE_DISTANCE = 3  # cm
 NAV_FWD_VEL = 8
 NAV_ROT_VEL_LARGE = 6
 NAV_ROT_VEL_SMALL = 3

@@ -52,7 +52,7 @@ class ParticleFilter:
 
 	def measurementUpdate(self, z):
 		for i in range(0, NUMBER_OF_PARTICLES):
-			p = self.particleSet[i]
+			p = self.particleSet[i]			
 			new_w = self._calculate_likelihood(p[0], p[1], p[2], z)*p[3]
 			self.particleSet[i] = (p[0], p[1], p[2], new_w)
 
@@ -119,23 +119,28 @@ class ParticleFilter:
 		if(best_m < 0):
 			print "Something wrong!"
 
+
 		# calculate likelihood
 		dz = z - best_m;
 		lik = exp(-(dz*dz)/(2*SIGMA_Z*SIGMA_Z)) + LIK_K
+		# print z, lik, dz, "----------"
+		# 	print "Measured ", z, ""
+
 
 		return lik
 
 	def getPredictState(self):
-		#maximum weight
-		#bestIndex = 0
-		#for i in range(1, NUMBER_OF_PARTICLES):
-		#	if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
-		#		bestIndex = i
-		#	
-		#return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
+		# maximum weight
+		# bestIndex = 0
+		# for i in range(1, NUMBER_OF_PARTICLES):
+		# 	if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
+		# 		bestIndex = i
+			
+		# return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
 		#return self.particleSet[0]  # preserved 0th index
 
 		# mean
+		
 		best_x = 0
 		best_y = 0
 		best_th = 0
@@ -144,9 +149,6 @@ class ParticleFilter:
 			best_y += self.particleSet[i][3]*self.particleSet[i][1]
 			best_th += self.particleSet[i][3]*self.particleSet[i][2]
 		
-		#best_x /= NUMBER_OF_PARTICLES
-		#best_y /= NUMBER_OF_PARTICLES
-		#best_th /= NUMBER_OF_PARTICLES
 		return (best_x, best_y, best_th)
 
 	def normalizeWeights(self):
@@ -165,14 +167,6 @@ class ParticleFilter:
 		cumWeights = list(cumsum(weights))
 		newParticleSet = []
 
-		#print "Weight : "
-		#for i in range(0, 10):
-		#	print i, " : ", self.particleSet[i][3], "(", int(self.particleSet[i][0]), int(self.particleSet[i][1]), ")"
-
-		#print "Cum Weight : "
-		#for i in range(0, 10):
-		#	print i, " : ", cumWeights[i]
-
 		for i in xrange(0, NUMBER_OF_PARTICLES):
 			r = uniform(0, 1)
 			index = bisect(cumWeights, r) #Hack  # O(logn)
@@ -180,13 +174,8 @@ class ParticleFilter:
 			(x, y, t, _) = self.particleSet[index]
 			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
 		
-			
-
-		# particle0 = self.particleSet[0]  # preserved 0th index
+		
 		self.particleSet = newParticleSet
-		# self.particleSet[0] = (particle0[0], particle0[1], particle0[2], 1./NUMBER_OF_PARTICLES)  # preserved 0th index
-
-		# time.sleep(100)
 
 	def drawParticles(self):
 		for i in range(0, NUMBER_OF_PARTICLES):

@@ -71,9 +71,9 @@ class Motors:
 		# calculate power
 		power_est = self._velToPower(prefer_vel)
 		power_sign = sign(power_est)
-		power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
-		#power = abs(self._velToPower(prefer_vel))*power_sign
-		
+		# power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
+		power = abs(self._velToPower(prefer_vel))*power_sign
+
 		# print motor_index, power, self.dpower[motor_index]
  
 		# set power
