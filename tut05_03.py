@@ -86,9 +86,9 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	# z = robot.sonar.getSmoothSonarDistance(0.05)
+	z = robot.sonar.getSmoothSonarDistance(0.05)
 	# print "Measurement : FAKE"
-	z = particleFilter.getIdealM()
+	# z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)

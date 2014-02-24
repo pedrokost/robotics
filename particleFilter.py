@@ -81,6 +81,9 @@ class ParticleFilter:
 	def _get_predict_m(self, x, y, theta):
 		nWalls = len(self.Map.walls)
 
+		# point to the wall
+		theta = toPIPI(theta - pi/2)
+
 		best_m = -1
 		# estimate sonar measurement from the predict one of each wall
 		for i in range(0, nWalls):

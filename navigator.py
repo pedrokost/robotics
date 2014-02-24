@@ -16,6 +16,46 @@ class Navigator:
 		self.dToGo = 0
 		self.thToGo = 0
 
+		# substate for rotate and translate exactly
+		self.dAbsToGo = 0
+		self.dSign = 0
+		self.thAbsToGo = 0
+		self.thSign = 0
+		self.navSubState = 'None'
+
+
+	def rotateX(self, x, enc_distL, enc_distR):	
+		if(self.navSubState != 'RotateX'):
+			self.navSubState = 'RotateX'
+			self.thAbsToGo = abs(x)
+			self.thSign = sign(x)
+			return (0, 0, 'RotateX')  			
+		
+		if(self.thAbsToGo < 0):
+			self.navSubState = 'Complete'
+			return (0, 0, 'Complete')  			
+
+		motionTH = (enc_distR - enc_distL)/(2*RW_DIST)
+		self.thAbsToGo -= abs(motionTH)
+
+		return (-self.thSign*NAV_ROT_VEL_SMALL, self.thSign*NAV_ROT_VEL_SMALL, 'RotateX')
+
+	def translateX(self, x, enc_distL, enc_distR):	
+		if(self.navSubState != 'translateX'):
+			self.navSubState = 'translateX'
+			self.dAbsToGo = abs(x)
+			self.dSign = sign(x)
+			return (0, 0, 'translateX')  			
+		
+		if(self.dAbsToGo < 0):
+			self.navSubState = 'Complete'
+			return (0, 0, 'Complete')  			
+
+		motionD = (enc_distR + enc_distL)/2
+		self.dAbsToGo -= abs(motionD)
+
+		return (self.dSign*NAV_FWD_VEL, self.dSign*NAV_FWD_VEL, 'RotateX')
+
 	def navigateToWayPoint(self, robotState, goalPoint):
 		#calculate angle different
 		dx = goalPoint[0] - robotState[0]
