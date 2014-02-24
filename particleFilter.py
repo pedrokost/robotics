@@ -24,6 +24,9 @@ class ParticleFilter:
 		#	print x, " : ", self._calculate_likelihood(x, start_pose[1], start_pose[2], 25)
 
 	def motionUpdate(self, distL, distR):
+		"""
+		Update particle state after a motion update (based on encoder)
+		"""
 		# calculate estimated motion
 		motionD  = (distR + distL)/2            # average moved direction of both wheels
 		motionTH = (distR - distL)/(2*RW_DIST)  # rotation (voluntary or not) 
@@ -51,6 +54,9 @@ class ParticleFilter:
 				self.particleSet[i] = self._updateParticleRotate(self.particleSet[i], motionTH, g)
 
 	def measurementUpdate(self, z):
+		"""
+		After measurments, update particles state
+		"""
 		for i in range(0, NUMBER_OF_PARTICLES):
 			p = self.particleSet[i]			
 			new_w = self._calculate_likelihood(p[0], p[1], p[2], z)*p[3]
@@ -185,6 +191,17 @@ class ParticleFilter:
 			draw_th = int((self.particleSet[i][2] + pi)/pi*180) # change radian to degree
 			self.particleDraw[i] = (self.particleSet[i][0], self.particleSet[i][1], draw_th, self.particleSet[i][3])
 		self.canvas.drawParticles(self.particleDraw)
+
+		particle = self.bestParticle()
+		self.canvas.drawArrow(particle[0], particle[1], particle[2])
+
+	def bestParticle(self):
+		bestIndex = 0
+		for i in range(1, NUMBER_OF_PARTICLES):
+			if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
+				bestIndex = i
+			
+		return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
 
 	def _updateParticle(self, particleState, motionD, motionTH, e, f):
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])

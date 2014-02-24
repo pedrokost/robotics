@@ -56,8 +56,8 @@ class Motors:
 		d_error = error - self.prevError[motor_index]
 		acc_error = self.accError[motor_index] + error
 
-		if(motor_index == 0):
-			print "error : ", error
+		# if(motor_index == 0):
+		# 	print "error : ", error
 
 		# update static params
 		self.accError[motor_index] = acc_error
@@ -65,8 +65,8 @@ class Motors:
 
 		# update power (Not use pid)
 		self.dpower[motor_index] += self._velToPower(MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error)
-		if(motor_index == 0):
-			print "part : ", self._velToPower(MOTOR_VEL_KP*error), self._velToPower(MOTOR_VEL_KI*acc_error), self._velToPower(MOTOR_VEL_KD*d_error)
+		# if(motor_index == 0):
+		# 	print "part : ", self._velToPower(MOTOR_VEL_KP*error), self._velToPower(MOTOR_VEL_KI*acc_error), self._velToPower(MOTOR_VEL_KD*d_error)
 
 		# calculate power
 		power_est = self._velToPower(prefer_vel)

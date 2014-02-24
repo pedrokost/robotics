@@ -69,13 +69,11 @@ action = 'None'
 timeStep = 0
 while True:
 	timeStep += 1
-	time.sleep(0.001)
+	# time.sleep(0.001)
 
 	# get encoder data (for actual run)
-	enc_distL, enc_dtL = encoder.getMovingDistance(leftMotorPort);
-	enc_distR, enc_dtR = encoder.getMovingDistance(rightMotorPort);
-	enc_velL = enc_distL/enc_dtL;
-	enc_velR = enc_distR/enc_dtR;
+	enc_distL, enc_velL = encoder.getMovingDistanceAndVelocity(leftMotorPort)
+	enc_distR, enc_velR = encoder.getMovingDistanceAndVelocity(rightMotorPort)
 
 	#print enc_distL
 	# temp encoder data (for simulation only)
@@ -86,38 +84,31 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	z = robot.sonar.getSmoothSonarDistance(0.05)
+	# z = robot.sonar.getSmoothSonarDistance(0.05)
 	# print "Measurement : FAKE"
-	# z = particleFilter.getIdealM()
-
-	# motion update
+	z = particleFilter.getIdealM()
+	# z = 250
 	particleFilter.motionUpdate(enc_distL, enc_distR)
 
 	# measurement update
-	if(action != 'Rotate'): #update only when translate
-	# if(z < 120 and action != 'Rotate'): #update only when translate
+	# if(action != 'Rotate'): #update only when translate
+	if(z < 120): #update only when we can get accurate measurments
 		particleFilter.measurementUpdate(z)
 		particleFilter.normalizeWeights()
 
-	# get predict state
 	robotState = particleFilter.getPredictState()
+
+	# print robotState[2]*180/pi
 
 	# print state
 	#print "State : ", robotState
 	#print "Goal : ", currentPointIndex, wayPoints[currentPointIndex]
 
-	# set control signal
-	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
-	print leftVel, rightVel
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	#if action is not lastAction:
-	#	robot.motors.reset()
-	#lastAction = action
+	# leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul3(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
 
-	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
-	# set waypoint index
+	# # set waypoint index
 	if(action == 'Complete'):
 		currentPointIndex += 1
 		if(currentPointIndex >= len(wayPoints)):
@@ -125,9 +116,16 @@ while True:
 	
 	# resampling
 	if(timeStep%RESAMPLING_PERIOD == 0):
-		print "Updated measurements"
 		particleFilter.resample()
 
 	# draw particle
 	if(timeStep%DRAWING_PERIOD == 0):
 		particleFilter.drawParticles()
+
+	# if action != 'Complete':
+	# 	leftVel, rightVel, action = navigator.rotateX(pi/2, enc_distL, enc_distR)
+	
+	# if action == 'Complete':
+	# 	break
+
+	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
