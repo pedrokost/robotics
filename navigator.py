@@ -4,8 +4,9 @@ from constants import *
 
 ACCEPTABLE_ANGLE_LARGE = pi/12  # about 5 degress
 ACCEPTABLE_ANGLE_SMALL = pi/36  # about 1 degress
-ACCEPTABLE_DISTANCE = 1  # cm
+ACCEPTABLE_DISTANCE = 3  # cm
 NAV_FWD_VEL = 8
+NAV_ROT_VEL = 7
 NAV_ROT_VEL_LARGE = 6
 NAV_ROT_VEL_SMALL = 3
 
@@ -60,6 +61,12 @@ class Navigator:
 		action = 'Stop'
 
 		if(abs(diffD) <= ACCEPTABLE_DISTANCE):
+			# print "I AM DESPERATE"
+			# for x in xrange(1,20):
+			# 	BrickPi.MotorSpeed[LEFT_MOTOR] = FWD_SIGN*int(round(150))
+			# 	BrickPi.MotorSpeed[RIGHT_MOTOR] = FWD_SIGN*int(round(150))
+			# 	BrickPiUpdateValues()
+			# 	time.sleep(0.05)
 			self.navState = 'Complete'
 			action = 'Complete'
 			return (leftVel, rightVel, action)
@@ -113,6 +120,9 @@ class Navigator:
 		prefer_th = atan2(dy, dx)
 		dth = toPIPI(prefer_th - robotState[2])	
 
+		leftVel = 0
+		rightVel = 0
+
 		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
 			self.lastGoalPoint = goalPoint
 			self.navState = 'Rotate' # rotate first
@@ -146,15 +156,16 @@ class Navigator:
 
 			if(abs(self.dToGo) <= ACCEPTABLE_DISTANCE):
 				self.navState = 'None'
+				action = 'Complete'
 			else:
 				action = 'Forward'
 				leftVel = NAV_FWD_VEL
 				rightVel = NAV_FWD_VEL
 
-		if(self.navState == 'None'):
-			action = 'Stop'
-			leftVel = 0
-			rightVel = 0
+		# if(self.navState == 'None'):
+		# 	action = 'Stop'
+		# 	leftVel = 0
+		# 	rightVel = 0
 
 		return (leftVel, rightVel, action)
 #		

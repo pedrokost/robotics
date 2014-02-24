@@ -5,6 +5,9 @@ from particleFilter import *
 from encoder import *
 from random import uniform
 from navigator import Navigator
+from math import cos, sin, atan2
+from utilities import *
+
 
 def drawTrajectory(points):
 	n = len(points)
@@ -52,6 +55,29 @@ mymap.draw();
 
 # initialize way points
 wayPoints = [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
+
+def interpolate(points):
+	p = points[0]
+	newPoints = []
+	for i in xrange(1, len(points)):
+		newPoints.append(p)
+		p2 = points[i]
+
+		theta = atan2(p2[1] - p[1], p2[0] - p[0])
+
+		tmpp = p
+		while diffDist(p2, tmpp) > 15:
+			newp = (tmpp[0] + 15*cos(theta), tmpp[1] + 15*sin(theta))
+
+			newPoints.append(newp)
+			tmpp = newp
+		p = p2
+
+	return newPoints
+
+wayPoints = interpolate(wayPoints)
+
+print wayPoints
 #wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
 drawTrajectory(wayPoints)
 currentPointIndex = 1
@@ -107,8 +133,8 @@ while True:
 
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	# leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
 	#if action is not lastAction:
 	#	robot.motors.reset()
 	#lastAction = action

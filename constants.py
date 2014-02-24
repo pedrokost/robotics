@@ -1,5 +1,6 @@
 from math import pi
 from BrickPi import *
+from utilities import *
 
 NEAR_ZERO = 0.0000001
 M_PI = pi   # for backwards compatibility
@@ -27,7 +28,7 @@ ROT_VEL  = FWD_SIGN*100  # Velocity of robot rotation
 LOWEST_VEL = 55
 
 LEFT_MOTOR = PORT_A     # Motor port left
-RIGHT_MOTOR = PORT_B    # Motor port right
+RIGHT_MOTOR = PORT_C    # Motor port right
 
 LEFT_TOUCH = PORT_2
 RIGHT_TOUCH = PORT_1
@@ -47,9 +48,9 @@ DISPLAY_OFFSET_Y = 200
 
 # Porticle filter constants
 NUMBER_OF_PARTICLES = 100 #100
-SIGMA_E = 0.1          # error noise when driving straight
-SIGMA_F = pi/4000      # angular error noise when driving straight
-SIGMA_G = pi/4000      # angular error noise when rotating
+SIGMA_E = 0.3          # error noise when driving straight
+SIGMA_F = degToRad(0.2)      # angular error noise when driving straight
+SIGMA_G = degToRad(0.4)      # angular error noise when rotating
 
 
 # How aggresively should it turn towards the goal

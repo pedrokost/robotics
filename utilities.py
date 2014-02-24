@@ -57,3 +57,9 @@ def limitTo(x, min_val, max_val):
 	if(x > max_val):
 		x = max_val
 	return x
+
+def degToRad(deg):
+	return deg * math.pi / 180
+
+def radToDeg(rad):
+	return rad / math.pi * 180
