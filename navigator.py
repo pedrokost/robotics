@@ -69,26 +69,20 @@ class Navigator:
 			# check if the robot is at the goal angle
 			if(abs(diffTh) <= ACCEPTABLE_ANGLE_SMALL):
 				self.navState = 'Translate'
-			elif(abs(diffTh) <= ACCEPTABLE_ANGLE_LARGE):
-				# set control command
-				if(diffTh > 0):
-					action = 'Rotate'
-					leftVel = -NAV_ROT_VEL_SMALL
-					rightVel = NAV_ROT_VEL_SMALL
-				else:
-					action = 'Rotate'
-					leftVel = NAV_ROT_VEL_SMALL
-					rightVel = -NAV_ROT_VEL_SMALL
 			else:
+				if abs(diffTh) <= ACCEPTABLE_ANGLE_LARGE:
+					vel = NAV_ROT_VEL_SMALL
+				else:
+					vel = NAV_ROT_VEL_LARGE
 				# set control command
 				if(diffTh > 0):
 					action = 'Rotate'
-					leftVel = -NAV_ROT_VEL_LARGE
-					rightVel = NAV_ROT_VEL_LARGE
+					leftVel = -vel
+					rightVel = vel
 				else:
 					action = 'Rotate'
-					leftVel = NAV_ROT_VEL_LARGE
-					rightVel = -NAV_ROT_VEL_LARGE
+					leftVel = vel
+					rightVel = -vel
 		elif(self.navState == 'Translate'):
 			if(abs(diffTh) > ACCEPTABLE_ANGLE_LARGE):
 				self.navState = 'Rotate'
