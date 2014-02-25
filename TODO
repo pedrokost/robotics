@@ -5,5 +5,5 @@ Practical 5:
  ☐ Physical: Mount sonar sensor on robot using gear for accurate rotation
  ☐ Implementation: Perform measurments on rotating sensor every N degrees
  ☐ Physical: scan map at given location, and store measurments to disk (seet test_signatures.py)
- ☐ Implementation: SignatureRecognizer is able to return the absolute shift in number of bins (cycle rotate) between 2 Signatures -- we need to write an additional method that converts this into the angle. Additionally, this code performs an exhaustive search... should be able to optimize easily by rotating the signatures so that the minimum value is first or something similar
+ ✔ Implementation: SignatureRecognizer is able to return the absolute shift in number of bins (cycle rotate) between 2 Signatures -- we need to write an additional method that converts this into the angle. Additionally, this code performs an exhaustive search... should be able to optimize easily by rotating the signatures so that the minimum value is first or something similar @done (14-02-25 17:48)
  ☐ Physical: 4.3 -- probably should just be testing and minor fixes one the above tasks are done.
