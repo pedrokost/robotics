@@ -1,8 +1,8 @@
 import numpy as np
 
-class Histogram:
+class Signature:
 	"""
-	Represents a histogram of datapoint
+	Represents a signature of a set of measurements in place (360 deg)
 	"""
 	def __init__(self, vector, nBins = 20):
 		"""

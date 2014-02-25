@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 def toPIPI(angle):
 	"""
@@ -37,6 +38,12 @@ def diffDist(point0, point1):
 	dx = point0[0] - point1[0]
 	dy = point0[1] - point1[1]
 	return math.sqrt(dx*dx + dy*dy)
+
+def square_euclidean_distance(vector1, vector2):
+	"""
+	Returns the square euclidean distance between 2 numpy vectors
+	"""
+	return np.sum(np.square(vector1 - vector2))
 
 def cumsum(list):
     total = 0
