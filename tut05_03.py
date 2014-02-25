@@ -75,7 +75,7 @@ def interpolate(points):
 
 	return newPoints
 
-# wayPoints = interpolate(wayPoints)
+#wayPoints = interpolate(wayPoints)
 
 print wayPoints
 #wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
@@ -120,9 +120,9 @@ while True:
 	particleFilter.motionUpdate(enc_distL, enc_distR)
 
 	# measurement update
-	if(z < 120 and z > 20): #update only when translate
-		particleFilter.measurementUpdate(z)
-		particleFilter.normalizeWeights()
+	#if(z < 120 and z > 15): #update only when translate
+	particleFilter.measurementUpdate(z)
+	particleFilter.normalizeWeights()
 
 	# get predict state
 	robotState = particleFilter.getPredictState()

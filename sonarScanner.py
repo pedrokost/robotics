@@ -2,12 +2,26 @@ from encoder import *
 from math import *
 from motorScanner import *
 
-SCAN_START = 0
+START_ANGLE = 0
 SCAN_STEP = pi/180 # 1 degree
-SCAN_END = 2*pi
+END_ANGLE = 2*pi
+
 class SonarScanner:
+	def __init__(self, motorPort, sonarPort):
+		self.motorScanner = MotorScanner(motorPort)
+		self.sonarPort = sonarPort
+
+	# 
+	# Function to scan from 0 to 360. Each step takes SCAN_STEP Radian
 	def scan():
-		# move motor to angle SCAN_START
+		current_angle = START_ANGLE
+
+		while(True):
+			# read sonar
+			# rotate to degree
+
+
+
 
 
 		return 

@@ -23,7 +23,9 @@ class MotorScanner:
 			return
 
 		# calculate moving direction
-		moving_dir = sign(diff_angle)
+		#
+		moving_dir = sign(diff_angle) # if 
+		
 
 		# 
 
