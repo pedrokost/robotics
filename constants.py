@@ -49,9 +49,8 @@ DISPLAY_OFFSET_Y = 200
 # Porticle filter constants
 NUMBER_OF_PARTICLES = 100 #100
 SIGMA_E = 0.3          # error noise when driving straight
-SIGMA_F = degToRad(0.2)      # angular error noise when driving straight
-SIGMA_G = degToRad(0.4)      # angular error noise when rotating
-
+SIGMA_F = degToRad(0.3)      # angular error noise when driving straight
+SIGMA_G = degToRad(0.5)      # angular error noise when rotating
 
 # How aggresively should it turn towards the goal
 # (determines the smoothness of the movement)

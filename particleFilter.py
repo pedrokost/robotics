@@ -53,7 +53,11 @@ class ParticleFilter:
 	def measurementUpdate(self, z):
 		for i in range(0, NUMBER_OF_PARTICLES):
 			p = self.particleSet[i]
-			new_w = self._calculate_likelihood(p[0], p[1], p[2], z)*p[3]
+			lik, valid = self._calculate_likelihood(p[0], p[1], p[2], z)
+			if(valid):
+				new_w = lik*p[3]
+			else: # if the particle goes off map boundary
+				new_w = 0
 			self.particleSet[i] = (p[0], p[1], p[2], new_w)
 
 	def compute_m(self, Ax, Ay, Bx, By, x, y, theta):
@@ -118,12 +122,15 @@ class ParticleFilter:
 		best_m = self._get_predict_m(x, y, theta)
 		if(best_m < 0):
 			print "Something wrong!"
+			valid = False
+		else:
+			valid = True
 
 		# calculate likelihood
 		dz = z - best_m;
 		lik = exp(-(dz*dz)/(2*SIGMA_Z*SIGMA_Z)) + LIK_K
 
-		return lik
+		return lik, valid
 
 	def getPredictState(self):
 		#maximum weight

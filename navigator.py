@@ -118,7 +118,9 @@ class Navigator:
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
 		prefer_th = atan2(dy, dx)
-		dth = toPIPI(prefer_th - robotState[2])	
+		dth = toPIPI(prefer_th - robotState[2])
+		if(abs(prefer_th - robotState[2]) >= pi):
+			dth = -dth
 
 		leftVel = 0
 		rightVel = 0
