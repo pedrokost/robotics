@@ -25,25 +25,36 @@ class HistogramRecognizer():
 
 	def distance(self, hist1, hist2):
 		"""
-		Returns the square of the euclidean distance between the histograms
+		Returns the square of the euclidean distance between the histograms.
+		hist1 and hist2 are np.ndarray objects (enumerable lists)
 		"""
-		return np.sum(np.square(hist1.hist - hist2.hist))
+		return np.sum(np.square(hist1 - hist2))
 
 
-	def shift(self, hist1, hist2):
+	def shift(self, vector1, vector2):
 		"""
-		Returns the shift between two histograms
+		Returns the shift between two vectors.
+		vector1 is the reference vectorogram, vector2 is the one we want to compare against the reference 
+		vector1 and vector2 are np.ndarray objects (enumerable lists)
 		"""
-		pass
+		# min_vector1_index = min(enumerate(vector1.values), key=operator.itemgetter(1))
+		# min_vector2_index = min(enumerate(vector1.values), key=operator.itemgetter(1))
 
-		# min_hist1_index = min(enumerate(hist1.values), key=operator.itemgetter(1))
-		# min_hist2_index = min(enumerate(hist1.values), key=operator.itemgetter(1))
-
-		# find the minimum index in hist1.values
-		# find the minimum index in hist2.values
+		# find the minimum index in vector1.values
+		# find the minimum index in vector2.values
 		# return the difference between the values?
 
 		# This below is the stupid way, that should work
+		shift = -1
+		bestDist = float("inf")
+		for i in xrange(0, len(vector1)):
+			h = np.roll(vector2, i)
+			d = self.distance(h, vector1)
+			if d < bestDist:
+				bestDist = d
+				shift = i
+
+		return shift, bestDist
 		
 
 	def getHists(self):
