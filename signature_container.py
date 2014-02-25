@@ -48,7 +48,10 @@ class SignatureContainer():
             
     # Writes the signature to the file identified by index (e.g, if index is 1
     # it will be file loc_01.dat). If file already exists, it will be replaced.
-    def save(self, signature, index):
+    def save(self, signature, index=-1):
+    	if index < 0:
+    		index = self.get_free_index()
+
         if index > self.size - 1:
             print "FAIL:  You exceeded the maximum size of the signature container"
             return False
@@ -63,6 +66,18 @@ class SignatureContainer():
             f.write(s)
 
         f.close();
+
+    def readAll(self):
+    	"""
+		Returns a list of all existing stored signatures.
+		Assumes indexes are written consecutively.
+    	"""
+    	last = self.get_free_index()
+    	sigs = []
+    	for x in xrange(0, last):
+    		sigs.append( self.read(x) )
+    	return sigs
+
 
     # Read signature file identified by index. If the file doesn't exist
     # it returns an empty signature.
