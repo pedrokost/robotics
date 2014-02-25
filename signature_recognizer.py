@@ -41,29 +41,39 @@ class SignatureRecognizer:
 		"""
 		return square_euclidean_distance(signature1.sig, signature2.sig)
 
-	def shift(self, signature1, signature2):
-		return self.__shift(signature1.values, signature2.values)
+	def shift(self, signature1, signature2, **kwargs):
+		return self.__shift(signature1.values, signature2.values, **kwargs)
 
-	def __shift(self, vector1, vector2):
+	def __shift(self, vector1, vector2, exhaustive=False, debug=False):
 		"""
 		Returns the absolute shift between two enumerables.
 		vector1 is the reference vector, vector2 is the one we want to compare against the reference 
+
+		If exhaustive flag is set, performs an exhaustive search by attempting all possible shifts, else it tries to normalize the curves by finding the minimum
 		"""
-		# min_vector1_index = min(enumerate(vector1.values), key=operator.itemgetter(1))
-		# min_vector2_index = min(enumerate(vector1.values), key=operator.itemgetter(1))
 
-		# find the minimum index in vector1.values
-		# find the minimum index in vector2.values
-		# return the difference between the values?
+		if exhaustive:
+			shift = -1
+			bestDist = float("inf")
+			for i in xrange(0, len(vector1)):
+				cycled_values = np.roll(vector2, i)
+				d = square_euclidean_distance(cycled_values, vector1)
+				if d < bestDist:
+					bestDist = d
+					shift = i
+			
+			if debug:
+				print "Best distance", bestDist
 
-		# This below is the stupid way, that should work
-		shift = -1
-		bestDist = float("inf")
-		for i in xrange(0, len(vector1)):
-			cycled_values = np.roll(vector2, i)
-			d = square_euclidean_distance(cycled_values, vector1)
-			if d < bestDist:
-				bestDist = d
-				shift = i
+			return shift
+		else:
+			# Finds the minimum value, and rotates the signatures to it
+			min_v1_index, _ = min(enumerate(vector1), key=operator.itemgetter(1))
+			min_v2_index, _ = min(enumerate(vector2), key=operator.itemgetter(1))
+			shift = min_v1_index - min_v2_index
 
-		return shift, bestDist
+			if debug:
+				v2 = np.roll(vector2, shift)
+				bestDist = square_euclidean_distance(vector1, v2)
+				print "Best distance", bestDist
+			return shift

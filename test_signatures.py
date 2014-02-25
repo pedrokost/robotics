@@ -13,12 +13,14 @@ s3 = Signature([5,6,7,8,9,7,8,9,8,7,8,5,4,3,2,3], 10)
 container.save(s0)
 container.save(s1)
 container.save(s2)
-# container.save(s3)
+container.save(s3)
+
+s4 = Signature([8,5,4,3,2,3,5,6,7,8,9,7,8,9,8,7], 10)  # permuted s3
 
 recognizer = SignatureRecognizer(container)
-print recognizer.distance(s1, s2)
-print recognizer.shift(s1, s2)
 
-print recognizer.sigs()
+# print recognizer.sigs()
 
-print recognizer.closest(s3)
+i, d, closest = recognizer.closest(s4)
+print i, d, closest
+print recognizer.shift(closest, s4, exhaustive=False)
