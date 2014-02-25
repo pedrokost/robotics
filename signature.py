@@ -11,7 +11,6 @@ class Signature:
 		self.values = np.array(vector)
 		self.sig = self.sig(vector, nBins)  # histogram
 
-	# TODO memoize
 	def sig(self, vector, nBins):
 		h, _ = np.histogram(vector, nBins)
 		return h
