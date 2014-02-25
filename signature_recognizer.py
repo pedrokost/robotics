@@ -11,8 +11,9 @@ class SignatureRecognizer:
 		values (returns raw values)  -- numpy.array
 	"""
 
-	def __init__(self):
-		self.signatures = self.getSignatures()
+	def __init__(signature_container, self):
+		self.container = signature_container # manages reading/writing signatures to/from files
+		# self.sigs = self.getSignatures()
 
 	def closestTo(self, signature):
 		"""
@@ -22,7 +23,7 @@ class SignatureRecognizer:
 			distance to most similar signature
 			most similar signature
 		"""
-		dists = [self.distance(signature.hist, s.hist) for s in self.signatures]
+		dists = [self.distance(signature.sig, s.sig) for s in self.sigs]
 		min_index, min_value = min(enumerate(dists), key=operator.itemgetter(1))
 		return min_index, min_value, self.hists[min_index]
 
@@ -30,7 +31,7 @@ class SignatureRecognizer:
 		"""
 		Returns the square of the distance between the signatures.
 		"""
-		return square_euclidean_distance(signature1.hist, signature2.hist)
+		return square_euclidean_distance(signature1.sig, signature2.sig)
 
 	def shift(self, signature1, signature2):
 		return self.__shift(signature1.values, signature2.values)

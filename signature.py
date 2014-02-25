@@ -9,8 +9,11 @@ class Signature:
 		The vector contains reliable scalar values (in case of distance measurments, only those where the distance is below 100cm, and angle to wall < 40 deg)
 		"""
 		self.values = np.array(vector)
-		self.hist = self.hist(vector, nBins)
+		self.sig = self.sig(vector, nBins)  # histogram
 
-	def hist(self, vector, nBins):
+	def sig(self, vector, nBins):
 		h, _ = np.histogram(vector, nBins)
 		return h
+
+	def __str__(self):
+		return str(self.sig)
