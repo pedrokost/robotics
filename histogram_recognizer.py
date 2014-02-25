@@ -7,6 +7,7 @@ class HistogramRecognizer():
 	histogram should respond to: hist (returns the histogram) -- numpy.array
 	          					 values (returns raw values)  -- numpy.array
 	"""
+
 	def __init__(self):
 		self.hists = self.getHists()
 
@@ -34,6 +35,7 @@ class HistogramRecognizer():
 		Returns the shift between two histograms
 		"""
 		pass
+
 		# min_hist1_index = min(enumerate(hist1.values), key=operator.itemgetter(1))
 		# min_hist2_index = min(enumerate(hist1.values), key=operator.itemgetter(1))
 
@@ -55,5 +57,4 @@ class HistogramRecognizer():
 		# 	pass
 
 		# return self.hists
-
 
