@@ -4,6 +4,7 @@
 
 import random
 import os
+import sonarScanner
 
 # Location signature class: stores a signature characterizing one location
 class LocationSignature:
@@ -80,8 +81,8 @@ class SignatureContainer():
 # FILL IN: spin robot or sonar to capture a signature and store it in ls
 def characterize_location(ls):
     print "TODO:    You should implement the function that captures a signature."
-    for i in range(len(ls.sig)):
-        ls.sig[i] = random.randint(0, 255)
+    scanner = sonarScanner()
+    ls = scanner.scan()
 
 # FILL IN: compare two signatures
 def compare_signatures(ls1, ls2):
