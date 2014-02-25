@@ -25,7 +25,7 @@ class Encoder:
 		Returns the last traveled distance segment (in cm),
 		together with the velocity of the segment
 		"""
-		dist, dtime = self.getMovingDistance(motor_port);
+		dist, dtime = encoder.getMovingDistance(leftMotorPort);
 
 		vel = dist/dtime;
 

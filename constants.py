@@ -6,7 +6,7 @@ NEAR_ZERO = 0.0000001
 M_PI = pi   # for backwards compatibility
 
 W_RADIUS = 2.45 # wheel radius in cm # if move too much -> increase
-RW_DIST = 5.8 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
+RW_DIST = 6.2 #5.8 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
 ENCODER_RATIO = 24.0/40.0 # Gear Parameter
 
 EASING_C = 0.05  # determines acceleration strenght
@@ -47,15 +47,10 @@ DISPLAY_OFFSET_Y = 200
 
 
 # Porticle filter constants
-NUMBER_OF_PARTICLES = 200
-SIGMA_E = 0.2         # error noise when driving straight
+NUMBER_OF_PARTICLES = 100 #100
+SIGMA_E = 0.3          # error noise when driving straight
 SIGMA_F = degToRad(0.2)      # angular error noise when driving straight
 SIGMA_G = degToRad(0.4)      # angular error noise when rotating
-
-# SIGMA_E = 0         # error noise when driving straight
-# SIGMA_F = 0      # angular error noise when driving straight
-# SIGMA_G = 0      # angular error noise when rotating
-
 
 
 # How aggresively should it turn towards the goal

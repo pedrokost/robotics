@@ -2,13 +2,13 @@ from utilities import *
 from math import *
 from constants import *
 
-ACCEPTABLE_ANGLE_LARGE = degToRad(20)  # about 5 degress
-ACCEPTABLE_ANGLE_SMALL = degToRad(10)  # about 1 degress
+ACCEPTABLE_ANGLE_LARGE = pi/12  # about 5 degress
+ACCEPTABLE_ANGLE_SMALL = pi/36  # about 1 degress
 ACCEPTABLE_DISTANCE = 3  # cm
 NAV_FWD_VEL = 8
+NAV_ROT_VEL = 7
 NAV_ROT_VEL_LARGE = 6
-NAV_ROT_VEL_SMALL = 10
-MAX_SEGMENT_DIST = 10
+NAV_ROT_VEL_SMALL = 3
 
 class Navigator:
 	def __init__(self):
@@ -16,57 +16,6 @@ class Navigator:
 		self.navState = 'None'
 		self.dToGo = 0
 		self.thToGo = 0
-
-		# substate for rotate and translate exactly
-		self.dAbsToGo = 0
-		self.dSign = 0
-		self.thAbsToGo = 0
-		self.thSign = 0
-		self.navSubState = 'None'
-
-		#
-		self.lastMove = False
-
-
-
-	def rotateX(self, x, enc_distL, enc_distR):	
-		if(self.navSubState != 'RotateX'):
-			self.navSubState = 'RotateX'
-			self.thAbsToGo = abs(x)
-			self.thSign = sign(x)
-			return (0, 0, 'RotateX')  		
-		
-		motionTH = (enc_distR - enc_distL)/(2*RW_DIST)
-		self.thAbsToGo -= abs(motionTH)
-
-		# print "xxxxxxxxxxxxxxxxxx", x, radToDeg(pi/2 - self.thAbsToGo)
-		
-		if(self.thAbsToGo < 0):
-			self.navSubState = 'Complete'
-			return (0, 0, 'Complete')
-
-
-
-		return (-self.thSign*NAV_ROT_VEL_SMALL, self.thSign*NAV_ROT_VEL_SMALL, 'RotateX')
-
-	def translateX(self, x, enc_distL, enc_distR):	
-		if(self.navSubState != 'translateX'):
-			self.navSubState = 'translateX'
-			self.dAbsToGo = abs(x)
-			self.dSign = sign(x)
-			return (0, 0, 'translateX')
-
-		# print self.dSign, self.dAbsToGo	
-		
-		motionD = (enc_distR + enc_distL)/2
-		self.dAbsToGo -= abs(motionD)
-
-		if(self.dAbsToGo < 0):
-			self.navSubState = 'Complete'
-			return (0, 0, 'Complete')  			
-
-
-		return (self.dSign*NAV_FWD_VEL, self.dSign*NAV_FWD_VEL, 'RotateX')
 
 	def navigateToWayPoint(self, robotState, goalPoint):
 		#calculate angle different
@@ -85,13 +34,14 @@ class Navigator:
 		meanV = limitTo(diffD*KmeanV, 6, 8)
 		rotV = limitTo(diffTh*KrotV, -20, 20)
 
-		# print "V : ", meanV, rotV
+		print "V : ", meanV, rotV
 
 		leftVel = meanV - rotV
 		rightVel = meanV + rotV
 
 		return (leftVel, rightVel, 'Not Complete')
 		
+
 
 	def navigateToWayPointStateFul(self, robotState, goalPoint):
 		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
@@ -111,6 +61,12 @@ class Navigator:
 		action = 'Stop'
 
 		if(abs(diffD) <= ACCEPTABLE_DISTANCE):
+			# print "I AM DESPERATE"
+			# for x in xrange(1,20):
+			# 	BrickPi.MotorSpeed[LEFT_MOTOR] = FWD_SIGN*int(round(150))
+			# 	BrickPi.MotorSpeed[RIGHT_MOTOR] = FWD_SIGN*int(round(150))
+			# 	BrickPiUpdateValues()
+			# 	time.sleep(0.05)
 			self.navState = 'Complete'
 			action = 'Complete'
 			return (leftVel, rightVel, action)
@@ -120,23 +76,32 @@ class Navigator:
 			# check if the robot is at the goal angle
 			if(abs(diffTh) <= ACCEPTABLE_ANGLE_SMALL):
 				self.navState = 'Translate'
-			else:
-				if abs(diffTh) <= ACCEPTABLE_ANGLE_LARGE:
-					vel = NAV_ROT_VEL_SMALL
-				else:
-					vel = NAV_ROT_VEL_LARGE
+			elif(abs(diffTh) <= ACCEPTABLE_ANGLE_LARGE):
 				# set control command
 				if(diffTh > 0):
 					action = 'Rotate'
-					leftVel = -vel
-					rightVel = vel
+					leftVel = -NAV_ROT_VEL_SMALL
+					rightVel = NAV_ROT_VEL_SMALL
 				else:
 					action = 'Rotate'
-					leftVel = vel
-					rightVel = -vel
+					leftVel = NAV_ROT_VEL_SMALL
+					rightVel = -NAV_ROT_VEL_SMALL
+			else:
+				# set control command
+				if(diffTh > 0):
+					action = 'Rotate'
+					leftVel = -NAV_ROT_VEL_LARGE
+					rightVel = NAV_ROT_VEL_LARGE
+				else:
+					action = 'Rotate'
+					leftVel = NAV_ROT_VEL_LARGE
+					rightVel = -NAV_ROT_VEL_LARGE
 		elif(self.navState == 'Translate'):
 			if(abs(diffTh) > ACCEPTABLE_ANGLE_LARGE):
 				self.navState = 'Rotate'
+			elif(abs(diffD) <= ACCEPTABLE_DISTANCE):
+				self.navState = 'Complete'
+				action = 'Complete'
 			else:
 				action = 'Forward'
 				leftVel = NAV_FWD_VEL
@@ -145,12 +110,18 @@ class Navigator:
 		#print "Diff (R, T) : ", diffTh*180/pi, diffTh
 		return (leftVel, rightVel, action)
 
+
+		
+
 	def navigateToWayPointStateFul2(self, robotState, enc_distL, enc_distR, goalPoint):
 		#calculate angle different
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
 		prefer_th = atan2(dy, dx)
 		dth = toPIPI(prefer_th - robotState[2])	
+
+		leftVel = 0
+		rightVel = 0
 
 		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
 			self.lastGoalPoint = goalPoint
@@ -185,68 +156,18 @@ class Navigator:
 
 			if(abs(self.dToGo) <= ACCEPTABLE_DISTANCE):
 				self.navState = 'None'
+				action = 'Complete'
 			else:
 				action = 'Forward'
 				leftVel = NAV_FWD_VEL
 				rightVel = NAV_FWD_VEL
 
-		if(self.navState == 'None'):
-			action = 'Stop'
-			leftVel = 0
-			rightVel = 0
+		# if(self.navState == 'None'):
+		# 	action = 'Stop'
+		# 	leftVel = 0
+		# 	rightVel = 0
 
 		return (leftVel, rightVel, action)
-
-	def navigateToWayPointStateFul3(self, robotState, enc_distL, enc_distR, goalPoint):
-		"""
-		This one makes movements per partes: move 20cm, then correct, repeat.
-		"""
-
-		#calculate angle different
-		dx = goalPoint[0] - robotState[0]
-		dy = goalPoint[1] - robotState[1]
-		prefer_th = atan2(dy, dx)
-		dth = toPIPI(prefer_th - robotState[2])
-
-		# Rotate first
-		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
-			self.lastGoalPoint = goalPoint
-			self.navState = 'Rotate' # rotate first
-			self.navSubState = 'None'
-
-		if self.navState == 'Rotate':
-			velL, velR, action = self.rotateX(dth, enc_distL, enc_distR)
-			# print "dth", dth
-			if action == 'Complete':
-				self.navState = 'Translate'
-
-
-		if self.navState == 'Translate':
-			dist = diffDist(robotState, goalPoint)
-
-			if dist < MAX_SEGMENT_DIST:
-				self.lastMove = True
-				velL, velR, action = self.translateX(dist, enc_distL, enc_distR)
-			else:
-				self.lastMove = False
-				velL, velR, action = self.translateX(MAX_SEGMENT_DIST, enc_distL, enc_distR)
-
-			if action == 'Complete':
-				self.navState = 'Rotate'
-				if self.lastMove:
-					self.navState = 'Complete'
-
-
-		print (velL, velR, self.navState)
-
-		return (velL, velR, self.navState)
-
-
-
-
-
-
-		
 #		
 #
 #	def navigateToWayPoint(self, robotState, robotVelocity, goalPoint):

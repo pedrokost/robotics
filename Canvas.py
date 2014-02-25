@@ -19,13 +19,6 @@ class Canvas:
         y2 = self.__screenY(line[3]);
         print "drawLine:" + str((x1,y1,x2,y2))
 
-    def drawArrow(self, x1, y1, theta):
-        l = 40
-        x2 = int(x1 + l * math.cos(theta))
-        y2 = int(y1 + l * math.sin(theta))
-        # print (x1,y1,x2,y2)
-        self.drawLine((x1,y1,x2,y2))
-
     def drawParticles(self,data):
         display = [(self.__screenX(d[0]),self.__screenY(d[1])) + d[2:] for d in data];
         print "drawParticles:" + str(display);

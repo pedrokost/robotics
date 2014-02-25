@@ -24,9 +24,6 @@ class ParticleFilter:
 		#	print x, " : ", self._calculate_likelihood(x, start_pose[1], start_pose[2], 25)
 
 	def motionUpdate(self, distL, distR):
-		"""
-		Update particle state after a motion update (based on encoder)
-		"""
 		# calculate estimated motion
 		motionD  = (distR + distL)/2            # average moved direction of both wheels
 		motionTH = (distR - distL)/(2*RW_DIST)  # rotation (voluntary or not) 
@@ -54,11 +51,8 @@ class ParticleFilter:
 				self.particleSet[i] = self._updateParticleRotate(self.particleSet[i], motionTH, g)
 
 	def measurementUpdate(self, z):
-		"""
-		After measurments, update particles state
-		"""
 		for i in range(0, NUMBER_OF_PARTICLES):
-			p = self.particleSet[i]			
+			p = self.particleSet[i]
 			new_w = self._calculate_likelihood(p[0], p[1], p[2], z)*p[3]
 			self.particleSet[i] = (p[0], p[1], p[2], new_w)
 
@@ -86,9 +80,6 @@ class ParticleFilter:
 	# return -1 if not intersect with any wall
 	def _get_predict_m(self, x, y, theta):
 		nWalls = len(self.Map.walls)
-
-		# point to the wall
-		theta = toPIPI(theta - pi/2)
 
 		best_m = -1
 		# estimate sonar measurement from the predict one of each wall
@@ -128,37 +119,35 @@ class ParticleFilter:
 		if(best_m < 0):
 			print "Something wrong!"
 
-
 		# calculate likelihood
 		dz = z - best_m;
 		lik = exp(-(dz*dz)/(2*SIGMA_Z*SIGMA_Z)) + LIK_K
-		# print z, lik, dz, "----------"
-		# 	print "Measured ", z, ""
-
 
 		return lik
 
 	def getPredictState(self):
-		# maximum weight
-		# bestIndex = 0
-		# for i in range(1, NUMBER_OF_PARTICLES):
-		# 	if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
-		# 		bestIndex = i
+		#maximum weight
+		bestIndex = 0
+		for i in range(1, NUMBER_OF_PARTICLES):
+			if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
+				bestIndex = i
 			
-		# return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
+		return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
 		#return self.particleSet[0]  # preserved 0th index
 
 		# mean
+		#best_x = 0
+		#best_y = 0
+		#best_th = 0
+		#for i in range(0, NUMBER_OF_PARTICLES):
+		#	best_x += self.particleSet[i][0]
+		#	best_y += self.particleSet[i][1]
+		#	best_th += self.particleSet[i][2]
 		
-		best_x = 0
-		best_y = 0
-		best_th = 0
-		for i in range(0, NUMBER_OF_PARTICLES):
-			best_x += self.particleSet[i][3]*self.particleSet[i][0]
-			best_y += self.particleSet[i][3]*self.particleSet[i][1]
-			best_th += self.particleSet[i][3]*self.particleSet[i][2]
-		
-		return (best_x, best_y, best_th)
+		#best_x /= NUMBER_OF_PARTICLES
+		#best_y /= NUMBER_OF_PARTICLES
+		#best_th /= NUMBER_OF_PARTICLES
+		#return (best_x, best_y, best_th)
 
 	def normalizeWeights(self):
 		"""
@@ -176,6 +165,14 @@ class ParticleFilter:
 		cumWeights = list(cumsum(weights))
 		newParticleSet = []
 
+		#print "Weight : "
+		#for i in range(0, 10):
+		#	print i, " : ", self.particleSet[i][3], "(", int(self.particleSet[i][0]), int(self.particleSet[i][1]), ")"
+
+		#print "Cum Weight : "
+		#for i in range(0, 10):
+		#	print i, " : ", cumWeights[i]
+
 		for i in xrange(0, NUMBER_OF_PARTICLES):
 			r = uniform(0, 1)
 			index = bisect(cumWeights, r) #Hack  # O(logn)
@@ -183,25 +180,19 @@ class ParticleFilter:
 			(x, y, t, _) = self.particleSet[index]
 			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
 		
-		
+			
+
+		# particle0 = self.particleSet[0]  # preserved 0th index
 		self.particleSet = newParticleSet
+		# self.particleSet[0] = (particle0[0], particle0[1], particle0[2], 1./NUMBER_OF_PARTICLES)  # preserved 0th index
+
+		# time.sleep(100)
 
 	def drawParticles(self):
 		for i in range(0, NUMBER_OF_PARTICLES):
 			draw_th = int((self.particleSet[i][2] + pi)/pi*180) # change radian to degree
 			self.particleDraw[i] = (self.particleSet[i][0], self.particleSet[i][1], draw_th, self.particleSet[i][3])
 		self.canvas.drawParticles(self.particleDraw)
-
-		particle = self.bestParticle()
-		self.canvas.drawArrow(particle[0], particle[1], particle[2])
-
-	def bestParticle(self):
-		bestIndex = 0
-		for i in range(1, NUMBER_OF_PARTICLES):
-			if(self.particleSet[bestIndex][3] < self.particleSet[i][3]):
-				bestIndex = i
-			
-		return (self.particleSet[bestIndex][0], self.particleSet[bestIndex][1], self.particleSet[bestIndex][2])
 
 	def _updateParticle(self, particleState, motionD, motionTH, e, f):
 		newX = particleState[0] + (motionD + e)*cos(particleState[2])
