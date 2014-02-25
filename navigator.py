@@ -5,17 +5,19 @@ from constants import *
 ACCEPTABLE_ANGLE_LARGE = pi/12  # about 5 degress
 ACCEPTABLE_ANGLE_SMALL = pi/36  # about 1 degress
 ACCEPTABLE_DISTANCE = 3  # cm
-NAV_FWD_VEL = 8
+NAV_FWD_VEL = 10
 NAV_ROT_VEL = 7
-NAV_ROT_VEL_LARGE = 6
-NAV_ROT_VEL_SMALL = 3
+NAV_ROT_VEL_LARGE = 4
+NAV_ROT_VEL_SMALL = 4
 
 class Navigator:
 	def __init__(self):
 		self.lastGoalPoint = (0, 0)
 		self.navState = 'None'
 		self.dToGo = 0
+		self.dSignToGo = 0
 		self.thToGo = 0
+		self.thSignToGo = 0
 
 	def navigateToWayPoint(self, robotState, goalPoint):
 		#calculate angle different
@@ -118,7 +120,9 @@ class Navigator:
 		dx = goalPoint[0] - robotState[0]
 		dy = goalPoint[1] - robotState[1]
 		prefer_th = atan2(dy, dx)
-		dth = toPIPI(prefer_th - robotState[2])	
+		dth = toPIPI(prefer_th - robotState[2])
+		#if(abs(prefer_th - robotState[2]) >= pi):
+		#	dth = -dth
 
 		leftVel = 0
 		rightVel = 0
@@ -127,6 +131,7 @@ class Navigator:
 			self.lastGoalPoint = goalPoint
 			self.navState = 'Rotate' # rotate first
 			self.thToGo = dth
+			self.thSignToGo = sign(dth)
 
 		# set control command		 
 		if(self.navState == 'Rotate'):
@@ -135,7 +140,7 @@ class Navigator:
 			self.thToGo -= motionTH			
 
 			# check if the robot is at the goal angle
-			if(abs(self.thToGo) <= ACCEPTABLE_ANGLE_SMALL):
+			if(self.thToGo*self.thSignToGo <= 0):
 				self.navState = 'Translate'
 				self.dToGo = diffDist(robotState, goalPoint)
 			else:
@@ -154,12 +159,11 @@ class Navigator:
 			motionD  = (enc_distR + enc_distL)/2
 			self.dToGo -= motionD
 
-			if(abs(self.dToGo) <= ACCEPTABLE_DISTANCE):
+			if(self.dToGo <= 0):
 				self.navState = 'None'
 				action = 'Complete'
 			else:
 				action = 'Forward'
-				leftVel = NAV_FWD_VEL
 				rightVel = NAV_FWD_VEL
 
 		# if(self.navState == 'None'):
