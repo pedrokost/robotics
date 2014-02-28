@@ -1,0 +1,21 @@
+from signature import Signature
+from signature_recognizer import SignatureRecognizer
+from signature_container import SignatureContainer
+from sonarScanner import *
+
+nScans = 5
+nBins = 10
+scanner = SonarScanner(PORT_4, PORT_C)
+s = []
+
+# read signatures
+for i in range(0, nScans):
+	data = scanner.scan()
+	new_s = Signature(data, nBins)
+	s.append(new_s)
+
+# save signatures
+container = SignatureContainer(nScans)
+container.delete_loc_files()
+for i in range(0, nScans):
+	container.save(s[i])
