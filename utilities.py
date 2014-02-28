@@ -70,3 +70,9 @@ def degToRad(deg):
 
 def radToDeg(rad):
 	return rad / math.pi * 180
+
+def getAngularDifferent(a1, a0):
+	a0 = toPIPI(a0)
+	a1 = toPIPI(a1)
+
+	return toPIPI(a1 - a0)
