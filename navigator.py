@@ -2,14 +2,15 @@ from utilities import *
 from math import *
 from constants import *
 
-ACCEPTABLE_ANGLE_LARGE = pi/12  # about 5 degress
-ACCEPTABLE_ANGLE_SMALL = pi/36  # about 1 degress
+ACCEPTABLE_ANGLE = degToRad(5)
+ACCEPTABLE_ANGLE_LARGE = pi/12  # about 15 degress
+ACCEPTABLE_ANGLE_SMALL = pi/36  # about 10 degress
 ACCEPTABLE_DISTANCE = 3  # cm
 NAV_FWD_VEL = 10
-NAV_ROT_VEL = 7
+NAV_ROT_VEL = 5.5
 NAV_ROT_VEL_LARGE = 4
 NAV_ROT_VEL_SMALL = 4
-BREAK_VEL = -10
+BREAK_VEL = -0.2
 
 class Navigator:
 	def __init__(self):
@@ -130,7 +131,7 @@ class Navigator:
 			self.thToGo -= motionTH			
 
 			# check if the robot is at the goal angle
-			if(self.thToGo*self.thSignToGo <= 0):
+			if(self.thToGo*self.thSignToGo <= ACCEPTABLE_ANGLE):
 				self.navState = 'Translate'
 				action = 'ToTranslate'
 				self.dToGo = diffDist(robotState, goalPoint)
@@ -176,6 +177,8 @@ class Navigator:
 
 
 		print action
+
+		print "thToGo : ", self.thToGo
 		# if(self.navState == 'None'):
 		# 	action = 'Stop'
 		# 	leftVel = 0

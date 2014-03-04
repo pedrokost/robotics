@@ -66,6 +66,11 @@ class ParticleFilter:
 			return 0
 		return ((By - Ay)*(Ax - x) - (Bx - Ax)*(Ay - y)) / bottom
 
+	def compute_beta(self, Ax, Ay, Bx, By, x, y, theta):
+		bottom = sqrt((Ay - By)*(Ay - By) + (Ax - Bx)*(Ax - Bx))
+		top = cos(theta)*(Ay - By) + sin(theta)*(Bx - Ax)
+		return acos(top/bottom)
+
 	def wall_intersection(self, x, y, theta, m):
 		Cx = x + m*cos(theta)			
 		Cy = y + m*sin(theta)
@@ -79,10 +84,11 @@ class ParticleFilter:
 		return ((AB[0]*AC[0] + AB[1]*AC[1] > 0) and (lenAC < lenAB))
 
 	def getIdealM(self):
-		return self._get_predict_m(self.particleSet[0][0], self.particleSet[0][1], self.particleSet[0][2])  # preserved 0th index
+		m, beta = self._get_predict_m_beta(self.particleSet[0][0], self.particleSet[0][1], self.particleSet[0][2])  # preserved 0th index
+		return m
 
 	# return -1 if not intersect with any wall
-	def _get_predict_m(self, x, y, theta):
+	def _get_predict_m_beta(self, x, y, theta):
 		nWalls = len(self.Map.walls)
 
 		best_m = -1
@@ -107,19 +113,22 @@ class ParticleFilter:
 			
 			# check if predict distance is minimum
 			if(best_m < 0 or best_m > predictM):  # the first possible or better
-				best_m = predictM			
+				best_m = predictM
+				best_beta = self.compute_beta(Ax, Ay, Bx, By, x, y, theta)	
 
 		if(best_m < 0):
-			print "Something wrong!"
+			print "Something wrong : M < 0"
 			print (x, y, theta)
 			time.sleep(100)
 
-		return best_m
+
+
+		return (best_m, best_beta)
 
 
 	# likelihood function for particle at state(x, y, theta) and current sonar measurement is z
 	def _calculate_likelihood(self, x, y, theta, z):
-		best_m = self._get_predict_m(x, y, theta)
+		best_m, beta = self._get_predict_m_beta(x, y, theta)
 		if(best_m < 0):
 			print "Something wrong!"
 			valid = False

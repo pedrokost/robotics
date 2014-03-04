@@ -132,11 +132,10 @@ while True:
 	#print "Goal : ", currentPointIndex, wayPoints[currentPointIndex]
 
 	# set control signal
-	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
-	# leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2((0, 0, 0), enc_distL, enc_distR, (0, 20))
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2((0, 0, 0), enc_distL, enc_distR, (10, 0))
+	#print "Command : ", leftVel, rightVel
+	#print "State : ", int(robotState[0]), radToDeg(robotState[2])
 
 	#if action is not lastAction:
 	#	robot.motors.reset()
