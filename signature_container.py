@@ -34,7 +34,7 @@ class SignatureContainer():
  
     # Delete all loc_%%.dat files
     def delete_loc_files(self):
-        print "STATUS:  All signature files removed."
+        # print "STATUS:  All signature files removed."
         for n in range(self.size):
             self.remove_loc_file(self.filenames[n])
             if os.path.isfile(self.filenames[n]):
