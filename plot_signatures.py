@@ -25,7 +25,7 @@ mymap.add_wall((168,210,168,84));   # e
 mymap.add_wall((168,84,210,84));    # f
 mymap.add_wall((210,84,210,0));     # g
 mymap.add_wall((210,0,0,0));        # h
-mymap.draw();
+# mymap.draw();
 
 
 def drawScanData(data, point):
@@ -54,10 +54,22 @@ p5 = container.read(4).values
 p7 = container.read(6).values
 vals = [p1, p2, p4, p5, p7]
 
+
+
 wayPoints = [(84, 30), (180,30), (126, 54), (126, 168), (30, 54)]
 
-# for p in range(len(wayPoints)):
-drawScanData(vals[0], wayPoints[0])
+# for i in range(len(wayPoints)):
+# 	drawScanData(vals[i], wayPoints[i])
+
+drawScanData(p5, (100, 50))
+new = medianFilter(list(p5))
+drawScanData(new, (180, 100))
+
+print p2 - p2_new
+
+
+# REdo index 1?
+# manually fix index 2
 
 # REdo 2 (index 1)
 # REdo 4 (index 3)

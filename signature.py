@@ -1,5 +1,5 @@
 import numpy as np
-from utilities import unitSum
+from utilities import unitSum, medianFilter
 
 class Signature:
 	"""
@@ -9,7 +9,8 @@ class Signature:
 		"""
 		The vector contains reliable scalar values (in case of distance measurments, only those where the distance is below 100cm, and angle to wall < 40 deg)
 		"""
-		self.values = np.array(vector)
+		cleanedVector = medianFilter(vector, 4)
+		self.values = np.array(cleanedVector)
 		self.sig = self.sig(vector, nBins)  # histogram
 
 	def sig(self, vector, nBins):

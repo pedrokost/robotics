@@ -82,3 +82,21 @@ def unitSum(vector):
 	s = sum(vec)
 	vec = [v / s for v in vec]
 	return vec
+
+def medianFilter(array, halfsize=4):
+	"""
+	Performs a median filtering on the array
+	"""
+	newArray = array[0:halfsize]
+	eachside = halfsize
+	right = len(array) - halfsize - 1
+	for x in xrange(halfsize, right):
+		window = array[x-eachside:x+eachside+1]
+		newArray.append(median(window))
+
+	newArray += (array[right:])
+
+	return newArray
+
+
+print medianFilter([1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1], 8)
