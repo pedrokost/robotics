@@ -76,3 +76,12 @@ def getAngularDifferent(a1, a0):
 	a1 = toPIPI(a1)
 
 	return toPIPI(a1 - a0)
+
+def unitSum(vector):
+	"""
+	Normalizes the vector so sum up to 1
+	"""
+	vec = map(float, vector)
+	s = sum(vec)
+	vec = [v / s for v in vec]
+	return vec

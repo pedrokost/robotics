@@ -1,4 +1,5 @@
 import numpy as np
+from utilities import unitSum
 
 class Signature:
 	"""
@@ -14,7 +15,7 @@ class Signature:
 	def sig(self, vector, nBins):
 		h, _ = np.histogram(vector, nBins)
 		# Normalize histogram to make it work with different number of measurments
-		h = map(float, h) / sum(h)
+		h = unitSum(h)
 		return h
 
 	def __str__(self):

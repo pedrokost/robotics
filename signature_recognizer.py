@@ -4,7 +4,7 @@ from signature import Signature
 from utilities import *
 from math import pi
 
-MINIMUM_THRESHOLD = 0   # vectors are normalized to 1, so this is used to find the indices of the minimums with a 10% soft boundary (to account for noise)
+MINIMUM_THRESHOLD = 0.1  # vectors are normalized to 1, so this is used to find the indices of the minimums with a *about* 10% soft boundary (to account for noise)
 
 class SignatureRecognizer:
 	"""
@@ -57,7 +57,10 @@ class SignatureRecognizer:
 		"""
 		Returns the absolute shift between two signatures
 		"""
-		return self.__shift(signature1.values, signature2.values, **kwargs)
+		s1_values = unitSum(signature1.values)
+		s2_values = unitSum(signature2.values)
+
+		return self.__shift(s1_values, s2_values, **kwargs)
 	
 	def __radiansPerShift(self, shift, max_shifts):
 		"""
@@ -78,7 +81,7 @@ class SignatureRecognizer:
 		else:
 			return self.__shift_fast(vector1, vector2, **kwargs)
 	
-	def __shift_exhaustive(self, vector1, vector2, debug=False):
+	def __shift_exhaustive(self, vector1, vector2, debug = False):
 		"""
 		Returns how much a vector was shifted
 
@@ -95,6 +98,7 @@ class SignatureRecognizer:
 		
 		if debug:
 			print "Best distance", bestDist
+			print "Total comparisons:", len(vector1)
 
 		return shift
 
@@ -102,13 +106,14 @@ class SignatureRecognizer:
 		"""
 		Returns how much a vector was shifted
 
-		The method is suboptimal (can give wrong shift) but fast
+		The method is almost always optimal but at least an order of
+		magnitude faster than the exhaustive shift
 		"""
 		min_v1_index, _ = min(enumerate(vector1), key=operator.itemgetter(1))
-		min_v2_index, min_v2_value = min(enumerate(vector2), key=operator.itemgetter(1))
+		_, min_v2_value = min(enumerate(vector2), key=operator.itemgetter(1))
 
 
-		val = min_v2_value + MINIMUM_THRESHOLD
+		val = min_v2_value + float(MINIMUM_THRESHOLD) / len(vector1)
 		min_v2_indices = [i for i, x in enumerate(vector2) if x <= val]
 
 		bestShift = -1
@@ -123,6 +128,7 @@ class SignatureRecognizer:
 
 		if debug:
 			v2 = np.roll(vector2, bestShift)
-			print "Best distance", bestDist
+			print "Best distance:", bestDist
+			print "Total comparisons:", len(min_v2_indices)
 
 		return bestShift

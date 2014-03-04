@@ -25,6 +25,7 @@ recognizer = SignatureRecognizer(container)
 # print "fast", shift_fast
 # print recognizer.theta(closest, s4, exhaustive=exhaustive, debug=False)
 
-for x in range(1000):
-	recognizer.theta(orig, shifted, exhaustive=False)
+for x in range(100):
+	# recognizer.shift(orig, shifted, exhaustive=True, debug=True)
+	recognizer.shift(orig, shifted, exhaustive=False, debug=True)
 
