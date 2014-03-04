@@ -75,7 +75,7 @@ def interpolate(points):
 
 	return newPoints
 
-#wayPoints = interpolate(wayPoints)
+wayPoints = interpolate(wayPoints)
 
 print wayPoints
 #wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
@@ -112,9 +112,9 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	z = robot.sonar.getSmoothSonarDistance(0.05)
-	# print "Measurement : FAKE"
-	# z = particleFilter.getIdealM()
+	#z = robot.sonar.getSmoothSonarDistance(0.05)
+	print "Measurement : FAKE"
+	z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
@@ -134,7 +134,10 @@ while True:
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPoint(robotState, wayPoints[currentPointIndex])
 	# leftVel, rightVel, action = navigator.navigateToWayPointStateFul(robotState, wayPoints[currentPointIndex])
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2((0, 0, 0), enc_distL, enc_distR, (0, 20))
+
 	#if action is not lastAction:
 	#	robot.motors.reset()
 	#lastAction = action
