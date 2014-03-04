@@ -24,9 +24,6 @@ def mean(list):
 	"""
 	sum(list) / float(len(list))
 
-def mean_(tupl_list):
-	pass
-
 
 def limitTo(value, min_v, max_v):
 	"""
@@ -39,7 +36,7 @@ def diffDist(point0, point1):
 	dy = point0[1] - point1[1]
 	return math.sqrt(dx*dx + dy*dy)
 
-def square_euclidean_distance(vector1, vector2):
+def squareEuclideanDistance(vector1, vector2):
 	"""
 	Returns the square euclidean distance between 2 numpy vectors
 	"""

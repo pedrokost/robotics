@@ -42,7 +42,7 @@ class SignatureRecognizer:
 		"""
 		Returns the square of the distance between the signatures.
 		"""
-		return square_euclidean_distance(signature1.sig, signature2.sig)
+		return squareEuclideanDistance(signature1.sig, signature2.sig)
 
 	def theta(self, signature1, signature2, **kwargs):
 		"""
@@ -91,7 +91,7 @@ class SignatureRecognizer:
 		bestDist = float("inf")
 		for i in xrange(0, len(vector1)):
 			cycled_values = np.roll(vector2, i)
-			d = square_euclidean_distance(cycled_values, vector1)
+			d = squareEuclideanDistance(cycled_values, vector1)
 			if d < bestDist:
 				bestDist = d
 				shift = i
@@ -121,7 +121,7 @@ class SignatureRecognizer:
 		for v2_index in min_v2_indices:
 			shift = min_v1_index - v2_index
 			cycled_values = np.roll(vector2, shift)
-			d = square_euclidean_distance(cycled_values, vector1)
+			d = squareEuclideanDistance(cycled_values, vector1)
 			if d < bestDist:
 				bestDist = d
 				bestShift = shift
