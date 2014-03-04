@@ -4,7 +4,9 @@ from signature import Signature
 from utilities import *
 from math import pi
 
+
 MINIMUM_THRESHOLD = 0.1  # vectors are normalized to 1, so this is used to find the indices of the minimums with a *about* 10% soft boundary (to account for noise)
+
 
 class SignatureRecognizer:
 	"""
@@ -111,7 +113,6 @@ class SignatureRecognizer:
 		"""
 		min_v1_index, _ = min(enumerate(vector1), key=operator.itemgetter(1))
 		_, min_v2_value = min(enumerate(vector2), key=operator.itemgetter(1))
-
 
 		val = min_v2_value + float(MINIMUM_THRESHOLD) / len(vector1)
 		min_v2_indices = [i for i, x in enumerate(vector2) if x <= val]

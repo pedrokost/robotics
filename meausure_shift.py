@@ -28,4 +28,3 @@ recognizer = SignatureRecognizer(container)
 # for x in range(100):
 	# recognizer.shift(orig, shifted, exhaustive=True, debug=True)
 recognizer.shift(orig, shifted, exhaustive=False, debug=True)
-
