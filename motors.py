@@ -4,7 +4,7 @@ from utilities import *
 
 MOTOR_VEL_KP = 0.1
 MOTOR_VEL_KI = 0.03
-MOTOR_VEL_KD = 0.05
+MOTOR_VEL_KD = 0.0  
 
 VEL_TO_POWER_W1 = 12.6407
 VEL_TO_POWER_W0 = 0 #-1.8951
@@ -50,14 +50,13 @@ class Motors:
 		# get motor index from motor port
 		motor_index = self.LEFT_MOTOR_INDEX if motor_port == self.leftMotorPort else self.RIGHT_MOTOR_INDEX		
 
-
 		# get PID value
 		error = abs(prefer_vel) - abs(current_vel)
 		d_error = error - self.prevError[motor_index]
 		acc_error = self.accError[motor_index] + error
 
-		if(motor_index == 0):
-			print "error : ", error
+		#if(motor_index == 0):
+		#	print "error : ", error
 
 		# update static params
 		self.accError[motor_index] = acc_error
@@ -65,16 +64,12 @@ class Motors:
 
 		# update power (Not use pid)
 		self.dpower[motor_index] += self._velToPower(MOTOR_VEL_KP*error + MOTOR_VEL_KI*acc_error + MOTOR_VEL_KD*d_error)
-		if(motor_index == 0):
-			print "part : ", self._velToPower(MOTOR_VEL_KP*error), self._velToPower(MOTOR_VEL_KI*acc_error), self._velToPower(MOTOR_VEL_KD*d_error)
 
 		# calculate power
 		power_est = self._velToPower(prefer_vel)
 		power_sign = sign(power_est)
 		#power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
 		power = abs(self._velToPower(prefer_vel))*power_sign
-		
-		# print motor_index, power, self.dpower[motor_index]
  
 		# set power
 		self._setMotorPower(motor_port, power)
