@@ -4,6 +4,10 @@ from signature import Signature
 from utilities import *
 from math import pi
 
+
+MINIMUM_THRESHOLD = 0.1  # vectors are normalized to 1, so this is used to find the indices of the minimums with a *about* 10% soft boundary (to account for noise)
+
+
 class SignatureRecognizer:
 	"""
 	Compares a histogram with a set of stored histogram, and returns the closest.
@@ -40,7 +44,7 @@ class SignatureRecognizer:
 		"""
 		Returns the square of the distance between the signatures.
 		"""
-		return square_euclidean_distance(signature1.sig, signature2.sig)
+		return squareEuclideanDistance(signature1.sig, signature2.sig)
 
 	def theta(self, signature1, signature2, **kwargs):
 		"""
@@ -48,14 +52,17 @@ class SignatureRecognizer:
 		"""
 		shift = self.shift(signature1, signature2, **kwargs)
 		radiansPerShift = self.__radiansPerShift(shift, len(signature1.values))
-		return shift * radiansPerShift
+		return toPIPI(shift * radiansPerShift)
 
 
 	def shift(self, signature1, signature2, **kwargs):
 		"""
 		Returns the absolute shift between two signatures
 		"""
-		return self.__shift(signature1.values, signature2.values, **kwargs)
+		s1_values = unitSum(signature1.values)
+		s2_values = unitSum(signature2.values)
+
+		return self.__shift(s1_values, s2_values, **kwargs)
 	
 	def __radiansPerShift(self, shift, max_shifts):
 		"""
@@ -76,7 +83,7 @@ class SignatureRecognizer:
 		else:
 			return self.__shift_fast(vector1, vector2, **kwargs)
 	
-	def __shift_exhaustive(self, vector1, vector2, debug=False):
+	def __shift_exhaustive(self, vector1, vector2, debug = False):
 		"""
 		Returns how much a vector was shifted
 
@@ -86,13 +93,14 @@ class SignatureRecognizer:
 		bestDist = float("inf")
 		for i in xrange(0, len(vector1)):
 			cycled_values = np.roll(vector2, i)
-			d = square_euclidean_distance(cycled_values, vector1)
+			d = squareEuclideanDistance(cycled_values, vector1)
 			if d < bestDist:
 				bestDist = d
 				shift = i
 		
 		if debug:
 			print "Best distance", bestDist
+			print "Total comparisons:", len(vector1)
 
 		return shift
 
@@ -100,16 +108,28 @@ class SignatureRecognizer:
 		"""
 		Returns how much a vector was shifted
 
-		The method is suboptimal (can give wrong shift) but fast
+		The method is almost always optimal but at least an order of
+		magnitude faster than the exhaustive shift
 		"""
-		# Finds the minimum value, and rotates the signatures to it
 		min_v1_index, _ = min(enumerate(vector1), key=operator.itemgetter(1))
-		min_v2_index, _ = min(enumerate(vector2), key=operator.itemgetter(1))
-		shift = min_v1_index - min_v2_index
+		_, min_v2_value = min(enumerate(vector2), key=operator.itemgetter(1))
+
+		val = min_v2_value + float(MINIMUM_THRESHOLD) / len(vector1)
+		min_v2_indices = [i for i, x in enumerate(vector2) if x <= val]
+
+		bestShift = -1
+		bestDist = float("inf")
+		for v2_index in min_v2_indices:
+			shift = min_v1_index - v2_index
+			cycled_values = np.roll(vector2, shift)
+			d = squareEuclideanDistance(cycled_values, vector1)
+			if d < bestDist:
+				bestDist = d
+				bestShift = shift
 
 		if debug:
-			v2 = np.roll(vector2, shift)
-			bestDist = square_euclidean_distance(vector1, v2)
-			print "Best distance", bestDist
+			v2 = np.roll(vector2, bestShift)
+			print "Best distance:", bestDist
+			print "Total comparisons:", len(min_v2_indices)
 
-		return shift
+		return bestShift

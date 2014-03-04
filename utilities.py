@@ -24,9 +24,6 @@ def mean(list):
 	"""
 	sum(list) / float(len(list))
 
-def mean_(tupl_list):
-	pass
-
 
 def limitTo(value, min_v, max_v):
 	"""
@@ -39,11 +36,11 @@ def diffDist(point0, point1):
 	dy = point0[1] - point1[1]
 	return math.sqrt(dx*dx + dy*dy)
 
-def square_euclidean_distance(vector1, vector2):
+def squareEuclideanDistance(vector1, vector2):
 	"""
 	Returns the square euclidean distance between 2 numpy vectors
 	"""
-	return np.sum(np.square(vector1 - vector2))
+	return np.sum(np.square(np.subtract(vector1, vector2)))
 
 def cumsum(list):
     total = 0
@@ -76,3 +73,12 @@ def getAngularDifferent(a1, a0):
 	a1 = toPIPI(a1)
 
 	return toPIPI(a1 - a0)
+
+def unitSum(vector):
+	"""
+	Normalizes the vector so sum up to 1
+	"""
+	vec = map(float, vector)
+	s = sum(vec)
+	vec = [v / s for v in vec]
+	return vec
