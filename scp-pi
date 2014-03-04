@@ -32,6 +32,7 @@ if( $count == 1 )
 	my $ip = shift @tuple;
 	print "Transferring files to pi\@$ip\n";
 	system( "scp ./*.py pi\@$ip:~/prac-files/" );
+	system( "scp ./loc* pi\@$ip:~/prac-files/" );
 } else
 {
 	print "debug: retrieved $count elements from ptuple($mac): @tuple\n";
