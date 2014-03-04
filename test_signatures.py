@@ -22,5 +22,5 @@ s4 = Signature([5,4,3,2,3,5,6,7,8,9,7,8,9,8,7, 8], 10)  # permuted s3
 index, distance, closest = recognizer.closest(s4)
 print index, distance, closest
 
-print recognizer.theta(closest, s4, exhaustive=True, debug=False)
+# print recognizer.theta(closest, s4, exhaustive=True, debug=False)
 
