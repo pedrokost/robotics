@@ -23,8 +23,8 @@ index, distance, closest = recognizer.closest(s4)
 print index, distance, closest
 
 # Ehaustive returns 6, fast returns 3 which is wrong
-shift_exhaustive = recognizer.shift(closest, s4, exhaustive=True, debug=True)
-shift_fast =  recognizer.shift(closest, s4, exhaustive=False, debug=True)
+shift_exhaustive = recognizer.theta(closest, s4, exhaustive=True, debug=True)
+shift_fast =  recognizer.theta(closest, s4, exhaustive=False, debug=True)
 print "exhaustive", radToDeg(shift_exhaustive)
 print "fast", radToDeg(shift_fast)
 # print recognizer.theta(closest, s4, exhaustive=exhaustive, debug=False)

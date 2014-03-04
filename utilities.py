@@ -43,7 +43,7 @@ def square_euclidean_distance(vector1, vector2):
 	"""
 	Returns the square euclidean distance between 2 numpy vectors
 	"""
-	return np.sum(np.square(vector1 - vector2))
+	return np.sum(np.square(np.subtract(vector1, vector2)))
 
 def cumsum(list):
     total = 0
