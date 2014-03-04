@@ -4,9 +4,10 @@ from signature_container import SignatureContainer
 from sonarScanner import *
 
 BrickPiSetup()
-scanner = SonarScanner(PORT_4, PORT_C)
+scanner = SonarScanner(PORT_D, PORT_4)
 BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
+nScans = 5
 container = SignatureContainer(nScans)
 # container.delete_loc_files()
 
