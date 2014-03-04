@@ -4,6 +4,8 @@ from signature import Signature
 from utilities import *
 from math import pi
 
+MINIMUM_THRESHOLD = 0   # vectors are normalized to 1, so this is used to find the indices of the minimums with a 10% soft boundary (to account for noise)
+
 class SignatureRecognizer:
 	"""
 	Compares a histogram with a set of stored histogram, and returns the closest.
@@ -48,7 +50,7 @@ class SignatureRecognizer:
 		"""
 		shift = self.shift(signature1, signature2, **kwargs)
 		radiansPerShift = self.__radiansPerShift(shift, len(signature1.values))
-		return shift * radiansPerShift
+		return toPIPI(shift * radiansPerShift)
 
 
 	def shift(self, signature1, signature2, **kwargs):
@@ -102,14 +104,25 @@ class SignatureRecognizer:
 
 		The method is suboptimal (can give wrong shift) but fast
 		"""
-		# Finds the minimum value, and rotates the signatures to it
 		min_v1_index, _ = min(enumerate(vector1), key=operator.itemgetter(1))
-		min_v2_index, _ = min(enumerate(vector2), key=operator.itemgetter(1))
-		shift = min_v1_index - min_v2_index
+		min_v2_index, min_v2_value = min(enumerate(vector2), key=operator.itemgetter(1))
+
+
+		val = min_v2_value + MINIMUM_THRESHOLD
+		min_v2_indices = [i for i, x in enumerate(vector2) if x <= val]
+
+		bestShift = -1
+		bestDist = float("inf")
+		for v2_index in min_v2_indices:
+			shift = min_v1_index - v2_index
+			cycled_values = np.roll(vector2, shift)
+			d = square_euclidean_distance(cycled_values, vector1)
+			if d < bestDist:
+				bestDist = d
+				bestShift = shift
 
 		if debug:
-			v2 = np.roll(vector2, shift)
-			bestDist = square_euclidean_distance(vector1, v2)
+			v2 = np.roll(vector2, bestShift)
 			print "Best distance", bestDist
 
-		return shift
+		return bestShift
