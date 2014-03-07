@@ -112,17 +112,15 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	#z = robot.sonar.getSmoothSonarDistance(0.05)
-	print "Measurement : FAKE"
-	z = particleFilter.getIdealM()
+	z = robot.sonar.getSmoothSonarDistance(0.05)
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
 
 	# measurement update
-	#if(z < 120 and z > 15): #update only when translate
-	particleFilter.measurementUpdate(z)
-	particleFilter.normalizeWeights()
+	if(z < 100 and z > 20): #update only when translate
+		particleFilter.measurementUpdate(z)
+		particleFilter.normalizeWeights()
 
 	# get predict state
 	robotState = particleFilter.getPredictState()

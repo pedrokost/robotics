@@ -196,8 +196,6 @@ class ParticleFilter:
 			(x, y, t, _) = self.particleSet[index]
 			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
 		
-			
-
 		# particle0 = self.particleSet[0]  # preserved 0th index
 		self.particleSet = newParticleSet
 		# self.particleSet[0] = (particle0[0], particle0[1], particle0[2], 1./NUMBER_OF_PARTICLES)  # preserved 0th index

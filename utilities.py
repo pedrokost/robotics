@@ -82,3 +82,9 @@ def unitSum(vector):
 	s = sum(vec)
 	vec = [v / s for v in vec]
 	return vec
+
+def updateState(self, particleState, motionD, motionTH, e, f):
+	newX = particleState[0] + (motionD + e)*cos(particleState[2])
+	newY = particleState[1] + (motionD + e)*sin(particleState[2])
+	newTH = toPIPI(particleState[2] + motionTH + f)
+	return (newX, newY, newTH, particleState[3])

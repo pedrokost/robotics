@@ -7,10 +7,10 @@ ACCEPTABLE_ANGLE_LARGE = pi/12  # about 15 degress
 ACCEPTABLE_ANGLE_SMALL = pi/36  # about 10 degress
 ACCEPTABLE_DISTANCE = 3  # cm
 NAV_FWD_VEL = 10
-NAV_ROT_VEL = 5.5
+NAV_ROT_VEL = 6
 NAV_ROT_VEL_LARGE = 4
 NAV_ROT_VEL_SMALL = 4
-BREAK_VEL = -0.2
+BREAK_VEL = -0.1
 
 class Navigator:
 	def __init__(self):
