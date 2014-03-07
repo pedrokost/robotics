@@ -78,6 +78,11 @@ class SignatureRecognizer:
 
 		If exhaustive flag is set, performs an exhaustive search by attempting all possible shifts, else it tries to normalize the curves by finding the minimum
 		"""
+		print len(vector1), len(vector2)
+
+		if len(vector1) is not len(vector2):
+			vector2 = interpolate(vector2, len(vector1))
+
 		if exhaustive:
 			return self.__shift_exhaustive(vector1, vector2, **kwargs)
 		else:

@@ -47,25 +47,24 @@ def drawScanData(data, point):
 		canvas.drawLine((x0, y0, x1, y1))
 
 container = SignatureContainer(8)
-p1 = container.read(0).values
-p2 = container.read(1).values
-p4 = container.read(3).values
-p5 = container.read(4).values
-p7 = container.read(6).values
+p1 = container.read(1).values
+p2 = container.read(2).values
+p4 = container.read(4).values
+p5 = container.read(6).values
+p7 = container.read(7).values
 vals = [p1, p2, p4, p5, p7]
-
 
 
 wayPoints = [(84, 30), (180,30), (126, 54), (126, 168), (30, 54)]
 
-# for i in range(len(wayPoints)):
-# 	drawScanData(vals[i], wayPoints[i])
+for i in [1]:
+	drawScanData(vals[i], wayPoints[i])
 
-drawScanData(p5, (100, 50))
-new = medianFilter(list(p5))
-drawScanData(new, (180, 100))
+# drawScanData(p5, (100, 50))
+# new = medianFilter(list(p5))
+# drawScanData(new, (180, 100))
 
-print p2 - p2_new
+# print p5 - new
 
 
 # REdo index 1?

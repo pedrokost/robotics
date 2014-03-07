@@ -22,17 +22,16 @@ class SonarScanner:
 
 	# 
 	# Function to scan from 0 to 360. Each step takes SCAN_STEP Radian
-	def scan(self):
+	def scan(self, step=SCANNER_SCAN_STEP):
 		# initialize data
 		data = []
-
 		# Go to start angle
 		self.motor.gotoAngle(SCANNER_START_ANGLE, 'cw')
 
-		nStep = int((SCANNER_END_ANGLE - SCANNER_START_ANGLE)/SCANNER_SCAN_STEP)
+		nStep = int((SCANNER_END_ANGLE - SCANNER_START_ANGLE)/step)
 		for i in range(0, nStep):
 			# go to angle
-			angle = SCANNER_START_ANGLE + SCANNER_SCAN_STEP*i
+			angle = SCANNER_START_ANGLE + step*i
 			self.motor.gotoAngle(angle, 'ccw')
 
 			# read sonar data

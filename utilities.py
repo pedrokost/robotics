@@ -1,7 +1,7 @@
 import math
 import numpy as np
-from constants import *
-
+# from constants import *  Please don't do this. only; reduce depencies by only loading required
+ 
 def toPIPI(angle):
 	"""
 	Function to limit the value of angle (radian) into [-PI, PI)
@@ -107,3 +107,15 @@ def medianFilter(array, halfsize=4):
 	newArray += (array[right:])
 
 	return newArray
+
+def interpolate(vector, length, kind='nearest'):
+	"""
+	Piecewise interpolates a vector to be of 'length'
+	"""
+	from scipy.interpolate import interp1d
+	x = np.linspace(0, 1, len(vector))
+	f2 = interp1d(x, vector, kind=kind)
+	xnew = np.linspace(0, 1, length)
+	return f2(xnew)
+
+# print interpolate([1,2,3,4, 5, 6, 7, 8, 9], 50)

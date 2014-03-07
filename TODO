@@ -1,5 +1,7 @@
 
 Practical 7:
+ ✔ Signature should not store the number of bins, it's a global @done (14-03-07 16:58)
+ ✔ Add waypoint name to signature @done (14-03-07 16:58)
 Practical 5: 
  ☐ Fix particle filter: it is very innacurate -- the navigation logic might need to be rewritten/fixed, and the rest touroughly reviewed for mistakes (we just discoverd that we had a bug in toPIPI function when rotation was large)
  Practical 6:

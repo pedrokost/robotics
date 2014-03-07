@@ -1,12 +1,13 @@
 from signature import Signature
-import os
+import os, glob, re
+from constants import NUMBER_OF_SIGNATURE_BINS
 
 # --------------------- File management class ---------------
 class SignatureContainer():
     """
     A container that handles storing/reading signatures
     """
-    def __init__(self, size = 5):
+    def __init__(self, size = 100):
         self.size      = size; # max number of signatures that can be stored
         self.filenames = self.createFilenames(size);
 
@@ -60,7 +61,9 @@ class SignatureContainer():
         self.remove_loc_file(filename)
             
         f = open(filename, 'w')
-        f.write(str(len(signature.sig)) + "\n")  # nBins
+        # f.write(str(len(signature.sig)) + "\n")  # nBins
+
+        f.write(str(signature.name) + "\n")  # name
         for i in range(len(signature.values)):
             s = str(signature.values[i]) + "\n"
             f.write(s)
@@ -72,10 +75,14 @@ class SignatureContainer():
 		Returns a list of all existing stored signatures.
 		Assumes indexes are written consecutively.
     	"""
-    	last = self.get_free_index()
+
+        filenames = glob.glob('loc_*.dat')
+        indices = [int(re.search("loc_(\d+).dat", f).group(1)) for f in filenames]
+        print "indices", indices
     	sigs = []
-    	for x in xrange(0, last):
+    	for x in indices:
     		sigs.append( self.read(x) )
+        print "sigs", sigs
     	return sigs
 
 
@@ -88,12 +95,14 @@ class SignatureContainer():
 
         s = None
         filename = self.filenames[index]
+
         if os.path.isfile(filename):
+            print filename
             f = open(filename, 'r')
-            nBins = int(f.readline())
+            name = str(f.readline()).rstrip()
             data = f.readlines()
             values = [int(v) for v in data]
-            s = Signature(values, nBins)
+            s = Signature(values, NUMBER_OF_SIGNATURE_BINS, name)
             f.close();
         else:
             print "WARNING: Signature does not exist."
