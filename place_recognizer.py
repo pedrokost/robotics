@@ -22,17 +22,15 @@ class PlaceRecognizer:
 		"""
 		Returns the waypoint number and orientation of the robot
 		"""
-		print "Available sigs", map(lambda x: x.name, self.recognizer.sigs())
-
 		# Perform a scan
 		data = self.sonarScanner.scan(self.scannerAccuracy)
 		s = Signature(data, NUMBER_OF_SIGNATURE_BINS)
 
 		# Try to recognize the signature
 		_, dist, closest = self.recognizer.closest(s)
+		print closest.values
 		theta = self.recognizer.theta(closest, s, exhaustive=self.thetaAccuracy, debug=True)
 
-		print dist
 		# return the waypoint number and theta
 		if dist > self.ALLOWED_DISTANCE:
 			print "Place not recognized"

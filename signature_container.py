@@ -78,11 +78,10 @@ class SignatureContainer():
 
         filenames = glob.glob('loc_*.dat')
         indices = [int(re.search("loc_(\d+).dat", f).group(1)) for f in filenames]
-        print "indices", indices
+        print "Existing Signatures for places", indices
     	sigs = []
     	for x in indices:
     		sigs.append( self.read(x) )
-        print "sigs", sigs
     	return sigs
 
 
@@ -97,7 +96,6 @@ class SignatureContainer():
         filename = self.filenames[index]
 
         if os.path.isfile(filename):
-            print filename
             f = open(filename, 'r')
             name = str(f.readline()).rstrip()
             data = f.readlines()
