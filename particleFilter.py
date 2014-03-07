@@ -194,7 +194,7 @@ class ParticleFilter:
 			index = bisect(cumWeights, r) #Hack  # O(logn)
 			#print "Chosen Index : ", index, "<", r, ">"
 			(x, y, t, _) = self.particleSet[index]
-			newParticleSet.append( (x, y, t, 1./NUMBER_OF_PARTICLES) )
+			newParticleSet.append( (x + gauss(0, SIGMA_E), y + gauss(0, SIGMA_E), t + gauss(0, SIGMA_F), 1./NUMBER_OF_PARTICLES) )
 		
 		# particle0 = self.particleSet[0]  # preserved 0th index
 		self.particleSet = newParticleSet

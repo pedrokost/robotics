@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from constants import *
 
 def toPIPI(angle):
 	"""
@@ -83,8 +84,26 @@ def unitSum(vector):
 	vec = [v / s for v in vec]
 	return vec
 
-def updateState(self, particleState, motionD, motionTH, e, f):
-	newX = particleState[0] + (motionD + e)*cos(particleState[2])
-	newY = particleState[1] + (motionD + e)*sin(particleState[2])
-	newTH = toPIPI(particleState[2] + motionTH + f)
-	return (newX, newY, newTH, particleState[3])
+def predictState(state, distL, distR):
+	motionD  = (distR + distL)/2            # average moved direction of both wheels
+	motionTH = (distR - distL)/(2*RW_DIST)  # rotation (voluntary or not) 
+
+	newX = state[0] + (motionD)*cos(state[2])
+	newY = state[1] + (motionD)*sin(state[2])
+	newTH = toPIPI(state[2] + motionTH)
+	return (newX, newY, newTH)
+
+def medianFilter(array, halfsize=4):
+	"""
+	Performs a median filtering on the array
+	"""
+	newArray = array[0:halfsize]
+	eachside = halfsize
+	right = len(array) - halfsize - 1
+	for x in xrange(halfsize, right):
+		window = array[x-eachside:x+eachside+1]
+		newArray.append(median(window))
+
+	newArray += (array[right:])
+
+	return newArray

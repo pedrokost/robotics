@@ -6,10 +6,10 @@ ACCEPTABLE_ANGLE = degToRad(5)
 ACCEPTABLE_ANGLE_LARGE = pi/12  # about 15 degress
 ACCEPTABLE_ANGLE_SMALL = pi/36  # about 10 degress
 ACCEPTABLE_DISTANCE = 3  # cm
-NAV_FWD_VEL = 10
+NAV_FWD_VEL = 8
 NAV_ROT_VEL = 6
-NAV_ROT_VEL_LARGE = 4
-NAV_ROT_VEL_SMALL = 4
+NAV_ROT_VEL_LARGE = 6
+NAV_ROT_VEL_SMALL = 6
 BREAK_VEL = -0.1
 
 class Navigator:
@@ -176,9 +176,9 @@ class Navigator:
 
 
 
-		print action
+		# print action
 
-		print "thToGo : ", self.thToGo
+		# print "thToGo : ", self.thToGo
 		# if(self.navState == 'None'):
 		# 	action = 'Stop'
 		# 	leftVel = 0

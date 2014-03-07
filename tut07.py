@@ -113,12 +113,22 @@ while True:
 
 	# measure from sonar
 	z = robot.sonar.getSmoothSonarDistance(0.05)
+	# print "Measurement : FAKE"
+	# z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
 
+	# predict new state
+	z_angle = 0
+	if(timeStep > 1):
+		nextState = predictState(robotState, enc_distL, enc_distR)
+		m, z_angle = particleFilter._get_predict_m_beta(nextState[0], nextState[1], nextState[2])
+
 	# measurement update
-	if(z < 100 and z > 20): #update only when translate
+	if(z < 100 and z > 20 and abs(radToDeg(z_angle)) < 45):
+		z -= 13
+		print "Until Move to center"
 		particleFilter.measurementUpdate(z)
 		particleFilter.normalizeWeights()
 
@@ -131,9 +141,10 @@ while True:
 
 	# set control signal
 	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2((0, 0, 0), enc_distL, enc_distR, (10, 0))
+
+	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2((0, 0, 0), enc_distL, enc_distR, (0, 5))
 	#print "Command : ", leftVel, rightVel
-	#print "State : ", int(robotState[0]), radToDeg(robotState[2])
+	print "State : ", int(robotState[0]), radToDeg(robotState[2])
 
 	#if action is not lastAction:
 	#	robot.motors.reset()

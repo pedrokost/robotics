@@ -1,6 +1,5 @@
-from math import pi
+from math import *
 from BrickPi import *
-from utilities import *
 
 NEAR_ZERO = 0.0000001
 M_PI = pi   # for backwards compatibility
@@ -33,7 +32,7 @@ RIGHT_MOTOR = PORT_C    # Motor port right
 LEFT_TOUCH = PORT_2
 RIGHT_TOUCH = PORT_1
 
-SONAR_SENSOR = PORT_3   # sonar sensor port
+SONAR_SENSOR = PORT_4   # sonar sensor port
 SONAR_BIAS = 3
 
 # The array size of previous sonar meausurments
@@ -48,14 +47,14 @@ DISPLAY_OFFSET_Y = 200
 
 # Porticle filter constants
 NUMBER_OF_PARTICLES = 100 #100
-SIGMA_E = 0.3          # error noise when driving straight
-SIGMA_F = degToRad(0.3)      # angular error noise when driving straight
-SIGMA_G = degToRad(0.5)      # angular error noise when rotating
+SIGMA_E = 0.1          # error noise when driving straight
+SIGMA_F = 0.2*(pi/180)      	# angular error noise when driving straight
+SIGMA_G = 0.7*(pi/180)   # angular error noise when rotating
 
 # How aggresively should it turn towards the goal
 # (determines the smoothness of the movement)
 GOAL_GREADYNESS = 1  # if close to goal can be more aggressive ... higher
 
 
-RESAMPLING_PERIOD = 8
+RESAMPLING_PERIOD = 5
 DRAWING_PERIOD = 1

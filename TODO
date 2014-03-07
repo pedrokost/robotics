@@ -1,7 +1,5 @@
 
 Practical 7:
-  ☐ Record map
-  ☐ Test map at differen angles
 Practical 5: 
  ☐ Fix particle filter: it is very innacurate -- the navigation logic might need to be rewritten/fixed, and the rest touroughly reviewed for mistakes (we just discoverd that we had a bug in toPIPI function when rotation was large)
  Practical 6:
