@@ -170,13 +170,13 @@ class Navigator:
 				leftVel = NAV_FWD_VEL
 				rightVel = NAV_FWD_VEL
 		elif(self.navState == 'None'):
-				action = 'None'
+				action = 'Complete'
 				leftVel = 0
 				rightVel = 0
 
 
 
-		# print action
+		print action
 
 		# print "thToGo : ", self.thToGo
 		# if(self.navState == 'None'):
