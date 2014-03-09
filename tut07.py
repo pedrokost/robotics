@@ -58,9 +58,6 @@ mymap.add_wall((210,84,210,0));     # g
 mymap.add_wall((210,0,0,0));        # h
 mymap.draw();
 
-# initialize way points
-wayPoints = [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
-
 def interpolate(points):
 	p = points[0]
 	newPoints = []
@@ -80,13 +77,6 @@ def interpolate(points):
 
 	return newPoints
 
-wayPoints = interpolate(wayPoints)
-
-print wayPoints
-#wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
-drawTrajectory(wayPoints)
-currentPointIndex = 1
-
 # TODO
 # Where am I need to come in here
 container = SignatureContainer()
@@ -101,8 +91,14 @@ placeRecognizer = PlaceRecognizer({
 	'accurateRecognition': True,
 })
 wayPoint, theta = placeRecognizer.whereAmI()
+
 startingPointCoords = POI.getById(wayPoint)
 wayPoints = POI.buildPath(wayPoint)
+wayPoints = interpolate(wayPoints)
+
+print wayPoints
+drawTrajectory(wayPoints)
+currentPointIndex = 1
 
 # initialize particle filter
 particleFilter = ParticleFilter(mymap, canvas, (startingPointCoords[0], startingPointCoords[1], theta))

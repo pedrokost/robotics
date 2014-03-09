@@ -8,12 +8,29 @@ POI_dict = {\
 	7 : (30, 54),\
 	}
 
-def getById(wayPointIndedx):
+def getById(wayPointIndex):
 	global POI_dict
-	if wayPointIndedx not in POI_dict:
+	if wayPointIndex not in POI_dict:
 		print "Waypoint index does not exist."
 		os._exit(0)
 	return POI_dict[wayPointIndex]
 
+def pathFromIndexes(indexList):
+	return map(lambda index : POI_dict[index], indexList)
+
+def makeCircular(indexList):
+	return indexList.append(indexList[0])
+
+def rotate(l, n):
+	return l[n:] + l[:n]
+
+def performRotation(indexList, first):
+	while indexList[0] != first:
+		indexList = rotate(indexList, 1)
+
+# wayPointIndex is the first waypoint
 def buildPath(wayPointIndex):
-	return [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
+	basePathIndexes = [7, 1, 2, 4, 5, 4]
+	rotatedPath = performRotation(basePathIndexes, wayPointIndex)
+	circularPath = makeCircular(rotatedPath)
+	return pathFromIndexes(circularPath)
