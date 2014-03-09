@@ -77,8 +77,6 @@ def interpolate(points):
 
 	return newPoints
 
-# TODO
-# Where am I need to come in here
 container = SignatureContainer()
 recognizer = SignatureRecognizer(container)
 sonarScanner = SonarScanner(PORT_4, PORT_D)
