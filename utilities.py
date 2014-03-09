@@ -1,6 +1,6 @@
 import math
 import numpy as np
-# from constants import *  Please don't do this. only; reduce depencies by only loading required
+from constants import RW_DIST  #Please don't do this. only; reduce depencies by only loading required
  
 def toPIPI(angle):
 	"""
@@ -88,8 +88,8 @@ def predictState(state, distL, distR):
 	motionD  = (distR + distL)/2            # average moved direction of both wheels
 	motionTH = (distR - distL)/(2*RW_DIST)  # rotation (voluntary or not) 
 
-	newX = state[0] + (motionD)*cos(state[2])
-	newY = state[1] + (motionD)*sin(state[2])
+	newX = state[0] + (motionD)*math.cos(state[2])
+	newY = state[1] + (motionD)*math.sin(state[2])
 	newTH = toPIPI(state[2] + motionTH)
 	return (newX, newY, newTH)
 

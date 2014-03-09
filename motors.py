@@ -85,4 +85,11 @@ class Motors:
 		BrickPi.MotorSpeed[motor_port] = FWD_SIGN*int(round(power))
 		BrickPiUpdateValues()
 
+	#
+	#	Function to set motor power
+	def _setMotorPowerAll(self, powerLeft, powerRight):
+		BrickPi.MotorSpeed[self.leftMotorPort] = FWD_SIGN*int(round(powerLeft))
+		BrickPi.MotorSpeed[self.rightMotorPort] = FWD_SIGN*int(round(powerRight))
+		BrickPiUpdateValues()
+
 
