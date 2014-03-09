@@ -7,6 +7,11 @@ from random import uniform
 from navigator import Navigator
 from math import cos, sin, atan2
 from utilities import *
+from signature_recognizer import SignatureRecognizer
+from signature_container import SignatureContainer
+from place_recognizer import PlaceRecognizer
+from sonarScanner import SonarScanner
+from BrickPi import BrickPiSetup, PORT_4, PORT_D, BrickPiSetupSensors
 
 
 def drawTrajectory(points):
@@ -81,6 +86,22 @@ print wayPoints
 #wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
 drawTrajectory(wayPoints)
 currentPointIndex = 1
+
+# TODO
+# Where am I need to come in here
+container = SignatureContainer()
+recognizer = SignatureRecognizer(container)
+sonarScanner = SonarScanner(PORT_4, PORT_D)
+BrickPiSetupSensors()
+
+placeRecognizer = PlaceRecognizer({
+	'sonarScanner': sonarScanner,
+	'signatureRecognizer': recognizer,
+	'accurateScan': False,
+	'accurateRecognition': True,
+})
+wayPoint, theta = placeRecognizer.whereAmI()
+
 
 # initialize particle filter
 particleFilter = ParticleFilter(mymap, canvas, (84, 30, 0))
