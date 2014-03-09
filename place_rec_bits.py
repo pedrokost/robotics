@@ -71,5 +71,3 @@ signatures = SignatureContainer(5);
 
 learn_location();
 recognize_location();
-
-

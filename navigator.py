@@ -185,3 +185,116 @@ class Navigator:
 		# 	rightVel = 0
 
 		return (leftVel, rightVel, action)
+
+
+
+	def navigateToWayPointStateFulPow(self, robotState, enc_distL, enc_distR, goalPoint):
+		#calculate angle different
+		dx = goalPoint[0] - robotState[0]
+		dy = goalPoint[1] - robotState[1]
+		prefer_th = atan2(dy, dx)
+		dth = toPIPI(prefer_th - robotState[2])
+
+		# if change goal point
+		if(self.lastGoalPoint != goalPoint):
+			self.lastGoalPoint = goalPoint
+			self.prepareRotate(dth)
+			self.navState = 'Rotate' # rotate first
+			action = 'Rotate'
+		# rotate
+		elif(self.navState == 'Rotate'):
+			leftPow, rightPow, complete = self.motorRotate(enc_distL, enc_distR)
+
+			if(complete): # change to translate state
+				dist = diffDist(robotState, goalPoint)
+				self.prepareForward(dist)
+				self.navState == 'Translate'
+				action = 'Translate'
+		# translate
+		elif(self.navState == 'Translate'):
+			leftPow, rightPow, complete = self.motorForward(enc_distL, enc_distR)
+
+			if(complete): # change to complete state
+				self.navState == 'None'
+				action = 'Complete'
+		else: #self.navState == 'None'
+				action = 'Complete'
+				leftPow = 0
+				rightPow = 0
+
+		return (leftPow, rightPow, action)
+
+# Function to move forward for a specified distance(in cm)
+	def prepareForward(self, prefer_dist):
+		self.fpCurrentLeft = 0
+		self.fpCurrentRight = 0
+		self.fpCurrentDist = 0
+		self.fpPreferDist = prefer_dist
+		self.fpDummyPow = 0
+		self.fpDummyWeight = 20
+		self.fpDirSign = sign(prefer_dist)
+		self.fpMainPow = 200
+
+	def motorForward(self, enc_distL, enc_distR):
+		# read data from encoder
+ 		self.fpCurrentLeft += enc_distL
+ 		self.fpCurrentRight += enc_distR
+ 		self.fpCurrentDist = (self.fpCurrentLeft + self.fpCurrentRight)/2
+
+ 		# set Dummy Power
+ 		dummy_vel = (abs(current_right) - abs(current_left))/2
+
+	 	# check if it reaches the goal
+	 	if(abs(self.fpCurrentDist) < abs(self.fpPreferDist)):
+	 		# set the power
+	 		leftPow = self.fpMainPow + self.fpDummyPow*self.fpDummyWeight
+	 		rightPow = self.fpMainPow - self.fpDummyPow*self.fpDummyWeight
+
+	 		# set to correct direction
+	 		leftPow *= self.fpDirSign
+	 		rightPow *= self.fpDirSign
+
+	 		complete = False
+	 	else: # brake
+	 		leftPow = -5*self.fpDirSign
+	 		rightPow = -5*self.fpDirSign
+	 		complete = True
+
+	 	return leftPow, rightPow, complete
+
+# Function to rotate for a specified angle (in radian)
+def prepareRotate(self, prefer_angle):
+	self.rpCurrentLeft = 0
+	self.rpCurrentRight = 0
+	self.rpCurrentAngle = 0
+	self.rpPreferAngle = prefer_angle
+	self.rpDummyPow = 0
+	self.rpDummyWeight = 40
+	self.rpMainPow = 100
+	self.rpDirSign = sign(prefer_angle)
+
+def motorRotate(self, enc_distL, enc_distR):
+	# read data from encoder
+	self.rpCurrentLeft += enc_distL
+	self.rpCurrentRight += enc_distR
+	self.rpCurrentAngle = (self.rpCurrentRight - self.rpCurrentLeft)/(2*RW_DIST)
+
+	# set Dummy Power
+	self.rpDummyPow = (abs(self.rpCurrentRight) - abs(self.rpCurrentLeft))/2
+
+	if(abs(self.rpCurrentAngle) < abs(self.rpPreferAngle)):
+		leftPow = -(self.rpMainPow + self.rpDummyPow*self.rpDummyWeight)
+		rightPow = self.rpMainPow - self.rpDummyPow*self.rpDummyWeight
+
+		# set to correct direction
+	 	leftPow *= self.rpDirSign
+	 	rightPow *= self.rpDirSign
+
+	 	complete = False
+	else:
+		leftPow = 5*self.rpDirSign
+		rightPow = -5*self.rpDirSign
+
+		complete = True
+	return leftPow, rightPow, complete
+
