@@ -13,6 +13,7 @@ from place_recognizer import PlaceRecognizer
 from sonarScanner import SonarScanner
 from BrickPi import BrickPiSetup, PORT_4, PORT_D, BrickPiSetupSensors
 import pointsofinterest as POI
+from ledController import *
 
 def drawTrajectory(points):
 	n = len(points)
@@ -94,7 +95,7 @@ print "Where am I? -> {0}, {1}".format(wayPoint, theta)
 
 startingPointCoords = POI.getById(wayPoint)
 wayPoints = POI.buildPath(wayPoint)
-wayPoints = interpolate(wayPoints)
+#wayPoints = interpolate(wayPoints)
 
 print "Waypoints: {0}".format(str(wayPoints))
 drawTrajectory(wayPoints)
@@ -169,6 +170,7 @@ while True:
 	# set waypoint index
 	if(action == 'Complete'):
 		currentPointIndex += 1
+		LEDController.blink()
 		if(currentPointIndex >= len(wayPoints)):
 			break
 
