@@ -35,6 +35,8 @@ RIGHT_TOUCH = PORT_1
 SONAR_SENSOR = PORT_4   # sonar sensor port
 SONAR_BIAS = 3
 
+LIGHT_SENSOR = PORT_3
+
 # The array size of previous sonar meausurments
 DISTANCE_HISTORY_SIZE = 5   # make it odd. 
 

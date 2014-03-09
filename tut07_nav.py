@@ -7,6 +7,7 @@ from random import uniform
 from navigator import Navigator
 from math import cos, sin, atan2
 from utilities import *
+from ledController import *
 
 
 def drawTrajectory(points):
@@ -150,6 +151,7 @@ while True:
 	# set waypoint index
 	if(action == 'Complete'):
 		currentPointIndex += 1
+		LEDController.blink()
 		if(currentPointIndex >= len(wayPoints)):
 			break
 	

@@ -1,6 +1,5 @@
 from BrickPi import *
-
-LIGHT_SENSOR = PORT_3
+from constants import *
 
 class LEDController:
 
