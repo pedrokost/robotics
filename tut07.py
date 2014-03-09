@@ -12,7 +12,7 @@ from signature_container import SignatureContainer
 from place_recognizer import PlaceRecognizer
 from sonarScanner import SonarScanner
 from BrickPi import BrickPiSetup, PORT_4, PORT_D, BrickPiSetupSensors
-
+import pointsofinterest as POI
 
 def drawTrajectory(points):
 	n = len(points)
@@ -101,10 +101,11 @@ placeRecognizer = PlaceRecognizer({
 	'accurateRecognition': True,
 })
 wayPoint, theta = placeRecognizer.whereAmI()
-
+startingPointCoords = POI.getById(wayPoint)
+wayPoints = POI.buildPath(wayPoint)
 
 # initialize particle filter
-particleFilter = ParticleFilter(mymap, canvas, (84, 30, 0))
+particleFilter = ParticleFilter(mymap, canvas, (startingPointCoords[0], startingPointCoords[1], theta))
 
 
 # initialize control command
