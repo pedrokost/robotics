@@ -118,10 +118,10 @@ while True:
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
-	
+
 	# get predict state
 	robotState = particleFilter.getPredictState()
-	# set control signal	
+	# set control signal
 	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
@@ -151,14 +151,14 @@ while True:
 	#	robot.motors.reset()
 	#lastAction = action
 
-	
+
 
 	# set waypoint index
 	if(action == 'Complete'):
 		currentPointIndex += 1
 		if(currentPointIndex >= len(wayPoints)):
 			break
-	
+
 	# resampling
 	if(timeStep%RESAMPLING_PERIOD == 0):
 		particleFilter.resample()
