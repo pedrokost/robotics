@@ -61,4 +61,4 @@ GOAL_GREADYNESS = 1  # if close to goal can be more aggressive ... higher
 RESAMPLING_PERIOD = 5
 DRAWING_PERIOD = 1
 
-NUMBER_OF_SIGNATURE_BINS = 40
+NUMBER_OF_SIGNATURE_BINS = 20

@@ -29,6 +29,10 @@ class PlaceRecognizer:
 		drawScanData(data, (100,100))
 		# Try to recognize the signature
 		_, dist, closest = self.recognizer.closest(s)
+
+		print "s.sig:", s.sig
+		print "closest.sig", closest.sig
+
 		theta = self.recognizer.theta(closest, s, exhaustive=self.thetaAccuracy, debug=True)
 		
 		# return the waypoint number and theta
