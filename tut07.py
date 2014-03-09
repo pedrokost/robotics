@@ -124,7 +124,7 @@ while True:
 	# set control signal	
 	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
-
+	
 	# predict new state
 	z_angle = 0
 	if(timeStep > 1):
