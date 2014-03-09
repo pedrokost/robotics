@@ -74,7 +74,7 @@ def interpolate(points):
 			newPoints.append(newp)
 			tmpp = newp
 		p = p2
-
+	newPoints.append(points[-1])
 	return newPoints
 
 container = SignatureContainer()
@@ -89,18 +89,18 @@ placeRecognizer = PlaceRecognizer({
 	'accurateRecognition': True,
 })
 wayPoint, theta = placeRecognizer.whereAmI()
+print "Where am I? -> {0}, {1}".format(wayPoint, theta)
 
 startingPointCoords = POI.getById(wayPoint)
 wayPoints = POI.buildPath(wayPoint)
 wayPoints = interpolate(wayPoints)
 
-print wayPoints
+print "Waypoints: {0}".format(str(wayPoints))
 drawTrajectory(wayPoints)
 currentPointIndex = 1
 
 # initialize particle filter
 particleFilter = ParticleFilter(mymap, canvas, (startingPointCoords[0], startingPointCoords[1], theta))
-
 
 # initialize control command
 leftVel = 0
