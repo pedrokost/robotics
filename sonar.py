@@ -16,7 +16,7 @@ class Sonar:
 		start = time.time()
 		while time.time() - start < duration:
 			values.append(self._getSonarDistance())
-			time.sleep(0.002)
+			time.sleep(0.005)
 		return median(values) - SONAR_BIAS
 
 	# This function is to get sonar distance. (in cm)

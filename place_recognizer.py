@@ -28,13 +28,12 @@ class PlaceRecognizer:
 
 		# Try to recognize the signature
 		_, dist, closest = self.recognizer.closest(s)
-		print closest.values
 		theta = self.recognizer.theta(closest, s, exhaustive=self.thetaAccuracy, debug=True)
 
 		# return the waypoint number and theta
 		if dist > self.ALLOWED_DISTANCE:
-			print "Place not recognized"
-			return None, None
+			print "WARNING: we are very uncertain of the accuracy of the location"
+			# return None, None
 		
 		print "Recognized place:", closest.name, "at rotation:", radToDeg(theta), "dist:", dist
 		return closest.name, theta

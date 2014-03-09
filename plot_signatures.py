@@ -50,14 +50,14 @@ container = SignatureContainer(8)
 p1 = container.read(1).values
 p2 = container.read(2).values
 p4 = container.read(4).values
-p5 = container.read(6).values
+p5 = container.read(5).values
 p7 = container.read(7).values
 vals = [p1, p2, p4, p5, p7]
 
 
 wayPoints = [(84, 30), (180,30), (126, 54), (126, 168), (30, 54)]
 
-for i in [1]:
+for i in range(len(wayPoints)):
 	drawScanData(vals[i], wayPoints[i])
 
 # drawScanData(p5, (100, 50))

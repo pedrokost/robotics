@@ -3,8 +3,8 @@ from math import *
 from utilities import *
 
 SCANNER_ACCEPTABLE_ANGLE = pi/180*5 # 1 degree
-SCANNER_POWER = 200
-SCANNER_ENCODER_RATIO = 8.0/40.0
+SCANNER_POWER = 80
+SCANNER_ENCODER_RATIO = 1.0/40.0
 SCANNER_FWD_SIGN = -1
 
 
@@ -13,7 +13,7 @@ class MotorScanner:
     # Function to reset the motor
 	def reset(self):
 		self._prev_encoder_angle = self._getEncoderAngle()
-		self._sonar_angle = 0
+		self._sonar_angle = -pi
 
 	#
 	# Constructor
