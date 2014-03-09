@@ -138,9 +138,9 @@ while True:
 	# get predict state
 	robotState = particleFilter.getPredictState()
 	# set control signal
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
-	
+	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	#robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
+
 	# predict new state
 	z_angle = 0
 	if(timeStep > 1):
@@ -158,12 +158,12 @@ while True:
 	robotState = particleFilter.getPredictState()
 
 	# set control signal with vel
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	#robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# set control signal with pow
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow(robotState, enc_distL, enc_distR, goalPoint)
-	robot.motors._setMotorPowerAll(leftVel, rightVel)
+	# leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow(robotState, enc_distL, enc_distR, goalPoint)
+	# robot.motors._setMotorPowerAll(leftVel, rightVel)
 
 	# set waypoint index
 	if(action == 'Complete'):

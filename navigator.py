@@ -28,12 +28,12 @@ class Navigator:
 	# 	prefer_th = atan2(dy, dx)
 	# 	diffTh = toPIPI(prefer_th - robotState[2])
 	# 	diffD = diffDist(robotState, goalPoint)
-		
+
 	# 	if(abs(diffD) <= ACCEPTABLE_DISTANCE):
 	# 		return (0, 0, 'Complete')
 
 	# 	KmeanV = (1.0/50)
-	# 	KrotV = 180/pi	
+	# 	KrotV = 180/pi
 
 	# 	meanV = limitTo(diffD*KmeanV, 6, 8)
 	# 	rotV = limitTo(diffTh*KrotV, -20, 20)
@@ -44,7 +44,7 @@ class Navigator:
 	# 	rightVel = meanV + rotV
 
 	# 	return (leftVel, rightVel, 'Not Complete')
-		
+
 
 
 	# def navigateToWayPointStateFul(self, robotState, goalPoint):
@@ -109,82 +109,82 @@ class Navigator:
 	# 	return (leftVel, rightVel, action)
 
 
-		
-
-	# def navigateToWayPointStateFul2(self, robotState, enc_distL, enc_distR, goalPoint):
-	# 	#calculate angle different
-	# 	dx = goalPoint[0] - robotState[0]
-	# 	dy = goalPoint[1] - robotState[1]
-	# 	prefer_th = atan2(dy, dx)
-	# 	dth = toPIPI(prefer_th - robotState[2])
-
-	# 	if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
-	# 		self.lastGoalPoint = goalPoint
-	# 		self.navState = 'Rotate' # rotate first
-	# 		self.thToGo = dth
-	# 		self.thSignToGo = sign(dth)
-
-	# 	# set control command		 
-	# 	if(self.navState == 'Rotate'):
-	# 		# set new state
-	# 		motionTH = (enc_distR - enc_distL)/(2*RW_DIST) #estamate moved angle
-	# 		self.thToGo -= motionTH			
-
-	# 		# check if the robot is at the goal angle
-	# 		if(self.thToGo*self.thSignToGo <= ACCEPTABLE_ANGLE):
-	# 			self.navState = 'Translate'
-	# 			action = 'ToTranslate'
-	# 			self.dToGo = diffDist(robotState, goalPoint)
-
-	# 			# just break
-	# 			if(self.thSignToGo > 0):
-	# 				leftVel = -BREAK_VEL
-	# 				rightVel = BREAK_VEL
-	# 			else:
-	# 				leftVel = BREAK_VEL
-	# 				rightVel = -BREAK_VEL
-
-	# 		else:
-	# 			# set control command
-	# 			if(self.thToGo > 0):
-	# 				action = 'RotateCCW'
-	# 				leftVel = -NAV_ROT_VEL
-	# 				rightVel = NAV_ROT_VEL
-	# 			else:
-	# 				action = 'RotateCW'
-	# 				leftVel = NAV_ROT_VEL
-	# 				rightVel = -NAV_ROT_VEL
-	# 	elif(self.navState == 'Translate'):
-	# 		motionD  = (enc_distR + enc_distL)/2
-	# 		self.dToGo -= motionD
-
-	# 		if(self.dToGo <= 0):
-	# 			self.navState = 'None'
-	# 			action = 'Complete'
-
-	# 			# just break
-	# 			leftVel = BREAK_VEL
-	# 			rightVel = BREAK_VEL
-	# 		else:
-	# 			action = 'Forward'
-	# 			leftVel = NAV_FWD_VEL
-	# 			rightVel = NAV_FWD_VEL
-	# 	elif(self.navState == 'None'):
-	# 			action = 'Complete'
-	# 			leftVel = 0
-	# 			rightVel = 0
 
 
+	def navigateToWayPointStateFul2(self, robotState, enc_distL, enc_distR, goalPoint):
+		#calculate angle different
+		dx = goalPoint[0] - robotState[0]
+		dy = goalPoint[1] - robotState[1]
+		prefer_th = atan2(dy, dx)
+		dth = toPIPI(prefer_th - robotState[2])
 
-	# 	print "What : ", action
+		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
+			self.lastGoalPoint = goalPoint
+			self.navState = 'Rotate' # rotate first
+			self.thToGo = dth
+			self.thSignToGo = sign(dth)
 
-	# 	# print "thToGo : ", self.thToGo
-	# 	# if(self.navState == 'None'):
-	# 	# 	action = 'Stop'
-	# 	# 	leftVel = 0
-	# 	# 	rightVel = 0
+		# set control command
+		if(self.navState == 'Rotate'):
+			# set new state
+			motionTH = (enc_distR - enc_distL)/(2*RW_DIST) #estamate moved angle
+			self.thToGo -= motionTH
 
-	# 	return (leftVel, rightVel, action)
+			# check if the robot is at the goal angle
+			if(self.thToGo*self.thSignToGo <= ACCEPTABLE_ANGLE):
+				self.navState = 'Translate'
+				action = 'ToTranslate'
+				self.dToGo = diffDist(robotState, goalPoint)
+
+				# just break
+				if(self.thSignToGo > 0):
+					leftVel = -BREAK_VEL
+					rightVel = BREAK_VEL
+				else:
+					leftVel = BREAK_VEL
+					rightVel = -BREAK_VEL
+
+			else:
+				# set control command
+				if(self.thToGo > 0):
+					action = 'RotateCCW'
+					leftVel = -NAV_ROT_VEL
+					rightVel = NAV_ROT_VEL
+				else:
+					action = 'RotateCW'
+					leftVel = NAV_ROT_VEL
+					rightVel = -NAV_ROT_VEL
+		elif(self.navState == 'Translate'):
+			motionD  = (enc_distR + enc_distL)/2
+			self.dToGo -= motionD
+
+			if(self.dToGo <= 0):
+				self.navState = 'None'
+				action = 'Complete'
+
+				# just break
+				leftVel = BREAK_VEL
+				rightVel = BREAK_VEL
+			else:
+				action = 'Forward'
+				leftVel = NAV_FWD_VEL
+				rightVel = NAV_FWD_VEL
+		elif(self.navState == 'None'):
+				action = 'Complete'
+				leftVel = 0
+				rightVel = 0
+
+
+
+		# print "What : ", action
+
+		# print "thToGo : ", self.thToGo
+		# if(self.navState == 'None'):
+		# 	action = 'Stop'
+		# 	leftVel = 0
+		# 	rightVel = 0
+
+		return (leftVel, rightVel, action)
 
 
 
