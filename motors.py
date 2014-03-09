@@ -3,7 +3,7 @@ from BrickPi import *
 from utilities import *
 
 MOTOR_VEL_KP = 0.1
-MOTOR_VEL_KI = 0.03
+MOTOR_VEL_KI = 0.0
 MOTOR_VEL_KD = 0.0  
 
 VEL_TO_POWER_W1 = 12.6407
@@ -68,8 +68,8 @@ class Motors:
 		# calculate power
 		power_est = self._velToPower(prefer_vel)
 		power_sign = sign(power_est)
-		#power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
-		power = abs(self._velToPower(prefer_vel))*power_sign
+		power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
+		#power = self._velToPower(prefer_vel)
  
 		# set power
 		self._setMotorPower(motor_port, power)

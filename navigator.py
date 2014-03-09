@@ -111,80 +111,70 @@ class Navigator:
 
 		
 
-	# def navigateToWayPointStateFul2(self, robotState, enc_distL, enc_distR, goalPoint):
-	# 	#calculate angle different
-	# 	dx = goalPoint[0] - robotState[0]
-	# 	dy = goalPoint[1] - robotState[1]
-	# 	prefer_th = atan2(dy, dx)
-	# 	dth = toPIPI(prefer_th - robotState[2])
+	def navigateToWayPointStateFul2(self, robotState, enc_distL, enc_distR, goalPoint):
+		#calculate angle different
+		dx = goalPoint[0] - robotState[0]
+		dy = goalPoint[1] - robotState[1]
+		prefer_th = atan2(dy, dx)
+		dth = toPIPI(prefer_th - robotState[2])
 
-	# 	if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
-	# 		self.lastGoalPoint = goalPoint
-	# 		self.navState = 'Rotate' # rotate first
-	# 		self.thToGo = dth
-	# 		self.thSignToGo = sign(dth)
+		if(self.lastGoalPoint != goalPoint): # just order to go to this point first time!
+			self.lastGoalPoint = goalPoint
+			self.navState = 'Rotate' # rotate first
+			self.thToGo = dth
+			self.thSignToGo = sign(dth)
 
-	# 	# set control command		 
-	# 	if(self.navState == 'Rotate'):
-	# 		# set new state
-	# 		motionTH = (enc_distR - enc_distL)/(2*RW_DIST) #estamate moved angle
-	# 		self.thToGo -= motionTH			
+		# set control command		 
+		if(self.navState == 'Rotate'):
+			# set new state
+			motionTH = (enc_distR - enc_distL)/(2*RW_DIST) #estamate moved angle
+			self.thToGo -= motionTH			
 
-	# 		# check if the robot is at the goal angle
-	# 		if(self.thToGo*self.thSignToGo <= ACCEPTABLE_ANGLE):
-	# 			self.navState = 'Translate'
-	# 			action = 'ToTranslate'
-	# 			self.dToGo = diffDist(robotState, goalPoint)
+			# check if the robot is at the goal angle
+			if(self.thToGo*self.thSignToGo <= ACCEPTABLE_ANGLE):
+				self.navState = 'Translate'
+				action = 'ToTranslate'
+				self.dToGo = diffDist(robotState, goalPoint)
 
-	# 			# just break
-	# 			if(self.thSignToGo > 0):
-	# 				leftVel = -BREAK_VEL
-	# 				rightVel = BREAK_VEL
-	# 			else:
-	# 				leftVel = BREAK_VEL
-	# 				rightVel = -BREAK_VEL
+				# just break
+				if(self.thSignToGo > 0):
+					leftVel = -BREAK_VEL
+					rightVel = BREAK_VEL
+				else:
+					leftVel = BREAK_VEL
+					rightVel = -BREAK_VEL
 
-	# 		else:
-	# 			# set control command
-	# 			if(self.thToGo > 0):
-	# 				action = 'RotateCCW'
-	# 				leftVel = -NAV_ROT_VEL
-	# 				rightVel = NAV_ROT_VEL
-	# 			else:
-	# 				action = 'RotateCW'
-	# 				leftVel = NAV_ROT_VEL
-	# 				rightVel = -NAV_ROT_VEL
-	# 	elif(self.navState == 'Translate'):
-	# 		motionD  = (enc_distR + enc_distL)/2
-	# 		self.dToGo -= motionD
+			else:
+				# set control command
+				if(self.thToGo > 0):
+					action = 'RotateCCW'
+					leftVel = -NAV_ROT_VEL
+					rightVel = NAV_ROT_VEL
+				else:
+					action = 'RotateCW'
+					leftVel = NAV_ROT_VEL
+					rightVel = -NAV_ROT_VEL
+		elif(self.navState == 'Translate'):
+			motionD  = (enc_distR + enc_distL)/2
+			self.dToGo -= motionD
 
-	# 		if(self.dToGo <= 0):
-	# 			self.navState = 'None'
-	# 			action = 'Complete'
+			if(self.dToGo <= 0):
+				self.navState = 'None'
+				action = 'Complete'
 
-	# 			# just break
-	# 			leftVel = BREAK_VEL
-	# 			rightVel = BREAK_VEL
-	# 		else:
-	# 			action = 'Forward'
-	# 			leftVel = NAV_FWD_VEL
-	# 			rightVel = NAV_FWD_VEL
-	# 	elif(self.navState == 'None'):
-	# 			action = 'Complete'
-	# 			leftVel = 0
-	# 			rightVel = 0
+				# just break
+				leftVel = BREAK_VEL
+				rightVel = BREAK_VEL
+			else:
+				action = 'Forward'
+				leftVel = NAV_FWD_VEL
+				rightVel = NAV_FWD_VEL
+		elif(self.navState == 'None'):
+				action = 'Complete'
+				leftVel = 0
+				rightVel = 0
 
-
-
-	# 	print "What : ", action
-
-	# 	# print "thToGo : ", self.thToGo
-	# 	# if(self.navState == 'None'):
-	# 	# 	action = 'Stop'
-	# 	# 	leftVel = 0
-	# 	# 	rightVel = 0
-
-	# 	return (leftVel, rightVel, action)
+		return (leftVel, rightVel, action)
 
 
 
@@ -277,7 +267,7 @@ class Navigator:
 		self.rpCurrentAngle = 0
 		self.rpPreferAngle = prefer_angle
 		self.rpDummyPow = 0
-		self.rpDummyWeight = 40
+		self.rpDummyWeight = 20
 		self.rpMainPow = 100
 		self.rpDirSign = sign(prefer_angle)
 

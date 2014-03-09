@@ -112,19 +112,15 @@ while True:
 	#enc_distR = rightVel*temp_dt;
 
 	# measure from sonar
-	# z = robot.sonar.getSmoothSonarDistance(0.05)
-	print "Measurement : FAKE"
-	z = particleFilter.getIdealM()
+	z = robot.sonar.getSmoothSonarDistance(0.05)
+	#print "Measurement : FAKE"
+	#z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
 	
 	# get predict state
 	robotState = particleFilter.getPredictState()
-
-	# set control signal with pow
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	#robot.motors._setMotorPowerAll(leftVel, rightVel)
 
 	# predict new state
 	z_angle = 0
@@ -141,12 +137,14 @@ while True:
 	robotState = particleFilter.getPredictState()
 	
 	# set control signal with vel
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	#robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
+	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	print leftVel, rightVel
+	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# set control signal with pow
-	leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	robot.motors._setMotorPowerAll(leftVel, rightVel)
+	#leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	# leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow((0, 0, 0), enc_distL, enc_distR, (10, 0))
+	#robot.motors._setMotorPowerAll(leftVel, rightVel)
 
 	# set waypoint index
 	if(action == 'Complete'):
