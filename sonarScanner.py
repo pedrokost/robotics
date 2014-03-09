@@ -4,6 +4,7 @@ from math import *
 from motorScanner import *
 from utilities import *
 from Canvas import *
+from plotter import *
 
 SCANNER_START_ANGLE = -pi
 SCANNER_SCAN_STEP = pi/180 # 1 degree
@@ -35,8 +36,8 @@ class SonarScanner:
 			self.motor.gotoAngle(angle, 'ccw')
 
 			# read sonar data
-			z = self.sonar.getSmoothSonarDistance(0.05)
-			# z = self.sonar._getSonarDistance()
+			#z = self.sonar.getSmoothSonarDistance(0.05)
+			z = self.sonar.getSimpleSonarDistance()
 			data.append(z)
 
 		# Back to zero angle
@@ -45,19 +46,4 @@ class SonarScanner:
 		return data
 
 	def drawScanData(self, data):
-		for i in range(0, len(data)):
-			r = data[i]*SCANNER_DRAW_SCALE
-			th = SCANNER_START_ANGLE + SCANNER_SCAN_STEP*i
-
-			if(r > 200):
-				continue
-
-			x0 = int(SCANNER_DRAW_X0)
-			y0 = int(SCANNER_DRAW_Y0)
-			x1 = int(x0 + r*cos(th))
-			y1 = int(y0 + r*sin(th))
-
-			print radToDeg(th), r
-			print (x0, y0, x1, y1)
-
-			self.canvas.drawLine((x0, y0, x1, y1))
+		return drawScanData(data, (100, 100))

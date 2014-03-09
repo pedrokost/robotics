@@ -1,68 +1,18 @@
-from signature import Signature
-from signature_recognizer import SignatureRecognizer
-from signature_container import SignatureContainer
 from sonarScanner import *
 from signature import Signature
-from signature_recognizer import SignatureRecognizer
 from signature_container import SignatureContainer
-from utilities import *
-from Canvas import *
 from math import pi, cos, sin
-from Map import *
+from plotter import *
 
-SCANNER_DRAW_X0 = 0
-SCANNER_DRAW_Y0 = 0
-SCANNER_DRAW_SCALE = 1.2
-
-SCANNER_START_ANGLE = -pi
-SCANNER_SCAN_STEP = pi/180 # 1 degree
-SCANNER_END_ANGLE = pi
-
-
-canvas = Canvas();
-mymap = Map(canvas);
-mymap.add_wall((0,0,0,168));        # a
-mymap.add_wall((0,168,84,168));     # b
-mymap.add_wall((84,126,84,210));    # c
-mymap.add_wall((84,210,168,210));   # d
-mymap.add_wall((168,210,168,84));   # e
-mymap.add_wall((168,84,210,84));    # f
-mymap.add_wall((210,84,210,0));     # g
-mymap.add_wall((210,0,0,0));        # h
-# mymap.draw();
-
-
-def drawScanData(data, point):
-	canvas = Canvas()
-	for i in range(0, len(data)):
-		if i%2 == 0:
-			continue
-		r = data[i]*SCANNER_DRAW_SCALE
-		th = SCANNER_START_ANGLE + SCANNER_SCAN_STEP*i
-
-		x0 = int(SCANNER_DRAW_X0) + point[0]
-		y0 = int(SCANNER_DRAW_Y0) + point[1]
-		x1 = int(x0 + r*cos(th))
-		y1 = int(y0 + r*sin(th))
-
-		# print radToDeg(th), r
-		# print (x0, y0, x1, y1)
-
-		canvas.drawLine((x0, y0, x1, y1))
 
 BrickPiSetup()
 scanner = SonarScanner(PORT_D, PORT_4)
 BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
 nScans = 8
-index = 7
+index = 5
 
-# We need to do index 1, 3, 6
 container = SignatureContainer(nScans)
-# container.delete_loc_files()
-
-# read + save signatures
-# for i in range(0, nScans):
 
 data = scanner.scan()
 
