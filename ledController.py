@@ -1,7 +1,4 @@
-try:
-	import RPi.GPIO as GPIO
-except RuntimeError:
-	print "Error importing RPi.GPIO. You need to run this with superuser privileges."
+import RPi.GPIO as GPIO
 import time
 
 GPIO.setmode(GPIO.BOARD)
@@ -17,6 +14,7 @@ class LEDController:
 	def __init__(self):
 		pass
 
+	@staticmethod
 	def blink():
 		for i in range(0, 5):
 			GPIO.output(12, True)
@@ -26,4 +24,3 @@ class LEDController:
 			GPIO.output(13, False)
 			time.sleep(0.1)
 
-LEDController.blink()
