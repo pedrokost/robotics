@@ -89,6 +89,7 @@ placeRecognizer = PlaceRecognizer({
 	'accurateRecognition': True,
 })
 wayPoint, theta = placeRecognizer.whereAmI()
+wayPoint = int(wayPoint)
 print "Where am I? -> {0}, {1}".format(wayPoint, theta)
 
 startingPointCoords = POI.getById(wayPoint)
