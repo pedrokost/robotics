@@ -55,7 +55,7 @@ scanner = SonarScanner(PORT_D, PORT_4)
 BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
 nScans = 8
-index = 4
+index = 7
 
 # We need to do index 1, 3, 6
 container = SignatureContainer(nScans)

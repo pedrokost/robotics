@@ -35,7 +35,7 @@ class SonarScanner:
 			self.motor.gotoAngle(angle, 'ccw')
 
 			# read sonar data
-			z = self.sonar.getSmoothSonarDistance(0.05)
+			z = self.sonar._getSonarDistance()
 			data.append(z)
 
 		# Back to zero angle

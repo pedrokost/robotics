@@ -3,7 +3,7 @@ from math import *
 from utilities import *
 
 SCANNER_ACCEPTABLE_ANGLE = pi/180*5 # 1 degree
-SCANNER_POWER = 50
+SCANNER_POWER = 200
 SCANNER_ENCODER_RATIO = 1.0/40.0
 SCANNER_FWD_SIGN = -1
 

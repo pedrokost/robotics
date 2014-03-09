@@ -57,7 +57,7 @@ vals = [p1, p2, p4, p5, p7]
 
 wayPoints = [(84, 30), (180,30), (126, 54), (126, 168), (30, 54)]
 
-for i in [1]:
+for i in range(len(wayPoints)):
 	drawScanData(vals[i], wayPoints[i])
 
 # drawScanData(p5, (100, 50))
