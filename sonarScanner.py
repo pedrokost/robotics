@@ -26,7 +26,7 @@ class SonarScanner:
 		# initialize data
 		data = []
 		# Go to start angle
-		self.motor.gotoAngle(SCANNER_START_ANGLE, 'cw')
+		# self.motor.gotoAngle(SCANNER_START_ANGLE, 'cw')
 
 		nStep = int((SCANNER_END_ANGLE - SCANNER_START_ANGLE)/step)
 		for i in range(0, nStep):
@@ -39,7 +39,7 @@ class SonarScanner:
 			data.append(z)
 
 		# Back to zero angle
-		self.motor.gotoAngle(0, 'cw')
+		# self.motor.gotoAngle(0, 'cw')
 
 		return data
 

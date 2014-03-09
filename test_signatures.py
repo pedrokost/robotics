@@ -18,10 +18,10 @@ placeRecognizer = PlaceRecognizer({
 	'accurateRecognition': True,
 })
 
-while True:
+# while True:
 
-	print placeRecognizer.whereAmI()
+print placeRecognizer.whereAmI()
 	
-	break
+	# break
 	# time.sleep(20)
 
