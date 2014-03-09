@@ -74,7 +74,7 @@ def interpolate(points):
 			newPoints.append(newp)
 			tmpp = newp
 		p = p2
-
+	newPoints.append(points[-1])
 	return newPoints
 
 container = SignatureContainer()
@@ -89,18 +89,19 @@ placeRecognizer = PlaceRecognizer({
 	'accurateRecognition': True,
 })
 wayPoint, theta = placeRecognizer.whereAmI()
+wayPoint = int(wayPoint)
+print "Where am I? -> {0}, {1}".format(wayPoint, theta)
 
 startingPointCoords = POI.getById(wayPoint)
 wayPoints = POI.buildPath(wayPoint)
 wayPoints = interpolate(wayPoints)
 
-print wayPoints
+print "Waypoints: {0}".format(str(wayPoints))
 drawTrajectory(wayPoints)
 currentPointIndex = 1
 
 # initialize particle filter
 particleFilter = ParticleFilter(mymap, canvas, (startingPointCoords[0], startingPointCoords[1], theta))
-
 
 # initialize control command
 leftVel = 0
@@ -140,7 +141,7 @@ while True:
 	# set control signal
 	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
 	#robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
-	
+
 	# predict new state
 	z_angle = 0
 	if(timeStep > 1):

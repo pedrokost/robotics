@@ -108,9 +108,6 @@ class Navigator:
 	# 	#print "Diff (R, T) : ", diffTh*180/pi, diffTh
 	# 	return (leftVel, rightVel, action)
 
-
-		
-
 	def navigateToWayPointStateFul2(self, robotState, enc_distL, enc_distR, goalPoint):
 		#calculate angle different
 		dx = goalPoint[0] - robotState[0]
@@ -175,8 +172,6 @@ class Navigator:
 				rightVel = 0
 
 		return (leftVel, rightVel, action)
-
-
 
 	def navigateToWayPointStateFulPow(self, robotState, enc_distL, enc_distR, goalPoint):
 		print "Power"
