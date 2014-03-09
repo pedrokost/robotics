@@ -9,6 +9,8 @@ MOTOR_VEL_KD = 0.0
 VEL_TO_POWER_W1 = 12.6407
 VEL_TO_POWER_W0 = 0 #-1.8951
 
+LEFT_BIAS = 11
+
 class Motors:
 	# The index indicates the element of the vector that belongs to each motor
 	LEFT_MOTOR_INDEX  = 0
@@ -70,6 +72,8 @@ class Motors:
 		power_sign = sign(power_est)
 		power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
 		#power = self._velToPower(prefer_vel)
+		if(motor_port == self.leftMotorPort):
+			power = (LEFT_BIAS + self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
  
 		# set power
 		self._setMotorPower(motor_port, power)

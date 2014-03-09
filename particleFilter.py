@@ -90,8 +90,9 @@ class ParticleFilter:
 	# return -1 if not intersect with any wall
 	def _get_predict_m_beta(self, x, y, theta):
 		nWalls = len(self.Map.walls)
-
 		best_m = -1
+		best_beta = 0
+
 		# estimate sonar measurement from the predict one of each wall
 		for i in range(0, nWalls):
 			# predict m of this wall
@@ -116,10 +117,10 @@ class ParticleFilter:
 				best_m = predictM
 				best_beta = self.compute_beta(Ax, Ay, Bx, By, x, y, theta)	
 
-		if(best_m < 0):
-			print "Something wrong : M < 0"
-			print (x, y, theta)
-			time.sleep(100)
+		#if(best_m < 0):
+		#	print "Something wrong : M < 0"
+		#	print (x, y, theta)
+		#	time.sleep(100)
 
 
 

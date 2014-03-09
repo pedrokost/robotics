@@ -75,7 +75,7 @@ def interpolate(points):
 
 	return newPoints
 
-wayPoints = interpolate(wayPoints)
+# wayPoints = interpolate(wayPoints)
 
 print wayPoints
 #wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
@@ -135,6 +135,7 @@ while True:
 
 	# get predict state
 	robotState = particleFilter.getPredictState()
+	print "State: {0}".format(int(robotState[0]))
 	
 	# set control signal with vel
 	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
