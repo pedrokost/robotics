@@ -1,4 +1,5 @@
 *~
+*.pyc
 .nfs*
 *.swp
 libpeerconnection.log
