@@ -3,6 +3,7 @@ import numpy as np
 from signature import Signature
 from utilities import *
 from math import pi
+import os
 
 
 MINIMUM_THRESHOLD = 0.1  # vectors are normalized to 1, so this is used to find the indices of the minimums with a *about* 10% soft boundary (to account for noise)
@@ -44,11 +45,11 @@ class SignatureRecognizer:
 		"""
 		Returns the square of the distance between the signatures.
 		"""
-		rotations = genAllRotations(signature2.values)
+		rotations = self.genAllRotations(signature2.values)
 		distances = map(lambda r : squareEuclideanDistance(r, signature1.values), rotations)
 		return min(distances)
 
-	def genAllRotations(values):
+	def genAllRotations(self, values):
 		rotations = []
 		currentRot = values
 		for i in range(0, len(values)):
