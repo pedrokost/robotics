@@ -63,7 +63,7 @@ class SignatureRecognizer:
 		s2_values = unitSum(signature2.values)
 
 		return self.__shift(s1_values, s2_values, **kwargs)
-	
+
 	def __radiansPerShift(self, shift, max_shifts):
 		"""
 		Returns the number of radians that correspond to a cyclic shift of 1
@@ -74,7 +74,7 @@ class SignatureRecognizer:
 	def __shift(self, vector1, vector2, exhaustive = False, **kwargs):
 		"""
 		Returns the absolute shift between two enumerables.
-		vector1 is the reference vector, vector2 is the one we want to compare against the reference 
+		vector1 is the reference vector, vector2 is the one we want to compare against the reference
 
 		If exhaustive flag is set, performs an exhaustive search by attempting all possible shifts, else it tries to normalize the curves by finding the minimum
 		"""
@@ -85,7 +85,7 @@ class SignatureRecognizer:
 			return self.__shift_exhaustive(vector1, vector2, **kwargs)
 		else:
 			return self.__shift_fast(vector1, vector2, **kwargs)
-	
+
 	def __shift_exhaustive(self, vector1, vector2, debug = False):
 		"""
 		Returns how much a vector was shifted
@@ -100,7 +100,7 @@ class SignatureRecognizer:
 			if d < bestDist:
 				bestDist = d
 				shift = i
-		
+
 		if debug:
 			print "Best distance", bestDist
 			print "Total comparisons:", len(vector1)
