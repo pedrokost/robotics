@@ -40,8 +40,31 @@ class SignatureRecognizer:
 		dists = [self.distance(signature, s) for s in self.sigs()]
 		dists_print = [(s.name, self.distance(signature, s)) for s in self.sigs()]
 		print dists_print
-		min_index, min_value = min(enumerate(dists), key=operator.itemgetter(1))
-		return min_index, min_value, self.sigs()[min_index]
+		if self.tie(dists):
+			return self.solveTie(signature, dists)
+		else:
+			min_index, min_value = min(enumerate(dists), key=operator.itemgetter(1))
+			return min_index, min_value, self.sigs()[min_index]
+
+	def tie(self, dists):
+		dists = sorted(dists)
+		# TODO(asfrent) make this a constant
+		return dists[1] - dists[0] < 3000
+
+	def solveTie(self, signature, dists):
+		METRIC_FUN = variance
+		sortedIndices = [i[0] for i in sorted(enumerate(dists), key=lambda x:x[1])]
+		first, second = sortedIndices[0], sortedIndices[1]
+		metricFirst = METRIC_FUN(self.sigs()[first].values)
+		metricSecond = METRIC_FUN(self.sigs()[second].values)
+		metricReal = METRIC_FUN(signature.values)
+		print "Metrics: real = {0}, first[{1}] = {2}, second[{3}] = {4}".format(metricReal, first, metricFirst, second, metricSecond)
+		distToFirst = abs(metricReal - metricFirst)
+		distToSecond = abs(metricReal - metricSecond)
+		if distToFirst < distToSecond:
+			return first, dists[first], self.sigs()[first]
+		else:
+			return second, dists[second], self.sigs()[second]
 
 	def distance(self, signature1, signature2):
 		"""
@@ -53,7 +76,7 @@ class SignatureRecognizer:
 			vals2 = interpolate(vals2, len(vals1))
 		rotations = self.genAllRotations(vals2)
 		distances = map(lambda r : squareEuclideanDistance(r, vals1), rotations)
-		return min(distances)
+		return float(min(distances)) / float(len(vals1))
 
 	def genAllRotations(self, values):
 		rotations = []

@@ -23,8 +23,12 @@ def mean(list):
 	"""
 	Returns the mean of an list
 	"""
-	sum(list) / float(len(list))
+	return sum(list) / float(len(list))
 
+def variance(v):
+	mu = mean(v)
+	terms = map(lambda x : (x - mu) * (x - mu), v)
+	return sum(terms)
 
 def limitTo(value, min_v, max_v):
 	"""
