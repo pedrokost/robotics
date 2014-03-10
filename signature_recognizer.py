@@ -45,8 +45,12 @@ class SignatureRecognizer:
 		"""
 		Returns the square of the distance between the signatures.
 		"""
-		rotations = self.genAllRotations(signature2.values)
-		distances = map(lambda r : squareEuclideanDistance(r, signature1.values), rotations)
+		vals1 = list(signature1.values)
+		vals2 = list(signature2.values)
+		if len(vals1) != len(vals2):
+			vals2 = interpolate(vals2, len(vals1))
+		rotations = self.genAllRotations(vals2)
+		distances = map(lambda r : squareEuclideanDistance(r, vals1), rotations)
 		return min(distances)
 
 	def genAllRotations(self, values):
