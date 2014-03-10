@@ -49,7 +49,7 @@ class SignatureRecognizer:
 	def tie(self, dists):
 		dists = sorted(dists)
 		# TODO(asfrent) make this a constant
-		return dists[1] - dists[0] < 3000
+		return dists[1] - dists[0] < 750
 
 	def solveTie(self, signature, dists):
 		METRIC_FUN = variance
