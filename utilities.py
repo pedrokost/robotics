@@ -118,4 +118,7 @@ def interpolate(vector, length, kind='nearest'):
 	xnew = np.linspace(0, 1, length)
 	return f2(xnew)
 
+def rotate(l, n):
+	return l[n:] + l[:n]
+
 # print interpolate([1,2,3,4, 5, 6, 7, 8, 9], 50)

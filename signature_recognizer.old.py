@@ -44,20 +44,7 @@ class SignatureRecognizer:
 		"""
 		Returns the square of the distance between the signatures.
 		"""
-		rotations = genAllRotations(signature2.values)
-		distances = map(lambda r : squareEuclideanDistance(r, signature1.values), rotations)
-		return min(distances)
-
-	def genAllRotations(values):
-		rotations = []
-		currentRot = values
-		for i in range(0, len(values)):
-			rotations.append(currentRot)
-			currentRot = rotate(currentRot, 1)
-		if currentRot != values:
-			print "Fuck."
-			os._exit(-1)
-		return rotations
+		return squareEuclideanDistance(signature1.sig, signature2.sig)
 
 	def theta(self, signature1, signature2, **kwargs):
 		"""

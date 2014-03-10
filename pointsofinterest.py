@@ -1,4 +1,5 @@
 import os
+from utilities import rotate
 
 POI_dict = {\
 	1 : (84, 30),\
@@ -20,9 +21,6 @@ def pathFromIndexes(indexList):
 
 def makeCircular(indexList):
 	return indexList + [indexList[0]]
-
-def rotate(l, n):
-	return l[n:] + l[:n]
 
 def performRotation(indexList, first):
 	while indexList[0] != first:
