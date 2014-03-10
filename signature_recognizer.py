@@ -38,6 +38,8 @@ class SignatureRecognizer:
 			most similar signature
 		"""
 		dists = [self.distance(signature, s) for s in self.sigs()]
+		dists_print = [(s.name, self.distance(signature, s)) for s in self.sigs()]
+		print dists_print
 		min_index, min_value = min(enumerate(dists), key=operator.itemgetter(1))
 		return min_index, min_value, self.sigs()[min_index]
 
