@@ -55,9 +55,6 @@ class SignatureRecognizer:
 		for i in range(0, len(values)):
 			rotations.append(currentRot)
 			currentRot = rotate(currentRot, 1)
-		if currentRot != values:
-			print "Fuck."
-			os._exit(-1)
 		return rotations
 
 	def theta(self, signature1, signature2, **kwargs):
