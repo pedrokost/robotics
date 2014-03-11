@@ -151,8 +151,8 @@ while True:
 
 	# measurement update
 	if(z < 100 and z > 20 and abs(radToDeg(z_angle)) < 45):
-		z -= 13
-		print "Until Move to center"
+		z -= 1
+		# print "Until Move to center"
 		particleFilter.measurementUpdate(z)
 		particleFilter.normalizeWeights()
 

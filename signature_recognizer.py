@@ -92,7 +92,7 @@ class SignatureRecognizer:
 		"""
 		shift = self.shift(signature1, signature2, **kwargs)
 		radiansPerShift = self.__radiansPerShift(shift, len(signature1.values))
-		return toPIPI(shift * radiansPerShift)
+		return -toPIPI(shift * radiansPerShift)
 
 
 	def shift(self, signature1, signature2, **kwargs):

@@ -123,6 +123,7 @@ def interpolate(vector, length, kind='nearest'):
 	return f2(xnew)
 
 def rotate(l, n):
-	return l[n:] + l[:n]
+	return list(np.roll(l, n))
+	# return l[n:] + l[:n]
 
 # print interpolate([1,2,3,4, 5, 6, 7, 8, 9], 50)
