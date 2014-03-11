@@ -4,8 +4,8 @@ from BrickPi import *
 NEAR_ZERO = 0.0000001
 M_PI = pi   # for backwards compatibility
 
-W_RADIUS = 2.45 # wheel radius in cm # if move too much -> increase
-RW_DIST = 6.2 #5.8 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
+W_RADIUS = 2 # 2.45 # wheel radius in cm # if move too much -> increase
+RW_DIST = 5.25 # 6.2 #5.8 # distance from center of the robot to center of the wheel # if rotation is too much -> decrease
 ENCODER_RATIO = 24.0/40.0 # Gear Parameter
 
 EASING_C = 0.05  # determines acceleration strenght
@@ -34,6 +34,8 @@ RIGHT_TOUCH = PORT_1
 
 SONAR_SENSOR = PORT_4   # sonar sensor port
 SONAR_BIAS = 3
+
+LIGHT_SENSOR = PORT_3
 
 # The array size of previous sonar meausurments
 DISTANCE_HISTORY_SIZE = 5   # make it odd. 

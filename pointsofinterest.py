@@ -1,4 +1,5 @@
 import os
+from utilities import rotate
 
 POI_dict = {\
 	1 : (84, 30),\
@@ -19,18 +20,21 @@ def pathFromIndexes(indexList):
 	return map(lambda index : POI_dict[index], indexList)
 
 def makeCircular(indexList):
-	return indexList.append(indexList[0])
-
-def rotate(l, n):
-	return l[n:] + l[:n]
+	return indexList + [indexList[0]]
 
 def performRotation(indexList, first):
 	while indexList[0] != first:
 		indexList = rotate(indexList, 1)
+	return indexList
 
 # wayPointIndex is the first waypoint
 def buildPath(wayPointIndex):
 	basePathIndexes = [7, 1, 2, 4, 5, 4]
+	print "Base: {0}".format(str(basePathIndexes))
 	rotatedPath = performRotation(basePathIndexes, wayPointIndex)
+	print "Rotated: {0}".format(str(rotatedPath))
 	circularPath = makeCircular(rotatedPath)
-	return pathFromIndexes(circularPath)
+	print "Circular: {0}".format(str(circularPath))
+	finalPath = pathFromIndexes(circularPath)
+	print "Final: {0}".format(str(finalPath))
+	return finalPath

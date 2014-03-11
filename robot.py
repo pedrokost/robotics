@@ -16,6 +16,8 @@ class Robot:
 		if(leftMotorPort is not None and rightMotorPort is not None): 
 			self.motors = Motors(leftMotorPort, rightMotorPort)
 
+		BrickPi.SensorType[LIGHT_SENSOR] = TYPE_SENSOR_LIGHT_OFF
+
 		BrickPiSetupSensors()   #Send the properties of sensors to BrickPi
 
 	def followWall(self, prefer_wall_distance):

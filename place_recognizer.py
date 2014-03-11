@@ -1,6 +1,7 @@
 from signature import Signature
 from constants import NUMBER_OF_SIGNATURE_BINS
 from utilities import degToRad, radToDeg
+from plotter import drawScanData
 
 class PlaceRecognizer:
 
@@ -10,8 +11,8 @@ class PlaceRecognizer:
 	def __init__(self, args):
 
 		# Degree to rotate before each scan
-		HIGH_ACCURACY = degToRad(3)
-		LOW_ACCURACY = degToRad(10)
+		HIGH_ACCURACY = degToRad(1)
+		LOW_ACCURACY = degToRad(3)
 		
 		self.sonarScanner = args['sonarScanner']
 		self.recognizer = args['signatureRecognizer']
@@ -25,11 +26,15 @@ class PlaceRecognizer:
 		# Perform a scan
 		data = self.sonarScanner.scan(self.scannerAccuracy)
 		s = Signature(data, NUMBER_OF_SIGNATURE_BINS)
-
+		drawScanData(data, (100,100))
 		# Try to recognize the signature
 		_, dist, closest = self.recognizer.closest(s)
-		theta = self.recognizer.theta(closest, s, exhaustive=self.thetaAccuracy, debug=True)
 
+		print "s.sig:", s.sig
+		print "closest.sig", closest.sig
+
+		theta = self.recognizer.theta(closest, s, exhaustive=self.thetaAccuracy, debug=True)
+		
 		# return the waypoint number and theta
 		if dist > self.ALLOWED_DISTANCE:
 			print "WARNING: we are very uncertain of the accuracy of the location"

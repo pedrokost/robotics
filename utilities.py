@@ -1,6 +1,6 @@
 import math
 import numpy as np
-# from constants import *  Please don't do this. only; reduce depencies by only loading required
+from constants import RW_DIST  #Please don't do this. only; reduce depencies by only loading required
  
 def toPIPI(angle):
 	"""
@@ -23,8 +23,12 @@ def mean(list):
 	"""
 	Returns the mean of an list
 	"""
-	sum(list) / float(len(list))
+	return sum(list) / float(len(list))
 
+def variance(v):
+	mu = mean(v)
+	terms = map(lambda x : (x - mu) * (x - mu), v)
+	return sum(terms)
 
 def limitTo(value, min_v, max_v):
 	"""
@@ -88,8 +92,8 @@ def predictState(state, distL, distR):
 	motionD  = (distR + distL)/2            # average moved direction of both wheels
 	motionTH = (distR - distL)/(2*RW_DIST)  # rotation (voluntary or not) 
 
-	newX = state[0] + (motionD)*cos(state[2])
-	newY = state[1] + (motionD)*sin(state[2])
+	newX = state[0] + (motionD)*math.cos(state[2])
+	newY = state[1] + (motionD)*math.sin(state[2])
 	newTH = toPIPI(state[2] + motionTH)
 	return (newX, newY, newTH)
 
@@ -117,5 +121,8 @@ def interpolate(vector, length, kind='nearest'):
 	f2 = interp1d(x, vector, kind=kind)
 	xnew = np.linspace(0, 1, length)
 	return f2(xnew)
+
+def rotate(l, n):
+	return l[n:] + l[:n]
 
 # print interpolate([1,2,3,4, 5, 6, 7, 8, 9], 50)

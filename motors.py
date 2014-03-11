@@ -3,11 +3,13 @@ from BrickPi import *
 from utilities import *
 
 MOTOR_VEL_KP = 0.1
-MOTOR_VEL_KI = 0.03
+MOTOR_VEL_KI = 0.0
 MOTOR_VEL_KD = 0.0  
 
 VEL_TO_POWER_W1 = 12.6407
 VEL_TO_POWER_W0 = 0 #-1.8951
+
+LEFT_BIAS = 11
 
 class Motors:
 	# The index indicates the element of the vector that belongs to each motor
@@ -68,8 +70,10 @@ class Motors:
 		# calculate power
 		power_est = self._velToPower(prefer_vel)
 		power_sign = sign(power_est)
-		#power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
-		power = abs(self._velToPower(prefer_vel))*power_sign
+		power = (self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
+		#power = self._velToPower(prefer_vel)
+		if(motor_port == self.leftMotorPort):
+			power = (LEFT_BIAS + self.dpower[motor_index] + abs(self._velToPower(prefer_vel)))*power_sign
  
 		# set power
 		self._setMotorPower(motor_port, power)
@@ -83,6 +87,13 @@ class Motors:
 	#	Function to set motor power
 	def _setMotorPower(self, motor_port, power):
 		BrickPi.MotorSpeed[motor_port] = FWD_SIGN*int(round(power))
+		BrickPiUpdateValues()
+
+	#
+	#	Function to set motor power
+	def _setMotorPowerAll(self, powerLeft, powerRight):
+		BrickPi.MotorSpeed[self.leftMotorPort] = FWD_SIGN*int(round(powerLeft))
+		BrickPi.MotorSpeed[self.rightMotorPort] = FWD_SIGN*int(round(powerRight))
 		BrickPiUpdateValues()
 
 

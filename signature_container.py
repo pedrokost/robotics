@@ -98,7 +98,8 @@ class SignatureContainer():
         if os.path.isfile(filename):
             f = open(filename, 'r')
             name = str(f.readline()).rstrip()
-            data = f.readlines()
+            data = map(lambda x : x.strip(), f.readlines())
+            data = filter(lambda x : x != "", data)
             values = [int(v) for v in data]
             s = Signature(values, NUMBER_OF_SIGNATURE_BINS, name)
             f.close();

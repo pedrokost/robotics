@@ -7,13 +7,8 @@ from random import uniform
 from navigator import Navigator
 from math import cos, sin, atan2
 from utilities import *
-from signature_recognizer import SignatureRecognizer
-from signature_container import SignatureContainer
-from place_recognizer import PlaceRecognizer
-from sonarScanner import SonarScanner
-from BrickPi import BrickPiSetup, PORT_4, PORT_D, BrickPiSetupSensors
-import pointsofinterest as POI
 from ledController import *
+
 
 def drawTrajectory(points):
 	n = len(points)
@@ -59,6 +54,9 @@ mymap.add_wall((210,84,210,0));     # g
 mymap.add_wall((210,0,0,0));        # h
 mymap.draw();
 
+# initialize way points
+wayPoints = [(84, 30), (180,30), (180,54), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
+
 def interpolate(points):
 	p = points[0]
 	newPoints = []
@@ -75,34 +73,19 @@ def interpolate(points):
 			newPoints.append(newp)
 			tmpp = newp
 		p = p2
-	newPoints.append(points[-1])
+
 	return newPoints
 
-container = SignatureContainer()
-recognizer = SignatureRecognizer(container)
-sonarScanner = SonarScanner(PORT_4, PORT_D)
-BrickPiSetupSensors()
+# wayPoints = interpolate(wayPoints)
 
-placeRecognizer = PlaceRecognizer({
-	'sonarScanner': sonarScanner,
-	'signatureRecognizer': recognizer,
-	'accurateScan': False,
-	'accurateRecognition': True,
-})
-wayPoint, theta = placeRecognizer.whereAmI()
-wayPoint = int(wayPoint)
-print "Where am I? -> {0}, {1}".format(wayPoint, theta)
-
-startingPointCoords = POI.getById(wayPoint)
-wayPoints = POI.buildPath(wayPoint)
-#wayPoints = interpolate(wayPoints)
-
-print "Waypoints: {0}".format(str(wayPoints))
+print wayPoints
+#wayPoints = [(84, 30), (126,30), (126, 54), (126, 168), (126, 126), (30, 54), (84, 54), (84, 30)]
 drawTrajectory(wayPoints)
 currentPointIndex = 1
 
 # initialize particle filter
-particleFilter = ParticleFilter(mymap, canvas, (startingPointCoords[0], startingPointCoords[1], theta))
+particleFilter = ParticleFilter(mymap, canvas, (84, 30, 0))
+
 
 # initialize control command
 leftVel = 0
@@ -131,17 +114,14 @@ while True:
 
 	# measure from sonar
 	z = robot.sonar.getSmoothSonarDistance(0.05)
-	# print "Measurement : FAKE"
-	# z = particleFilter.getIdealM()
+	#print "Measurement : FAKE"
+	#z = particleFilter.getIdealM()
 
 	# motion update
 	particleFilter.motionUpdate(enc_distL, enc_distR)
-
+	
 	# get predict state
 	robotState = particleFilter.getPredictState()
-	# set control signal
-	#leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
-	#robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# predict new state
 	z_angle = 0
@@ -151,21 +131,22 @@ while True:
 
 	# measurement update
 	if(z < 100 and z > 20 and abs(radToDeg(z_angle)) < 45):
-		z -= 13
-		print "Until Move to center"
 		particleFilter.measurementUpdate(z)
 		particleFilter.normalizeWeights()
 
 	# get predict state
 	robotState = particleFilter.getPredictState()
-
+	print "State: {0}".format(int(robotState[0]))
+	
 	# set control signal with vel
 	leftVel, rightVel, action = navigator.navigateToWayPointStateFul2(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	print leftVel, rightVel
 	robot.motors.setVel(leftVel, rightVel, enc_velL, enc_velR)
 
 	# set control signal with pow
-	# leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow(robotState, enc_distL, enc_distR, goalPoint)
-	# robot.motors._setMotorPowerAll(leftVel, rightVel)
+	#leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow(robotState, enc_distL, enc_distR, wayPoints[currentPointIndex])
+	# leftVel, rightVel, action = navigator.navigateToWayPointStateFulPow((0, 0, 0), enc_distL, enc_distR, (10, 0))
+	#robot.motors._setMotorPowerAll(leftVel, rightVel)
 
 	# set waypoint index
 	if(action == 'Complete'):
@@ -173,7 +154,7 @@ while True:
 		LEDController.blink()
 		if(currentPointIndex >= len(wayPoints)):
 			break
-
+	
 	# resampling
 	if(timeStep%RESAMPLING_PERIOD == 0):
 		particleFilter.resample()

@@ -3,7 +3,6 @@ import numpy as np
 from signature import Signature
 from utilities import *
 from math import pi
-import os
 
 
 MINIMUM_THRESHOLD = 0.1  # vectors are normalized to 1, so this is used to find the indices of the minimums with a *about* 10% soft boundary (to account for noise)
@@ -38,53 +37,14 @@ class SignatureRecognizer:
 			most similar signature
 		"""
 		dists = [self.distance(signature, s) for s in self.sigs()]
-		dists_print = [(s.name, self.distance(signature, s)) for s in self.sigs()]
-		print dists_print
-		if self.tie(dists):
-			return self.solveTie(signature, dists)
-		else:
-			min_index, min_value = min(enumerate(dists), key=operator.itemgetter(1))
-			return min_index, min_value, self.sigs()[min_index]
-
-	def tie(self, dists):
-		dists = sorted(dists)
-		# TODO(asfrent) make this a constant
-		return dists[1] - dists[0] < 750
-
-	def solveTie(self, signature, dists):
-		METRIC_FUN = variance
-		sortedIndices = [i[0] for i in sorted(enumerate(dists), key=lambda x:x[1])]
-		first, second = sortedIndices[0], sortedIndices[1]
-		metricFirst = METRIC_FUN(self.sigs()[first].values)
-		metricSecond = METRIC_FUN(self.sigs()[second].values)
-		metricReal = METRIC_FUN(signature.values)
-		print "Metrics: real = {0}, first[{1}] = {2}, second[{3}] = {4}".format(metricReal, first, metricFirst, second, metricSecond)
-		distToFirst = abs(metricReal - metricFirst)
-		distToSecond = abs(metricReal - metricSecond)
-		if distToFirst < distToSecond:
-			return first, dists[first], self.sigs()[first]
-		else:
-			return second, dists[second], self.sigs()[second]
+		min_index, min_value = min(enumerate(dists), key=operator.itemgetter(1))
+		return min_index, min_value, self.sigs()[min_index]
 
 	def distance(self, signature1, signature2):
 		"""
 		Returns the square of the distance between the signatures.
 		"""
-		vals1 = list(signature1.values)
-		vals2 = list(signature2.values)
-		if len(vals1) != len(vals2):
-			vals2 = interpolate(vals2, len(vals1))
-		rotations = self.genAllRotations(vals2)
-		distances = map(lambda r : squareEuclideanDistance(r, vals1), rotations)
-		return float(min(distances)) / float(len(vals1))
-
-	def genAllRotations(self, values):
-		rotations = []
-		currentRot = values
-		for i in range(0, len(values)):
-			rotations.append(currentRot)
-			currentRot = rotate(currentRot, 1)
-		return rotations
+		return squareEuclideanDistance(signature1.sig, signature2.sig)
 
 	def theta(self, signature1, signature2, **kwargs):
 		"""

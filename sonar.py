@@ -23,3 +23,10 @@ class Sonar:
 	def _getSonarDistance(self):
 		BrickPiUpdateValues()
 		return BrickPi.Sensor[self.sonar]
+
+	def getSimpleSonarDistance(self):
+		values = []
+		for i in range(0,3):
+			values.append(self._getSonarDistance())
+			time.sleep(0.01)
+		return median(values) - SONAR_BIAS
